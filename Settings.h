@@ -14,11 +14,11 @@
 
 using namespace std;
 
-TString output_resolution_txtfile= TString("./resolution.txt");
-TString output_efficiency_txtfile= TString("./efficiency.txt");
+TString output_resolution_txtfile= TString("./results/resolution.txt");
+TString output_efficiency_txtfile= TString("./results/efficiency.txt");
 
 // should end with /
-TString inputPath = TString("../mainz_data/desyTBMMData/data/");
+TString inputPath = TString("/afs/desy.de/user/y/yeda/nfs_yeda/mainz_data/desyTBMMData/data/");
 TString outputPath = TString("./output/");
 
 TString inputRawTreeName = TString("raw");

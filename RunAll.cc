@@ -26,10 +26,10 @@ using namespace std;
 
 const double NOTSET = 100000;
 
-TString output_resolution_txtfile= TString("./resolution.txt");
-TString output_efficiency_txtfile= TString("./efficiency.txt");
+TString output_resolution_txtfile= TString("./results/resolution.txt");
+TString output_efficiency_txtfile= TString("./results/efficiency.txt");
 
-TString output_root_filename = TString("measurementResults.root");
+TString output_root_filename = TString("./results/measurementResults.root");
 
 TString eff_histoname= TString("eff_");
 TString res_histoname= TString("res_");
