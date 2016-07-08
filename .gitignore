@@ -4,6 +4,15 @@
 results/*
 input/*
 output/*
+MM_DESYTB_May_2016.csv
+VecVecDict.cc
+VecVecDict.h
+alignment
+analyze
+backup/
+hitmaker
+pdfs/
+runall
 
 # Except this file
 !.gitignore
