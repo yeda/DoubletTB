@@ -1,0 +1,10 @@
+# Ignore everything in this directory
+*.o
+*.xlsx
+results/*
+input/*
+output/*
+
+# Except this file
+!.gitignore
+

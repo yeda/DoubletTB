@@ -1,0 +1,9 @@
+# This is how to run the code:
+
+rootcint -f VecVecDict.cc -c HitMaker.h Alignment.h Analyze.h LinkDef.h
+make
+
+./hitmaker <runnumber>
+./alignment <runnumber> <iteration>
+
+
