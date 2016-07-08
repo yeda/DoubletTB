@@ -110,9 +110,13 @@ struct RunInfo{
     }
 };
 
+void runHitMaker();
+void runAlignment();
+void runAnalyze();
+
+
 void readMeasEff();
 void readMeasRes();
-void createTxtFiles();
 void makePlots();
 void createHistos();
 void createOutputFile(TFile *fout);
