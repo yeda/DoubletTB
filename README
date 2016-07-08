@@ -4,6 +4,10 @@ rootcint -f VecVecDict.cc -c HitMaker.h Alignment.h Analyze.h LinkDef.h
 make
 
 ./hitmaker <runnumber>
-./alignment <runnumber> <iteration>
+./alignment <alignment_runnumber> 
+./analyze <runnumber> <alignment_runnumber>
+
+or 
+./runall
 
 
