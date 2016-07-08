@@ -44,7 +44,10 @@ int main(int argc, char *argv[]){
 
     readRunList(runlistfile);
 
-  createTxtFiles();
+    // runHitMaker();
+    runAlignment();
+    runAnalyze();
+    
     readMeasEff();
     readMeasRes();
     
@@ -165,7 +168,7 @@ void createOutputFile(TFile *fout){
     
 }
 
-void createTxtFiles(){
+void runHitMaker(){
     
     TString runthis;
     
@@ -175,9 +178,16 @@ void createTxtFiles(){
         cout<<runthis<<endl;
         system(runthis.Data());
     }
+}
+void runAlignment(){
     
     system("./alignment 134");
-   
+}
+
+void runAnalyze(){
+    
+    TString runthis;
+
     runthis = TString("rm ")+ output_efficiency_txtfile + TString(" ")+ output_resolution_txtfile;
     system(runthis.Data());
     
