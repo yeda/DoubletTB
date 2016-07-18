@@ -1,8 +1,6 @@
 MMPedRunNum;MMDataRunNum;BeamEnergy;Distance1;Angle1;Distance2;Angle2;config;map;Comment;
 62;71;4.4;0;0;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 72;74;4.4;5;1.023193304;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
-75;76;4.4;10;2.046713098;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
-77;79;4.4;15;3.070886811;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 83;84;4.4;20;4.096043758;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 85;86;4.4;25;5.1225161;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 87;88;4.4;30;6.150639828;;;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
@@ -27,5 +25,3 @@ MMPedRunNum;MMDataRunNum;BeamEnergy;Distance1;Angle1;Distance2;Angle2;config;map
 155;157;6;40;8.213210702;-20.97804358;-4;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 158;160;4.4;40;8.213210702;-42.16225041;-8;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 164;165;4.4;;0;;0;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
-166;167;4.4;;0;;0;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
-171;172;;;0;;0;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
