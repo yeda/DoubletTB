@@ -45,8 +45,8 @@ int main(int argc, char *argv[]){
     readRunList(runlistfile);
     
     // runHitMaker();
-    runAlignment();
-    runAnalyze();
+   // runAlignment();
+   // runAnalyze();
     
     readMeasEff();
     readMeasRes();
@@ -76,11 +76,12 @@ void makePlots(){
     int i_point[2] = {0};
     for (map< int, Meas* >::iterator i_meas=measurements.begin(); i_meas != measurements.end(); i_meas++) {
         Meas* ameas = i_meas->second;
-        
+        cout<<" here angle1 "<<ameas->get_Angle1()<<" angle2 "<<ameas->get_Angle2()<<endl;
+
         if(ameas->get_Angle1() ==0 && ameas->get_Angle2()!=0)
-            tiltname = TString("tiltY");
-        else if (ameas->get_Angle1()!=0 && ameas->get_Angle2()==0)
             tiltname = TString("tiltX");
+        else if (ameas->get_Angle1()!=0 && ameas->get_Angle2()==0)
+            tiltname = TString("tiltY");
         else if (ameas->get_Angle1()!=0 && ameas->get_Angle2()!=0)
             tiltname = TString("skip");
         else if (ameas->get_Angle1() ==0 && ameas->get_Angle2()==0)
@@ -94,6 +95,8 @@ void makePlots(){
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[1][0][0][0][i_point[1]]=ameas->get_Angle1();
+            cout<<"angle1 " << ameas->get_Angle1()<<endl;
+
             comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_DownX();
             comb_result[1][0][0][2][i_point[1]]=ameas->get_res_DownX();
             comb_result[1][0][0][3][i_point[1]]=ameas->get_res_DownX_err();
@@ -130,6 +133,7 @@ void makePlots(){
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[0][0][0][0][i_point[0]]=ameas->get_Angle2();
+            cout<<"angle2 " << ameas->get_Angle2()<<endl;
             comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_DownX();
             comb_result[0][0][0][2][i_point[0]]=ameas->get_res_DownX();
             comb_result[0][0][0][3][i_point[0]]=ameas->get_res_DownX_err();
@@ -162,69 +166,73 @@ void makePlots(){
             
         }
         
-        // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
-        
-        
-        for (int itilt=0; itilt<2; itilt++) {
-            for (int idet=0; idet<3; idet++) {
-                for (int ixy=0; ixy<2; ixy++) {
-                    for (int imeastype=1; imeastype<3; imeastype++) {
-                        histname = TString("MEAS_tilt111_22233");
-                        
-                        if (itilt==0) histname.ReplaceAll("111", "X");
-                        else histname.ReplaceAll("111", "Y");
-                        
-                        if(idet==0) histname.ReplaceAll("222", "Down");
-                        else if(idet==1) histname.ReplaceAll("222", "Up");
-                        else histname.ReplaceAll("222", "Ref");
-                        
-                        if (ixy==0) histname.ReplaceAll("33", "X");
-                        else histname.ReplaceAll("33", "Y");
-                        
-                        if(imeastype==0) continue;
-                        else if(imeastype==1) histname.ReplaceAll("MEAS", eff_histoname);
-                        else if(imeastype==2) histname.ReplaceAll("MEAS", res_histoname);
-                        
-                        if (imeastype==1) {
-                            gr = new TGraph(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1]);
-                            gr->SetName(histname.Data());
-                            title= histname + TString(";Tilt angle (degrees);Efficiency");
-                            gr->SetTitle(title.Data());
-                            rootobjects.insert(pair<TString,TObject*>(histname,gr));
-                        } else if (imeastype==2){
-                            if (idet!=2){
-                                gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],zero_err,comb_result[itilt][idet][ixy][3]);
-                                gre->SetName(histname.Data());
-                                title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
-                                gre->SetTitle(title.Data());
-                                rootobjects.insert(pair<TString,TObject*>(histname,gre));
-                            }
+    }
+    // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+    
+    cout<< "i_point[0] "<<i_point[0]<<" i_point[1] "<<i_point[1]<<endl;
+    
+    for (int itilt=0; itilt<2; itilt++) {
+        for (int idet=0; idet<3; idet++) {
+            for (int ixy=0; ixy<2; ixy++) {
+                for (int imeastype=1; imeastype<3; imeastype++) {
+                    histname = TString("MEAS_tilt111_22233");
+                    
+                    if (itilt==0) histname.ReplaceAll("111", "X");
+                    else histname.ReplaceAll("111", "Y");
+                    
+                    if(idet==0) histname.ReplaceAll("222", "Down");
+                    else if(idet==1) histname.ReplaceAll("222", "Up");
+                    else histname.ReplaceAll("222", "Ref");
+                    
+                    if (ixy==0) histname.ReplaceAll("33", "X");
+                    else histname.ReplaceAll("33", "Y");
+                    
+                    if(imeastype==0) continue;
+                    else if(imeastype==1) histname.ReplaceAll("MEAS", eff_histoname);
+                    else if(imeastype==2) histname.ReplaceAll("MEAS", res_histoname);
+                    
+                    if (imeastype==1) {
+                        gr = new TGraph(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1]);
+                        gr->SetName(histname.Data());
+                        title= histname + TString(";Tilt angle (degrees);Efficiency");
+                        gr->SetTitle(title.Data());
+                        gr->SetMarkerStyle(20);
+                        rootobjects.insert(pair<TString,TObject*>(histname,gr));
+                    } else if (imeastype==2){
+                        if (idet!=2){
+                            gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],zero_err,comb_result[itilt][idet][ixy][3]);
+                            gre->SetName(histname.Data());
+                            gre->SetMarkerStyle(20);
+                            
+                            title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
+                            gre->SetTitle(title.Data());
+                            rootobjects.insert(pair<TString,TObject*>(histname,gre));
                         }
-                        
                     }
+                    
                 }
             }
         }
+    }
+    
+    // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
+    
+    for (int itilt=0; itilt<2; itilt++) {
+        histname = TString("MEAS_tilt111_Down");
+        if (itilt==0) histname.ReplaceAll("111", "X");
+        else histname.ReplaceAll("111", "Y");
+        histname.ReplaceAll("MEAS", angres_histoname);
         
-        // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
-        
-        for (int itilt=0; itilt<2; itilt++) {
-            histname = TString("MEAS_tilt111_Down");
-            if (itilt==0) histname.ReplaceAll("111", "X");
-            else histname.ReplaceAll("111", "Y");
-            histname.ReplaceAll("MEAS", angres_histoname);
-            
-            gre = new TGraphErrors(i_point[itilt], comb_ang_res[itilt][0], comb_ang_res[itilt][1],zero_err,comb_ang_res[itilt][2]);
-            gre->SetName(histname.Data());
-            title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
-            gre->SetTitle(title.Data());
-            rootobjects.insert(pair<TString,TObject*>(histname,gre));
-            
-        }
-        
+        gre = new TGraphErrors(i_point[itilt], comb_ang_res[itilt][0], comb_ang_res[itilt][1],zero_err,comb_ang_res[itilt][2]);
+        gre->SetName(histname.Data());
+        title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
+        gre->SetTitle(title.Data());
+        rootobjects.insert(pair<TString,TObject*>(histname,gre));
         
     }
     
+    
+
 }
 
 
@@ -380,6 +388,9 @@ void readMeasRes(){
             ameas->set_ang_res(atof(s.c_str()));
             getline(fileinfo_file,s,';');
             ameas->set_ang_res_err(atof(s.c_str()));
+            
+            measurements[runnum] = ameas;
+
         }
     }
     
@@ -433,7 +444,8 @@ void readMeasEff(){
             ameas->set_eff_RefX(atof(s.c_str()));
             getline(fileinfo_file,s,';');
             ameas->set_eff_RefY(atof(s.c_str()));
-            
+            measurements[runnum] = ameas;
+
         }
     }
     
