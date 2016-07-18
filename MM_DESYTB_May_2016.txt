@@ -18,8 +18,6 @@ MMPedRunNum;MMDataRunNum;BeamEnergy;Distance1;Angle1;Distance2;Angle2;config;map
 117;118;4.4;;0;36.83536827;7;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 121;124;4.4;;0;42.16225041;8;desyTB.config;desyTB2.map;;
 126;127;4.4;;0;52.89809421;10;desyTB.config;desyTB2.map;;
-128;129;4.4;;0;80.38475773;15;desyTB.config;desyTB2.map;;
-130;131;4.4;;0;109.1910703;20;desyTB.config;desyTB2.map;200k;
 133;134;4.4;;0;0;0;desyTB.config;desyTB2.map;180k;
 135;137;4.4;;0;-26.24659906;-5;desyTB.config;desyTB2.map;;
 138;139;4.4;;0;-52.89809421;-10;desyTB.config;desyTB2.map;;
