@@ -41,9 +41,9 @@ map<int, Meas* > measurements;
 map<TString,TObject*> rootobjects;
 
 int main(int argc, char *argv[]){
-
+    
     readRunList(runlistfile);
-
+    
     // runHitMaker();
     runAlignment();
     runAnalyze();
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
     readMeasRes();
     
     TFile *fout = new TFile(output_root_filename.Data(),"RECREATE");
-
+    
     makePlots();
     
     createOutputFile(fout);
@@ -60,84 +60,170 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void createHistos(){
-    TString histname, title;
-    TGraphErrors* gr;
-    
-    vector<TString> eff_histlist = {"DownX", "DownY", "UpX", "UpY", "RefX", "RefY"};
-    vector<TString> res_histlist = {"UpX", "UpY", "DownX", "DownY", "Angular"};
-    
-    // eff histos
-    for (unsigned int k=0; k<eff_histlist.size(); k++) {
-        histname = eff_histoname + eff_histlist[k];
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Efficiency ") + eff_histlist[k] + TString(";Efficiency;Tilt angle (degrees)");
-            gr = new TGraphErrors(measurements.size());
-            gr->SetName(histname.Data());
-            gr->SetTitle(title.Data());
-            rootobjects.insert(pair<TString,TObject*>(histname,gr));
-        }
-    }
-    
-    // res histos
-    for (unsigned int k=0; k<res_histlist.size(); k++) {
-        histname = res_histoname + res_histlist[k];
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Resolution ") + res_histlist[k] + TString(";Resolution (mm);Tilt angle (degrees)");
-            gr = new TGraphErrors(measurements.size());
-            gr->SetName(histname.Data());
-            gr->SetTitle(title.Data());
-            rootobjects.insert(pair<TString,TObject*>(histname,gr));
-        }
-    }
-
-}
-
 void makePlots(){
     TString histname, title;
-    TGraphErrors* gr;
+    TGraph* gr;
+    TGraphErrors* gre;
     
-    createHistos();
-    cout << "Here "<<endl;
-    
-    int i_point = 0;
+    TString tiltname;
+    TString basehistname;
+    // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+    double comb_result[2][3][2][4][30]={0};
+    // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
+    double comb_ang_res[2][3][30]={0};
+    double zero_err[30]={0};
+
+    int i_point[2] = {0};
     for (map< int, Meas* >::iterator i_meas=measurements.begin(); i_meas != measurements.end(); i_meas++) {
         Meas* ameas = i_meas->second;
-
+        
+        if(ameas->get_Angle1() ==0 && ameas->get_Angle2()!=0)
+            tiltname = TString("tiltY");
+        else if (ameas->get_Angle1()!=0 && ameas->get_Angle2()==0)
+            tiltname = TString("tiltX");
+        else if (ameas->get_Angle1()!=0 && ameas->get_Angle2()!=0)
+            tiltname = TString("skip");
+        else if (ameas->get_Angle1() ==0 && ameas->get_Angle2()==0)
+            tiltname = TString("both");
+        
         ///////////// Efficiency
-        histname = eff_histoname + TString("DownX");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_DownX());
-        //gr->SetPointError(i_point ,0, 0);
-
-        histname = eff_histoname + TString("DownY");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_DownY());
-
-        histname = eff_histoname + TString("UpX");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_UpX());
-
-        histname = eff_histoname + TString("UpY");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_UpY());
-
-        histname = eff_histoname + TString("RefX");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_RefX());
-
-        histname = eff_histoname + TString("RefY");
-        gr = dynamic_cast<TGraphErrors*> (rootobjects[histname]);
-        gr->SetPoint(i_point, ameas->get_Angle1(), ameas->get_eff_RefY());
-
-        i_point++;
+        if(tiltname == TString("skip")) continue;
+        
+        if(tiltname == TString("both") || tiltname == TString("tiltY")){
+            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+            // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
+            
+            comb_result[1][0][0][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_DownX();
+            comb_result[1][0][0][2][i_point[1]]=ameas->get_res_DownX();
+            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_DownX_err();
+            
+            comb_result[1][0][1][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_DownY();
+            comb_result[1][0][1][2][i_point[1]]=ameas->get_res_DownY();
+            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_DownY_err();
+            
+            comb_result[1][1][0][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_UpX();
+            comb_result[1][1][0][2][i_point[1]]=ameas->get_res_UpX();
+            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_UpX_err();
+            
+            comb_result[1][1][1][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_UpY();
+            comb_result[1][1][1][2][i_point[1]]=ameas->get_res_UpY();
+            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_UpY_err();
+            
+            comb_result[1][2][0][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RefX();
+            
+            comb_result[1][2][1][0][i_point[1]]=ameas->get_Angle1();
+            comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RefY();
+            
+            comb_ang_res[1][0][i_point[1]]=ameas->get_Angle1();
+            comb_ang_res[1][1][i_point[1]]=ameas->get_ang_res();
+            comb_ang_res[1][2][i_point[1]]=ameas->get_ang_res_err();
+            i_point[1]++;
+            
+        }
+        if(tiltname == TString("both") || tiltname == TString("tiltX")){
+            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+            // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
+            
+            comb_result[0][0][0][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_DownX();
+            comb_result[0][0][0][2][i_point[0]]=ameas->get_res_DownX();
+            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_DownX_err();
+            
+            comb_result[0][0][1][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_DownY();
+            comb_result[0][0][1][2][i_point[0]]=ameas->get_res_DownY();
+            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_DownY_err();
+            
+            comb_result[0][1][0][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_UpX();
+            comb_result[0][1][0][2][i_point[0]]=ameas->get_res_UpX();
+            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_UpX_err();
+            
+            comb_result[0][1][1][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_UpY();
+            comb_result[0][1][1][2][i_point[0]]=ameas->get_res_UpY();
+            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_UpY_err();
+            
+            comb_result[0][2][0][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RefX();
+            
+            comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
+            comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RefY();
+            
+            comb_ang_res[0][0][i_point[0]]=ameas->get_Angle1();
+            comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
+            comb_ang_res[0][2][i_point[0]]=ameas->get_ang_res_err();
+            i_point[0]++;
+            
+        }
+        
+        // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
         
         
+        for (int itilt=0; itilt<2; itilt++) {
+            for (int idet=0; idet<3; idet++) {
+                for (int ixy=0; ixy<2; ixy++) {
+                    for (int imeastype=1; imeastype<3; imeastype++) {
+                        histname = TString("MEAS_tilt111_22233");
+                        
+                        if (itilt==0) histname.ReplaceAll("111", "X");
+                        else histname.ReplaceAll("111", "Y");
+                        
+                        if(idet==0) histname.ReplaceAll("222", "Down");
+                        else if(idet==1) histname.ReplaceAll("222", "Up");
+                        else histname.ReplaceAll("222", "Ref");
+                        
+                        if (ixy==0) histname.ReplaceAll("33", "X");
+                        else histname.ReplaceAll("33", "Y");
+                        
+                        if(imeastype==0) continue;
+                        else if(imeastype==1) histname.ReplaceAll("MEAS", eff_histoname);
+                        else if(imeastype==2) histname.ReplaceAll("MEAS", res_histoname);
+                        
+                        if (imeastype==1) {
+                            gr = new TGraph(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1]);
+                            gr->SetName(histname.Data());
+                            title= histname + TString(";Tilt angle (degrees);Efficiency");
+                            gr->SetTitle(title.Data());
+                            rootobjects.insert(pair<TString,TObject*>(histname,gr));
+                        } else if (imeastype==2){
+                            if (idet!=2){
+                                gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],zero_err,comb_result[itilt][idet][ixy][3]);
+                                gre->SetName(histname.Data());
+                                title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
+                                gre->SetTitle(title.Data());
+                                rootobjects.insert(pair<TString,TObject*>(histname,gre));
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+        
+        // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
+        
+        for (int itilt=0; itilt<2; itilt++) {
+            histname = TString("MEAS_tilt111_Down");
+            if (itilt==0) histname.ReplaceAll("111", "X");
+            else histname.ReplaceAll("111", "Y");
+            histname.ReplaceAll("MEAS", angres_histoname);
+            
+            gre = new TGraphErrors(i_point[itilt], comb_ang_res[itilt][0], comb_ang_res[itilt][1],zero_err,comb_ang_res[itilt][2]);
+            gre->SetName(histname.Data());
+            title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
+            gre->SetTitle(title.Data());
+            rootobjects.insert(pair<TString,TObject*>(histname,gre));
+            
+        }
         
         
     }
-
-    
     
 }
 
@@ -180,14 +266,20 @@ void runHitMaker(){
     }
 }
 void runAlignment(){
+    TString runthis;
+    for (unsigned int irun=0; irun<runlist.size(); irun++) {
+        runlist[irun].print();
+        runthis = TString("./alignment ") + TString::Itoa(runlist[irun].DataRun,10);
+        cout<<runthis<<endl;
+        system(runthis.Data());
+    }
     
-    system("./alignment 134");
 }
 
 void runAnalyze(){
     
     TString runthis;
-
+    
     runthis = TString("rm ")+ output_efficiency_txtfile + TString(" ")+ output_resolution_txtfile;
     system(runthis.Data());
     
@@ -211,12 +303,13 @@ void runAnalyze(){
     
     for (unsigned int irun=0; irun<runlist.size(); irun++) {
         runlist[irun].print();
-        runthis = TString("./analyze ") + TString::Itoa(runlist[irun].DataRun,10) + TString(" 134");
+        TString runnum_str = TString::Itoa(runlist[irun].DataRun,10);
+        runthis = TString("./analyze ") + runnum_str + TString(" ")+ runnum_str;
         cout<<runthis<<endl;
         system(runthis.Data());
     }
     
-
+    
 }
 
 
@@ -348,17 +441,17 @@ void readMeasEff(){
 
 void readRunList(TString filename){
     cout<< "Reading runlist "<<filename<<endl;
-
+    
     vector<RunInfo> fileinfo;
     ifstream fileinfo_file(filename.Data());
     string firstline;
     getline(fileinfo_file,firstline);
-
+    
     string s;
     while(!fileinfo_file.eof()){
         
         RunInfo info;
-
+        
         getline(fileinfo_file,s,';');
         info.PedRun = atoi(s.c_str());
         
@@ -368,23 +461,23 @@ void readRunList(TString filename){
         getline(fileinfo_file,s,';');
         if (s == string("")) info.BeamEnergy = NOTSET;
         else info.BeamEnergy = atof(s.c_str());
- 
+        
         getline(fileinfo_file,s,';');
         if (s == string("")) info.Distance1 = 0;
         else info.Distance1 = atof(s.c_str());
-
+        
         getline(fileinfo_file,s,';');
         if (s == string("")) info.Angle1 = 0;
         else info.Angle1 = atof(s.c_str());
-
+        
         getline(fileinfo_file,s,';');
         if (s == string("")) info.Distance2 = 0;
         else info.Distance2 = atof(s.c_str());
-
+        
         getline(fileinfo_file,s,';');
         if (s == string("")) info.Angle2 = 0;
         else info.Angle2 = atof(s.c_str());
-
+        
         getline(fileinfo_file,info.config,';');
         getline(fileinfo_file,info.map,';');
         getline(fileinfo_file,info.Comment,';');
@@ -398,12 +491,11 @@ void readRunList(TString filename){
             ameas->set_Angle1(info.Angle1);
             ameas->set_Angle2(info.Angle2);
             ameas->set_BeamEnergy(info.BeamEnergy);
-
-
+            
+            
             measurements.insert(make_pair(info.DataRun, ameas));
             //info.print();
         }
     }
     return;
 }
-

@@ -118,7 +118,6 @@ void runAnalyze();
 void readMeasEff();
 void readMeasRes();
 void makePlots();
-void createHistos();
 void createOutputFile(TFile *fout);
 
 #endif
