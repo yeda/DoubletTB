@@ -161,13 +161,14 @@ void calculateEfficiency(){
 
             y = layerZposition[ilayer];
             x = getExpectedHit(x1,y1,x2,y2,y);
-            
+             if(y==0)   cout<< "points ("<<x1<<","<<y1<<") ("<<x2<<","<<y2<<")  -> (" <<x<<","<<y<<")"<<endl;
+        
             unsigned int n_pairs = 0;
             // check if there is a hit there
             
             for (unsigned int jj=0; jj<layerhit.size(); jj++) {
                 double dpos = x - (hit_position->at(layerhit[jj])- alignmentpar[layerID->at(layerhit[jj])]);
-                
+              if(y==0)   cout<< "dpos "<< dpos<<endl;  
                 if ( fabs(dpos) < layerResolution[ilayer]){
                     n_pairs++;
                 }

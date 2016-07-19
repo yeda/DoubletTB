@@ -44,9 +44,10 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-    // runHitMaker();
-   // runAlignment();
-   // runAnalyze();
+//    runHitMaker();
+//    runAlignment();
+//	system("./alignment 134");
+//    runAnalyze();
     
     readMeasEff();
     readMeasRes();
@@ -287,7 +288,7 @@ void runAlignment(){
 void runAnalyze(){
     
     TString runthis;
-    
+   TString runnum_str; 
     runthis = TString("rm ")+ output_efficiency_txtfile + TString(" ")+ output_resolution_txtfile;
     system(runthis.Data());
     
@@ -311,8 +312,9 @@ void runAnalyze(){
     
     for (unsigned int irun=0; irun<runlist.size(); irun++) {
         runlist[irun].print();
-        TString runnum_str = TString::Itoa(runlist[irun].DataRun,10);
-        runthis = TString("./analyze ") + runnum_str + TString(" ")+ runnum_str;
+        runnum_str = TString::Itoa(runlist[irun].DataRun,10);
+        runthis = TString("./analyze ") + runnum_str + TString(" 134");
+        //runthis = TString("./analyze ") + runnum_str + TString(" ")+ runnum_str;
         cout<<runthis<<endl;
         system(runthis.Data());
     }
