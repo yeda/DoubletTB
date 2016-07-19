@@ -14,11 +14,13 @@
 #include <stdlib.h>
 
 #include "TString.h"
+#include "TColor.h"
 
 using namespace std;
 
 TString runlistfile = TString("./MM_DESYTB_May_2016.txt");
 
+Color_t color[9] = {kBlack, kRed, kBlue, kGreen+2, kMagenta+1, kOrange-3, kPink-9, kViolet+1, kCyan+2};
 
 
 void readRunList(TString filename);
@@ -118,6 +120,8 @@ void runAnalyze();
 void readMeasEff();
 void readMeasRes();
 void makePlots();
+void makeMultiGraps();
+
 void createOutputFile(TFile *fout);
 
 #endif
