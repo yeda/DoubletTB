@@ -15,6 +15,7 @@
 
 #include "TString.h"
 #include "TColor.h"
+#include "TCanvas.h"
 
 using namespace std;
 
@@ -123,5 +124,13 @@ void makePlots();
 void makeMultiGraps();
 
 void createOutputFile(TFile *fout);
+
+
+void formatCanvas1D(TCanvas *cc){
+    cc->SetRightMargin(0.125);
+    cc->SetLeftMargin(0.125);
+    cc->SetBottomMargin(0.13);
+    cc->SetTopMargin(0.07);
+}
 
 #endif
