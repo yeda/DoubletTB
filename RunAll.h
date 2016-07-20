@@ -16,6 +16,8 @@
 #include "TString.h"
 #include "TColor.h"
 #include "TCanvas.h"
+#include "TMultiGraph.h"
+#include "TAxis.h"
 
 using namespace std;
 
@@ -131,6 +133,19 @@ void formatCanvas1D(TCanvas *cc){
     cc->SetLeftMargin(0.125);
     cc->SetBottomMargin(0.13);
     cc->SetTopMargin(0.07);
+}
+
+
+void formatMultiGraph(TMultiGraph *gr){
+    gr->GetXaxis()->SetLabelSize(0.045);
+    gr->GetXaxis()->SetTitleSize(0.05);
+    gr->GetXaxis()->SetTitleOffset(1.2);
+    
+    gr->GetYaxis()->SetLabelSize(0.045);
+    gr->GetYaxis()->SetTitleSize(0.05);
+    gr->GetYaxis()->SetTitleOffset(1.2);
+    
+    //gr->SetTitle("");
 }
 
 #endif

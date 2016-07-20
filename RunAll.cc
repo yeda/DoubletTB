@@ -225,7 +225,8 @@ void makePlots(){
         title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
         gre->SetTitle(title.Data());
         gre->Sort();
-       rootobjects.insert(pair<TString,TObject*>(histname,gre));
+
+        rootobjects.insert(pair<TString,TObject*>(histname,gre));
         
     }
     
@@ -257,12 +258,12 @@ void makeMultiGraps(){
     for (int i=0; i<2; i++) {
         leg_eff[i] = new TLegend(0.35, 0.35, 0.65, 0.2);
         leg_eff[i]->SetFillColor(0);
-        leg_eff[i]->SetLineColor(0);
+        leg_eff[i]->SetLineColor(1);
         leg_eff[i]->SetNColumns(2);
         
         leg_res[i] = new TLegend(0.35, 0.9, 0.65, 0.8);
         leg_res[i]->SetFillColor(0);
-        leg_res[i]->SetLineColor(0);
+        leg_res[i]->SetLineColor(1);
         leg_res[i]->SetNColumns(2);
 
     }
@@ -274,7 +275,7 @@ void makeMultiGraps(){
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
         if ( histname.Index(eff_histoname) != -1) { // pick eff plots
             gr = (TGraph*) it->second;
-            gr->SetMarkerStyle(7);
+            gr->SetMarkerStyle(20);
             gr->SetLineWidth(2);
             gr->SetFillStyle(0);
 
@@ -283,7 +284,7 @@ void makeMultiGraps(){
                 gr->SetLineColor(color[icolor[0]]);
                 icolor[0]++;
                 mgr_eff[0]->Add(gr);
-                leg_eff[0]->AddEntry(gr, legname.Data(), "lep");
+                leg_eff[0]->AddEntry(gr, legname.Data(), "ep");
                 
                 
             }
@@ -292,14 +293,14 @@ void makeMultiGraps(){
                 gr->SetLineColor(color[icolor[1]]);
                 icolor[1]++;
                 mgr_eff[1]->Add(gr);
-                leg_eff[1]->AddEntry(gr, legname.Data(), "lep");
+                leg_eff[1]->AddEntry(gr, legname.Data(), "ep");
 
             }
  
         }
         else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ // res plots
             gre = (TGraphErrors*) it->second;
-            gre->SetMarkerStyle(7);
+            gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
 
@@ -308,20 +309,20 @@ void makeMultiGraps(){
                 gre->SetLineColor(color[icolor[2]]);
                 icolor[2]++;
                 mgr_res[0]->Add(gre);
-                leg_res[0]->AddEntry(gre, legname.Data(), "lep");
+                leg_res[0]->AddEntry(gre, legname.Data(), "ep");
             }
             else if (histname.Index("tiltY") != -1){
                 gre->SetMarkerColor(color[icolor[3]]);
                 gre->SetLineColor(color[icolor[3]]);
                 icolor[3]++;
                 mgr_res[1]->Add(gre);
-                leg_res[1]->AddEntry(gre, legname.Data(), "lep");
+                leg_res[1]->AddEntry(gre, legname.Data(), "ep");
               
             }
         }
         else if (histname.Index(angres_histoname) != -1){
             gre = (TGraphErrors*) it->second;
-            gre->SetMarkerStyle(7);
+            gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             gre->SetMarkerColor(color[icolor[4]]);
@@ -329,7 +330,7 @@ void makeMultiGraps(){
             icolor[4]++;
             mgr_angres->Add(gre);
             legname =histname(histname.Last('_')-5, 5);
-            leg_angres->AddEntry(gre, legname.Data(), "lep");
+            leg_angres->AddEntry(gre, legname.Data(), "ep");
         }
         
     }
@@ -342,15 +343,20 @@ void makeMultiGraps(){
         
         histname = mgr_eff[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
-        mgr_eff[i]->Draw("APL");
+        mgr_eff[i]->Draw("AP");
         leg_eff[i]->Draw();
+        formatMultiGraph(mgr_eff[i]);
         cc->SaveAs(pdfname.Data());
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
+        mgr_res[i]->SetMinimum(0.10);
+        mgr_res[i]->SetMaximum(0.25);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
-        mgr_res[i]->Draw("APL");
+        mgr_res[i]->Draw("AP");
         leg_res[i]->Draw();
+        mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
+        formatMultiGraph(mgr_res[i]);
         cc->SaveAs(pdfname.Data());
 
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_res[i]));
@@ -359,8 +365,10 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     pdfname = TString("./results/") + histname +TString(".pdf");
-    mgr_angres->Draw("APL");
+    mgr_angres->Draw("AP");
     leg_angres->Draw();
+    mgr_angres->GetXaxis()->SetRangeUser(-1,11);
+    formatMultiGraph(mgr_angres);
     cc->SaveAs(pdfname.Data());
 
     
