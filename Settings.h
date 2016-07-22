@@ -115,7 +115,6 @@ std::map<unsigned short,double> layerZposition={
     {4,0.0},{5,0.0}
 };
 
-
 std::map<unsigned short,double> layerResolution={
     {0,200.0},{1,200.0},
     {2,200.0},{3,200.0},
