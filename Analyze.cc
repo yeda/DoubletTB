@@ -27,6 +27,7 @@ TString input_tree_name = TString("hitsTree");
 
 TString hitpos_histname = TString("hitposition_");
 TString hitmap_histname = TString("hitmap_");
+TString exphitpos_histname = TString("exphitpos_");
 TString hitamp_histname = TString("hitamplitude_");
 TString corr_histname = TString("corr_");
 TString spatialRes_histname = TString("spatialRes_");
@@ -63,7 +64,6 @@ int main(int argc, char *argv[]){
     TString alignmenttxt = outputPath + TString("alignment_") + alignmentrun + TString(".txt");
     readAlignmentParameters(alignmenttxt, alignmentpar);
 
-    
     // create histograms
     createHistos();
 
@@ -76,7 +76,6 @@ int main(int argc, char *argv[]){
         
         calculateEfficiency();
         if(isGoodEvent()){
-
             fillHistos();
             
         }
@@ -88,7 +87,6 @@ int main(int argc, char *argv[]){
     
     return 0;
 }
-
 
 void findRefLayers(int layerid, int* arr){
     TString ilayerName = IDlayermap[layerid];
@@ -124,7 +122,8 @@ void calculateEfficiency(){
     vector<unsigned short> reflayershit[2];
     vector<unsigned short> layerhit;
     double  x1, x2, y1, y2, x, y;
-    
+   TH1D *h1D;
+ 
     for (unsigned short ilayer=0; ilayer<NLayer; ilayer++) {
         findRefLayers(ilayer,reflayers);
         //cout<<"Layer: "<< ilayer<<" Ref layers "<< reflayers[0]<< " "<<reflayers[1]<<endl;
@@ -171,12 +170,17 @@ void calculateEfficiency(){
                     n_pairs++;
                 }
             }
-            
+        
             expectedcount[ilayer]++;
-            if (n_pairs>0) layercount[ilayer]++;
+            	if (n_pairs>0) layercount[ilayer]++;
+		else {
+     		TString tempname = IDlayermap[ilayer];
+        	TString histname = exphitpos_histname + tempname;
+	        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+	        h1D->Fill(x);
+}
         }
-        
-        
+
     }
 }
 
@@ -437,7 +441,13 @@ void createHistos(){
             h1D = new TH1D(histname.Data(), title.Data(), 1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
-        
+ 	histname = exphitpos_histname + it->second;
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Expected HitPos ")+ it->second + TString(";Hit Position (mm);Number of entries");
+            h1D = new TH1D(histname.Data(), title.Data(), 10000,0, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+        }
+       
         // hit amplitude
         histname = hitamp_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
@@ -490,13 +500,13 @@ void createHistos(){
     
     TString s[3] = {"Down","Up","Ref"};
     for (unsigned int i=0; i<3; i++) {
-        // point resolution
         histname = hitmap_histname + s[i];
         if (rootobjects.find(histname) == rootobjects.end()) {
             title = TString("HitMap ")+ s[i]+TString(";X (mm);Y (mm)");
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
-        }
+        } 
+
     }
     
     

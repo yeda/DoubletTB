@@ -105,7 +105,7 @@ int main(int argc, char *argv[]){
     if (rawTree->GetEntries() != dataTree->GetEntries()) {
         cout << "raw and data trees don't have same number of events"<< endl;
     }
-    
+   int iplotgoodevent=0; 
     // store all clusters in an event to a vector
     unsigned int count=0;
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
@@ -240,6 +240,10 @@ int main(int argc, char *argv[]){
         if (isGoodEvent(clusters)) {
             count++;
             processEvent(clusters);
+		if(iplotgoodevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
+			plotEvent();
+			iplotgoodevent++;
+		}
         }
         
         
@@ -362,10 +366,10 @@ void plotEvent(){
         
         // time vs strip number
         histname = event_name + it->second + TString("_timeVSchannel");
-        title = histname+TString(";time(ns);strip number");
+        title = histname+TString(";strip number;time(ns)");
         
         if (rootobjects.find(histname) == rootobjects.end()) {
-            htimeVSchannel = new TH2D(histname.Data(), title.Data(), 27, 0, 675, 360, 0, 360);
+            htimeVSchannel = new TH2D(histname.Data(), title.Data(), 360, 0, 360, 27, 0, 675);
             rootobjects.insert(pair<TString,TObject*>(histname,htimeVSchannel));
         }
         
@@ -420,7 +424,7 @@ void plotEvent(){
             time_ns = itime*25;
             histname = event_name + layername + TString("_timeVSchannel");
             htimeVSchannel = dynamic_cast<TH2D*> (rootobjects[histname]);
-            htimeVSchannel->Fill(time_ns,mm_strip->at(istrip),timedist[itime]);
+            htimeVSchannel->Fill(mm_strip->at(istrip),time_ns,timedist[itime]);
         }
     }
     
