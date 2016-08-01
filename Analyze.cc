@@ -123,7 +123,7 @@ void calculateEfficiency(){
     vector<unsigned short> layerhit;
     double  x1, x2, y1, y2, x, y;
    TH1D *h1D;
- 
+cout<< "--------- event_num ---------"<<event_num<<endl;
     for (unsigned short ilayer=0; ilayer<NLayer; ilayer++) {
         findRefLayers(ilayer,reflayers);
         //cout<<"Layer: "<< ilayer<<" Ref layers "<< reflayers[0]<< " "<<reflayers[1]<<endl;
@@ -155,6 +155,7 @@ void calculateEfficiency(){
 
             x1 = hit_position->at(ihit1) - alignmentpar[layerID->at(ihit1)];
             x2 = hit_position->at(ihit2) - alignmentpar[layerID->at(ihit2)];
+
             y1 = layerZposition[layerID->at(ihit1)];
             y2 = layerZposition[layerID->at(ihit2)];
 
@@ -163,9 +164,12 @@ void calculateEfficiency(){
         
             unsigned int n_pairs = 0;
             // check if there is a hit there
-            
+vector<double> xfound;            
+vector<double> xexp;            
             for (unsigned int jj=0; jj<layerhit.size(); jj++) {
                 double dpos = x - (hit_position->at(layerhit[jj])- alignmentpar[layerID->at(layerhit[jj])]);
+		xfound.push_back(hit_position->at(layerhit[jj])- alignmentpar[layerID->at(layerhit[jj])]);
+		xexp.push_back(x);
                 if ( fabs(dpos) < layerResolution[ilayer]){
                     n_pairs++;
                 }
@@ -178,8 +182,12 @@ void calculateEfficiency(){
         	TString histname = exphitpos_histname + tempname;
 	        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
 	        h1D->Fill(x);
-}
-        }
+		cout<< "layer "<<IDlayermap[ilayer] << "  p1("<<x1<<","<<y1<<") p2("<<x2<<","<<y2<<")"<<endl;
+            		for (unsigned int jj=0; jj<layerhit.size(); jj++) {
+			cout<<"                 found "<<xfound[jj]<<"  exp "<<xexp[jj]<< "  z="<<y<<endl;
+			}
+		}
+       }
 
     }
 }
