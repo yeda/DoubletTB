@@ -27,6 +27,7 @@ TString input_tree_name = TString("hitsTree");
 
 TString hitpos_histname = TString("hitposition_");
 TString hitmap_histname = TString("hitmap_");
+TString exphitmap_histname = TString("exphitmap_");
 TString exphitpos_histname = TString("exphitpos_");
 TString hitamp_histname = TString("hitamplitude_");
 TString corr_histname = TString("corr_");
@@ -117,80 +118,106 @@ void findRefLayers(int layerid, int* arr){
 }
 
 
+
 void calculateEfficiency(){
-    int reflayers[2];
-    vector<unsigned short> reflayershit[2];
-    vector<unsigned short> layerhit;
-    double  x1, x2, y1, y2, x, y;
-   TH1D *h1D;
-cout<< "--------- event_num ---------"<<event_num<<endl;
-    for (unsigned short ilayer=0; ilayer<NLayer; ilayer++) {
-        findRefLayers(ilayer,reflayers);
-        //cout<<"Layer: "<< ilayer<<" Ref layers "<< reflayers[0]<< " "<<reflayers[1]<<endl;
+    int reflayersX[2];
+    int reflayersY[2];
+    
+    map< int, vector<float> > hit;
+    double  x1, x2,x3, y1, y2,y3, z1,z2,z3, x, y;
+    TH1D *h1D;
+    TH2D *h2D;
+    TString histname;
+    
+    double newpos;
+    for (int i=0; i<NLayer; i++) {
+        vector<float> bla;
+        bla.clear();
+        hit[i] = bla;
+    }
+    
+    for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
+        newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
+        hit[layerID->at(ihit)].push_back(newpos);
+    }
+    
+    
+    for (int i_layer=0; i_layer<3; i_layer++) {
+        //current xlayer = xlayers[i_layer]
+        //current ylayer = ylayers[i_layer]
+        findRefLayers(xlayers[i_layer],reflayersX);
+        findRefLayers(ylayers[i_layer],reflayersY);
         
-        // count number of hits in each referance layer
-        reflayershit[0].clear(); reflayershit[1].clear();
-        layerhit.clear();
-        for (unsigned short ihit=0; ihit<(layerID->size()); ihit++) {
-            if (layerID->at(ihit) == ilayer) {
-                layerhit.push_back(ihit);
-            }
-            else if (layerID->at(ihit) == reflayers[0]) {
-                reflayershit[0].push_back(ihit);
-            }
-            else if (layerID->at(ihit) == reflayers[1]) {
-                reflayershit[1].push_back(ihit);
-            }
-        } // end of loop over hits in each referance layer
+        bool reflayershave1hit=true;
+        for (int i_ref=0; i_ref<2; i_ref++) {
+            if ( hit[reflayersX[i_ref]].size() !=1 || hit[reflayersY[i_ref]].size() !=1 ) reflayershave1hit = false;
+        }
         
-        
-        if (reflayershit[0].size() == 1 && reflayershit[1].size() == 1) {
+        if (reflayershave1hit) {
+            expectedcount[ xlayers[i_layer] ]++;
+            expectedcount[ ylayers[i_layer] ]++;
+            
             // calculate expected hit position on the layer
             
-            // line eq -> ax+by+c=0
-            // (y1-y2) * x + (x2-x1) * y + (x1y2-x2y1) = 0
-            unsigned int ihit1, ihit2;
-            ihit1 = reflayershit[0].at(0);
-            ihit2 = reflayershit[1].at(0);
-
-            x1 = hit_position->at(ihit1) - alignmentpar[layerID->at(ihit1)];
-            x2 = hit_position->at(ihit2) - alignmentpar[layerID->at(ihit2)];
-
-            y1 = layerZposition[layerID->at(ihit1)];
-            y2 = layerZposition[layerID->at(ihit2)];
-
-            y = layerZposition[ilayer];
-            x = getExpectedHit(x1,y1,x2,y2,y);
-        
-            unsigned int n_pairs = 0;
-            // check if there is a hit there
-vector<double> xfound;            
-vector<double> xexp;            
-            for (unsigned int jj=0; jj<layerhit.size(); jj++) {
-                double dpos = x - (hit_position->at(layerhit[jj])- alignmentpar[layerID->at(layerhit[jj])]);
-		xfound.push_back(hit_position->at(layerhit[jj])- alignmentpar[layerID->at(layerhit[jj])]);
-		xexp.push_back(x);
-                if ( fabs(dpos) < layerResolution[ilayer]){
-                    n_pairs++;
+            x1 = hit[ reflayersX[0] ][0];
+            y1 = hit[ reflayersY[0] ][0];
+            z1 = layerZposition[ reflayersX[0] ];
+            
+            x2 = hit[ reflayersX[1] ][0];
+            y2 = hit[ reflayersY[1] ][0];
+            z2 = layerZposition[ reflayersX[1] ];
+            
+            vector<float> xhits = hit[ xlayers[i_layer] ];
+            vector<float> yhits = hit[ ylayers[i_layer] ];
+            z3 = zpos[i_layer];
+            unsigned int n_pairs_x = 0;
+            unsigned int n_pairs_y = 0;
+            
+            // X layer
+            for (int i_hit_x=0; i_hit_x<xhits.size(); i_hit_x++) {
+                x3 = xhits[i_hit_x];
+                x = getExpectedHit(x1,z1,x2,z2,z3);
+                if ( fabs(x-x3)<layerResolution[ xlayers[i_layer] ] ) {
+                    n_pairs_x++;
                 }
             }
-        
-            expectedcount[ilayer]++;
-            	if (n_pairs>0) layercount[ilayer]++;
-		else {
-     		TString tempname = IDlayermap[ilayer];
-        	TString histname = exphitpos_histname + tempname;
-	        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-	        h1D->Fill(x);
-		cout<< "layer "<<IDlayermap[ilayer] << "  p1("<<x1<<","<<y1<<") p2("<<x2<<","<<y2<<")"<<endl;
-            		for (unsigned int jj=0; jj<layerhit.size(); jj++) {
-			cout<<"                 found "<<xfound[jj]<<"  exp "<<xexp[jj]<< "  z="<<y<<endl;
-			}
-		}
-       }
-
+            if (n_pairs_x>0) layercount[ xlayers[i_layer] ]++;
+            else{
+                x = getExpectedHit(x1,z1,x2,z2,z3);
+                y = getExpectedHit(y1,z1,y2,z2,z3);
+                histname = exphitmap_histname + IDlayermap[xlayers[i_layer]];
+                h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
+                h2D->Fill(x,y);
+                
+            }
+            
+            // Y layer
+            for (int i_hit_y=0; i_hit_y<yhits.size(); i_hit_y++) {
+                y3 = yhits[i_hit_y];
+                y = getExpectedHit(y1,z1,y2,z2,z3);
+                if ( fabs(y-y3)<layerResolution[ ylayers[i_layer] ] ) {
+                    n_pairs_y++;
+                }
+            }
+            if (n_pairs_y>0) layercount[ ylayers[i_layer] ]++;
+            else{
+                x = getExpectedHit(x1,z1,x2,z2,z3);
+                y = getExpectedHit(y1,z1,y2,z2,z3);
+                histname = exphitmap_histname + IDlayermap[ylayers[i_layer]];
+                h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
+                h2D->Fill(x,y);
+                
+            }
+            
+        }
     }
 }
+
+
+
+
+
+
 
 double getExpectedHit(double x1, double y1, double x2, double y2, double at_y){
     double eq_a, eq_b, eq_c, x;
@@ -463,6 +490,15 @@ void createHistos(){
             h1D = new TH1D(histname.Data(), title.Data(), 1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
+        
+        
+        histname = exphitmap_histname + it->second;
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("expHitMap ")+ it->second + TString(";X (mm);Y (mm)");
+            h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h2D));
+        }
+
     }
     
     for (unsigned int i=1; i<3; i++) {
@@ -514,6 +550,7 @@ void createHistos(){
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         } 
+
 
     }
     
