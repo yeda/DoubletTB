@@ -171,11 +171,9 @@ int main(int argc, char *argv[]){
                         prev_chan = i_chan->first;
                         
                     } else {
-                        TString layerxy = i_layer->first;
-                        layerxy =layerxy(layerxy.Length() -1, layerxy.Length());
-
+ 
                         // process and save the cluster
-                        if ( ( layerxy == TString("X") && clusize >2 ) || ( layerxy == TString("Y") && clusize >9 ) ){
+                        if (  clusize >2 ){
                             
                             Cluster acluster;
                             if (layerIDmap[i_layer->first]==2) {
