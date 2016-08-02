@@ -79,8 +79,9 @@ void makePlots(){
     double comb_result[2][3][2][4][30]={0};
     // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
     double comb_ang_res[2][3][30]={0};
-    double zero_err[30]={0};
-
+    double angle_err[30]={0};
+    fill(angle_err, angle_err+30, 0.5);
+    
     int i_point[2] = {0};
     for (map< int, Meas* >::iterator i_meas=measurements.begin(); i_meas != measurements.end(); i_meas++) {
         runnum = i_meas->first;
@@ -196,7 +197,7 @@ void makePlots(){
                         rootobjects.insert(pair<TString,TObject*>(histname,gr));
                     } else if (imeastype==2){
                         if (idet!=2){
-                            gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],zero_err,comb_result[itilt][idet][ixy][3]);
+                            gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],angle_err,comb_result[itilt][idet][ixy][3]);
                             gre->SetName(histname.Data());
                             gre->SetMarkerStyle(20);
                             
@@ -220,7 +221,7 @@ void makePlots(){
         else histname.ReplaceAll("111", "Y");
         histname.ReplaceAll("MEAS", angres_histoname);
         
-        gre = new TGraphErrors(i_point[itilt], comb_ang_res[itilt][0], comb_ang_res[itilt][1],zero_err,comb_ang_res[itilt][2]);
+        gre = new TGraphErrors(i_point[itilt], comb_ang_res[itilt][0], comb_ang_res[itilt][1],angle_err,comb_ang_res[itilt][2]);
         gre->SetName(histname.Data());
         title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
         gre->SetTitle(title.Data());
