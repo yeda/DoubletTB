@@ -45,24 +45,24 @@ struct Meas {
     
     double ang_res;
     double ang_res_err;
-
+    
     Meas(){};
     ~Meas(){};
-
+    
     void set_eff_DownX(double avalue) {eff_Down[0] = avalue;}
     void set_eff_DownY(double avalue) {eff_Down[1] = avalue;}
     void set_eff_UpX(double avalue) {eff_Up[0] = avalue;}
     void set_eff_UpY(double avalue) {eff_Up[1] = avalue;}
     void set_eff_RefX(double avalue) {eff_Ref[0] = avalue;}
     void set_eff_RefY(double avalue) {eff_Ref[1] = avalue;}
-
+    
     double get_eff_DownX() {return eff_Down[0];}
     double get_eff_DownY() {return eff_Down[1];}
     double get_eff_UpX() {return eff_Up[0];}
     double get_eff_UpY() {return eff_Up[1];}
     double get_eff_RefX() {return eff_Ref[0];}
     double get_eff_RefY() {return eff_Ref[1];}
-
+    
     void set_res_DownX(double avalue) {res_Down[0] = avalue;}
     void set_res_DownY(double avalue) {res_Down[1] = avalue;}
     void set_res_DownX_err(double avalue) {res_Down_err[0] = avalue;}
@@ -73,7 +73,7 @@ struct Meas {
     void set_res_UpY_err(double avalue) {res_Up_err[1] = avalue;}
     void set_ang_res(double avalue) {ang_res = avalue;}
     void set_ang_res_err(double avalue) {ang_res_err = avalue;}
-
+    
     double get_res_DownX() {return res_Down[0];}
     double get_res_DownY() {return res_Down[1];}
     double get_res_DownX_err() {return res_Down_err[0];}
@@ -84,7 +84,7 @@ struct Meas {
     double get_res_UpY_err() {return res_Up_err[1];}
     double get_ang_res() {return ang_res;}
     double get_ang_res_err() {return ang_res_err;}
-
+    
     void set_RunNum (int avalue) { RunNum = avalue;}
     void set_Angle1(double avalue) {Angle1 = avalue;}
     void set_Angle2(double avalue) {Angle2 = avalue;}
@@ -94,8 +94,8 @@ struct Meas {
     double get_Angle1() {return Angle1;}
     double get_Angle2() {return Angle2;}
     double get_BeamEnergy() {return BeamEnergy;}
-
-
+    
+    
 };
 
 struct RunInfo{
@@ -109,7 +109,7 @@ struct RunInfo{
     string config;
     string map;
     string Comment;
-
+    
     void print(){
         cout<<"DataRun "<< DataRun <<" PedRun "<<PedRun<<" Angle1 "<<Angle1<< " Angle2 "<<Angle2<<" config "<<config<< " BeamEnergy "<< BeamEnergy <<endl;
     }

@@ -48,9 +48,9 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-//    runHitMaker();
-//    runAlignment();
-//system("./alignment 134");
+    //    runHitMaker();
+    //    runAlignment();
+    //system("./alignment 134");
     runAnalyze();
     
     readMeasEff();
@@ -81,12 +81,12 @@ void makePlots(){
     double angle_err[30];
     fill(angle_err, angle_err+30, 0.5);
     double zero_err[30]={0};
-
+    
     int i_point[2] = {0};
     for (map< int, Meas* >::iterator i_meas=measurements.begin(); i_meas != measurements.end(); i_meas++) {
         runnum = i_meas->first;
         Meas* ameas = i_meas->second;
-
+        
         if (is_tiltX.find(runnum) == is_tiltX.end()) continue;
         
         if(is_tiltX[runnum]){
@@ -118,7 +118,7 @@ void makePlots(){
             
             comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RefY();
-         
+            
             comb_ang_res[0][0][i_point[0]]=ameas->get_Angle2();
             comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
             comb_ang_res[0][2][i_point[0]]=ameas->get_ang_res_err();
@@ -226,13 +226,13 @@ void makePlots(){
         title= histname + TString(";Tilt angle (degrees);Angular Resolution (degrees)");
         gre->SetTitle(title.Data());
         gre->Sort();
-
+        
         rootobjects.insert(pair<TString,TObject*>(histname,gre));
         
     }
     
     
-
+    
 }
 
 
@@ -244,11 +244,11 @@ void makeMultiGraps(){
     TMultiGraph *mgr_eff[2];
     mgr_eff[0]= new TMultiGraph("mgr_eff_tiltX","Tilt around X; Tilt angle (degrees); Efficiency");
     mgr_eff[1]= new TMultiGraph("mgr_eff_tiltY","Tilt around Y; Tilt angle (degrees); Efficiency");
-
+    
     TMultiGraph *mgr_res[2];
     mgr_res[0]= new TMultiGraph("mgr_res_tiltX","Tilt around X; Tilt angle (degrees); Spatial Resolution (mm)");
     mgr_res[1]= new TMultiGraph("mgr_res_tiltY","Tilt around Y; Tilt angle (degrees); Spatial Resolution (mm)");
-
+    
     TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","Down Layer; Tilt angle (degrees); Angular Resolution (degrees)");
     TString histname;
     
@@ -265,7 +265,7 @@ void makeMultiGraps(){
         leg_res[i]->SetFillColor(0);
         leg_res[i]->SetLineColor(1);
         leg_res[i]->SetNColumns(2);
-
+        
     }
     TString legname;
     int icolor[5]={0};
@@ -278,7 +278,7 @@ void makeMultiGraps(){
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
-
+            
             if (histname.Index("tiltX") != -1) {
                 gre->SetMarkerColor(color[icolor[0]]);
                 gre->SetLineColor(color[icolor[0]]);
@@ -294,16 +294,16 @@ void makeMultiGraps(){
                 icolor[1]++;
                 mgr_eff[1]->Add(gre);
                 leg_eff[1]->AddEntry(gre, legname.Data(), "ep");
-
+                
             }
- 
+            
         }
         else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ // res plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
-
+            
             if (histname.Index("tiltX") != -1) {
                 gre->SetMarkerColor(color[icolor[2]]);
                 gre->SetLineColor(color[icolor[2]]);
@@ -317,7 +317,7 @@ void makeMultiGraps(){
                 icolor[3]++;
                 mgr_res[1]->Add(gre);
                 leg_res[1]->AddEntry(gre, legname.Data(), "ep");
-              
+                
             }
         }
         else if (histname.Index(angres_histoname) != -1){
@@ -358,9 +358,9 @@ void makeMultiGraps(){
         mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
         formatMultiGraph(mgr_res[i]);
         cc->SaveAs(pdfname.Data());
-
+        
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_res[i]));
-
+        
     }
     
     histname = mgr_angres->GetName();
@@ -370,7 +370,7 @@ void makeMultiGraps(){
     mgr_angres->GetXaxis()->SetRangeUser(-1,11);
     formatMultiGraph(mgr_angres);
     cc->SaveAs(pdfname.Data());
-
+    
     
 }
 
@@ -425,7 +425,7 @@ void runAlignment(){
 void runAnalyze(){
     
     TString runthis;
-   TString runnum_str; 
+    TString runnum_str;
     runthis = TString("rm ")+ output_efficiency_txtfile + TString(" ")+ output_resolution_txtfile;
     system(runthis.Data());
     
@@ -529,7 +529,7 @@ void readMeasRes(){
             ameas->set_ang_res_err(atof(s.c_str()));
             
             measurements[runnum] = ameas;
-
+            
         }
     }
     
@@ -584,7 +584,7 @@ void readMeasEff(){
             getline(fileinfo_file,s,';');
             ameas->set_eff_RefY(atof(s.c_str()));
             measurements[runnum] = ameas;
-
+            
         }
     }
     

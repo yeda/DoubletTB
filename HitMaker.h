@@ -30,7 +30,7 @@ struct Cluster {
     unsigned short _cluster_size;
     float _hit_amplitude;
     float _hit_position;
-
+    
 };
 
 
@@ -68,7 +68,7 @@ bool isGoodEvent(vector<Cluster> clus);
  vector<short>           *apv_qmax;
  vector<short>           *apv_tbqmax;
  
-*/
+ */
 
 
 

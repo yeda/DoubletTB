@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
     else {
         cout<<"APV ID Map cannot be found!!!"<<endl;
     }
-
+    
     
     
     TString fin_name = inputPath + TString("run")+ runnum + TString(".root");
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]){
     if (rawTree->GetEntries() != dataTree->GetEntries()) {
         cout << "raw and data trees don't have same number of events"<< endl;
     }
-   int iplotgoodevent=0; 
+    int iplotgoodevent=0;
     // store all clusters in an event to a vector
     unsigned int count=0;
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
@@ -171,7 +171,7 @@ int main(int argc, char *argv[]){
                         prev_chan = i_chan->first;
                         
                     } else {
- 
+                        
                         // process and save the cluster
                         if (  clusize >2 ){
                             
@@ -245,10 +245,10 @@ int main(int argc, char *argv[]){
         if (isGoodEvent(clusters)) {
             count++;
             processEvent(clusters);
-		if(iplotgoodevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
-			plotEvent();
-			iplotgoodevent++;
-		}
+            if(iplotgoodevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
+                plotEvent();
+                iplotgoodevent++;
+            }
         }
         
         

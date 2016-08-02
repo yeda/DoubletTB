@@ -51,22 +51,22 @@ vector<float> *hit_position;
 int main(int argc, char *argv[]){
     
     TString runnum = TString(argv[1]);
-     
+    
     TString fin_name = outputPath + TString("hitmaker_") + runnum + TString(".root");
     
     TFile * fin = TFile::Open(fin_name.Data());
     TTree* input_tree = (TTree*)fin->Get(input_tree_name.Data());
     setBranches(input_tree);
- 
+    
     output_alignmenttxt = outputPath + output_alignmenttxt + runnum + TString(".txt");
-   
+    
     output_alignmentroot = outputPath + output_alignmentroot + runnum + TString(".root");
     TFile *fout = new TFile(output_alignmentroot.Data(),"RECREATE");
     
     
     // create histograms
     createHistos();
- 
+    
     
     Long64_t nentries = input_tree->GetEntries();
     
@@ -78,15 +78,15 @@ int main(int argc, char *argv[]){
             fillHistos();
         }
     }
-
-
+    
+    
     alignLayers();
     
     if (PlotHistosAfterAlignment) {
         
         double alignmentpar[NLayer];
         readAlignmentParameters(alignmentpar);
-    
+        
         for (Long64_t ientry=0; ientry<nentries;ientry++) {
             
             input_tree->GetEntry(ientry);
@@ -208,7 +208,7 @@ void fillHistosAfterAlignment(double alignmentpar[]){
     
     double px[3];
     double py[3];
- 
+    
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         
         layername = IDlayermap[layerID->at(ihit)];
@@ -225,7 +225,7 @@ void fillHistosAfterAlignment(double alignmentpar[]){
             else if (layerID->at(ihit) == ylayers[i])
                 py[i] = newpos;
         }
-
+        
     }
     
     for (unsigned int i=1; i<3; i++) {
@@ -246,7 +246,7 @@ void fillHistosAfterAlignment(double alignmentpar[]){
         histname = aligned_dy_histname + IDlayermap[ylayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(py[i]-py[0]);
-
+        
     }
     
 }
@@ -274,7 +274,7 @@ void fillHistos(){
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(hit_amplitude->at(ihit));
         
-      for (unsigned int i=0; i<3; i++) {
+        for (unsigned int i=0; i<3; i++) {
             if (layerID->at(ihit) == xlayers[i]) {
                 px[i] = hit_position->at(ihit);
             }
@@ -296,10 +296,10 @@ void fillHistos(){
         h1D->Fill(py[i]-py[0]);
         
     }
-
     
     
-  
+    
+    
 }
 
 
@@ -326,9 +326,9 @@ void createHistos(){
     TH1D* h;
     TH1D* h1D;
     TH2D* h2D;
-
+    
     for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
- 
+        
         
         histname = hitpos_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
@@ -342,7 +342,7 @@ void createHistos(){
             h = new TH1D(histname.Data(), title.Data(), 1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h));
         }
-
+        
         if (PlotHistosAfterAlignment) {
             histname = aligned_hitpos_histname + it->second;
             if (rootobjects.find(histname) == rootobjects.end()) {
@@ -350,7 +350,7 @@ void createHistos(){
                 h = new TH1D(histname.Data(), title.Data(), 1000,0, 100);
                 rootobjects.insert(pair<TString,TObject*>(histname,h));
             }
-
+            
         }
         
     }
@@ -396,11 +396,11 @@ void createHistos(){
                 h1D = new TH1D(histname.Data(), title.Data(), 100,-20, 20);
                 rootobjects.insert(pair<TString,TObject*>(histname,h1D));
             }
-
+            
         }
         
     }
-
+    
     
     
 }

@@ -49,14 +49,14 @@ unsigned int layercount[NLayer]={0};
 unsigned int expectedcount[NLayer]={0};
 
 int main(int argc, char *argv[]){
-
+    
     // get tree from input file
     TString runnum = TString(argv[1]);
     TString fin_name = outputPath + TString("hitmaker_") + runnum + TString(".root");
     TFile * fin = TFile::Open(fin_name.Data());
     TTree* input_tree = (TTree*)fin->Get(input_tree_name.Data());
     setBranches(input_tree);
-
+    
     TString fout_name = outputPath + TString("analyze_") + runnum + TString(".root");
     TFile *fout = new TFile(fout_name.Data(),"RECREATE");
     
@@ -64,13 +64,13 @@ int main(int argc, char *argv[]){
     TString alignmentrun = TString(argv[2]);
     TString alignmenttxt = outputPath + TString("alignment_") + alignmentrun + TString(".txt");
     readAlignmentParameters(alignmenttxt, alignmentpar);
-
+    
     // create histograms
     createHistos();
-
+    
     // run through events
     Long64_t nentries = input_tree->GetEntries();
-
+    
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
         
         input_tree->GetEntry(ientry);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
             
         }
     }
- 
+    
     printResolution(runnum);
     printEfficiency(runnum);
     createOutputFile(fout);
@@ -240,7 +240,7 @@ void fillHistos(){
     TString histname,layername;
     TH1D *h1D;
     TH2D* h2D;
-
+    
     double newpos;
     // [pointnumber][x,y,z]
     double p[3][3];
@@ -253,11 +253,11 @@ void fillHistos(){
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
         h1D->Fill(newpos);
-
+        
         histname = hitamp_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(hit_amplitude->at(ihit));
-
+        
         for (unsigned int i=0; i<3; i++) {
             if (layerID->at(ihit) == xlayers[i]) {
                 p[i][0] = newpos;
@@ -266,7 +266,7 @@ void fillHistos(){
             else if (layerID->at(ihit) == ylayers[i])
                 p[i][1] = newpos;
         }
-
+        
     }
     
     for (unsigned int i=1; i<3; i++) {
@@ -274,20 +274,20 @@ void fillHistos(){
         histname = corr_histname + IDlayermap[xlayers[i]];
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
         h2D->Fill(p[0][0], p[i][0]);
-
+        
         histname = corr_histname + IDlayermap[ylayers[i]];
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
         h2D->Fill(p[0][1], p[i][1]);
-
+        
         // spatial resolution
         histname = spatialRes_histname + IDlayermap[xlayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(p[0][0] - p[i][0]);
-
+        
         histname = spatialRes_histname + IDlayermap[ylayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(p[0][1] - p[i][1]);
-
+        
     }
     
     for (unsigned int i=0; i<3; i++) {
@@ -297,7 +297,7 @@ void fillHistos(){
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
         h2D->Fill(p[i][0], p[i][1]);
     }
-
+    
     // Angular resolution
     
     // match pointnumber with layers
@@ -313,7 +313,7 @@ void fillHistos(){
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     // angle between down_meas - up_meas - down_exp
     h1D->Fill(getAngleABC(p[2],p[1],p_exp));
-
+    
     
 }
 
@@ -428,7 +428,7 @@ void printResolution(TString runnum){
     
     outfile.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     outfile << runnum << ";";
-
+    
     for (unsigned int i=1; i<3; i++) {
         // point resolution
         for (unsigned int j=0; j<2; j++) {
@@ -439,19 +439,19 @@ void printResolution(TString runnum){
             h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
             mean = h1D->GetMean();
             rms = h1D->GetRMS();
-
+            
             max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
-
+            
             fitname = TString("fitgaus_") + histname;
             fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
             h1D->Fit(fitfunc1,"QR");
             
             fitname = TString("fitgauspol_") + histname;
             fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
-		fitfunc2->SetLineColor(kGreen);
-	fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
-
-           h1D->Fit(fitfunc2,"+QR");
+            fitfunc2->SetLineColor(kGreen);
+            fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
+            
+            h1D->Fit(fitfunc2,"+QR");
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
             double stat_err =fitfunc2->GetParError(2) / sqrt(2);
             double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
@@ -464,8 +464,8 @@ void printResolution(TString runnum){
     
     histname = angularRes_histname + TString("Down");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-            mean = h1D->GetMean();
-            rms = h1D->GetRMS();
+    mean = h1D->GetMean();
+    rms = h1D->GetRMS();
     max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
     
     fitname = TString("fitgaus_") + histname;
@@ -473,21 +473,21 @@ void printResolution(TString runnum){
     h1D->Fit(fitfunc1,"QR");
     
     fitname = TString("fitgauspol_") + histname;
-            fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
-		fitfunc2->SetLineColor(kGreen);
-	fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
+    fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
+    fitfunc2->SetLineColor(kGreen);
+    fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
     h1D->Fit(fitfunc2,"+QR");
     
     double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
     double stat_err =fitfunc2->GetParError(2) / sqrt(2);
     double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
     double ang_res_err = stat_err+sys_err;
-
     
-     cout<< "angular resolution of Down is "<< ang_res <<" +/- "<< ang_res_err<<" degrees      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" <<endl;
+    
+    cout<< "angular resolution of Down is "<< ang_res <<" +/- "<< ang_res_err<<" degrees      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" <<endl;
     outfile<<ang_res<<";"<<ang_res_err<<";"<<endl;
     outfile.close();
-
+    
 }
 
 void createHistos(){
@@ -504,13 +504,13 @@ void createHistos(){
             h1D = new TH1D(histname.Data(), title.Data(), 1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
- 	histname = exphitpos_histname + it->second;
+        histname = exphitpos_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
             title = TString("Expected HitPos ")+ it->second + TString(";Hit Position (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 10000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
-       
+        
         // hit amplitude
         histname = hitamp_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
@@ -526,7 +526,7 @@ void createHistos(){
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
-
+        
     }
     
     for (unsigned int i=1; i<3; i++) {
@@ -577,9 +577,9 @@ void createHistos(){
             title = TString("HitMap ")+ s[i]+TString(";X (mm);Y (mm)");
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
-        } 
-
-
+        }
+        
+        
     }
     
     
