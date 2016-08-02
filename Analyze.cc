@@ -441,10 +441,6 @@ void printResolution(TString runnum){
             rms = h1D->GetRMS();
 
             max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
-/*
-            fitname = TString("fit_") + histname;
-            fitfunc = new TF1(fitname.Data(),"gaus", max_inxaxis-0.5,max_inxaxis+0.5);
- */
 
             fitname = TString("fitgaus_") + histname;
             fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
@@ -471,11 +467,6 @@ void printResolution(TString runnum){
             mean = h1D->GetMean();
             rms = h1D->GetRMS();
     max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
-    /*
-    fitname = TString("fit_") + histname;
-    fitfunc = new TF1(fitname.Data(),"gaus", max_inxaxis-0.2,max_inxaxis+0.2);
-     */
-    
     
     fitname = TString("fitgaus_") + histname;
     fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
