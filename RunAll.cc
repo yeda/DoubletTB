@@ -69,7 +69,6 @@ int main(int argc, char *argv[]){
 
 void makePlots(){
     TString histname, title;
-    TGraph* gr;
     TGraphErrors* gre;
     int runnum;
     
@@ -195,7 +194,7 @@ void makePlots(){
                         gre->SetTitle(title.Data());
                         gre->SetMarkerStyle(20);
                         gre->Sort();
-                        rootobjects.insert(pair<TString,TObject*>(histname,gr));
+                        rootobjects.insert(pair<TString,TObject*>(histname,gre));
                     } else if (imeastype==2){
                         if (idet!=2){
                             gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],angle_err,comb_result[itilt][idet][ixy][3]);
@@ -240,7 +239,6 @@ void makePlots(){
 
 
 void makeMultiGraps(){
-    TGraph *gr;
     TGraphErrors *gre;
     
     TMultiGraph *mgr_eff[2];
@@ -276,26 +274,26 @@ void makeMultiGraps(){
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
         if ( histname.Index(eff_histoname) != -1) { // pick eff plots
-            gr = (TGraph*) it->second;
-            gr->SetMarkerStyle(20);
-            gr->SetLineWidth(2);
-            gr->SetFillStyle(0);
+            gre = (TGraphErrors*) it->second;
+            gre->SetMarkerStyle(20);
+            gre->SetLineWidth(2);
+            gre->SetFillStyle(0);
 
             if (histname.Index("tiltX") != -1) {
-                gr->SetMarkerColor(color[icolor[0]]);
-                gr->SetLineColor(color[icolor[0]]);
+                gre->SetMarkerColor(color[icolor[0]]);
+                gre->SetLineColor(color[icolor[0]]);
                 icolor[0]++;
-                mgr_eff[0]->Add(gr);
-                leg_eff[0]->AddEntry(gr, legname.Data(), "ep");
+                mgr_eff[0]->Add(gre);
+                leg_eff[0]->AddEntry(gre, legname.Data(), "ep");
                 
                 
             }
             else if (histname.Index("tiltY") != -1){
-                gr->SetMarkerColor(color[icolor[1]]);
-                gr->SetLineColor(color[icolor[1]]);
+                gre->SetMarkerColor(color[icolor[1]]);
+                gre->SetLineColor(color[icolor[1]]);
                 icolor[1]++;
-                mgr_eff[1]->Add(gr);
-                leg_eff[1]->AddEntry(gr, legname.Data(), "ep");
+                mgr_eff[1]->Add(gre);
+                leg_eff[1]->AddEntry(gre, legname.Data(), "ep");
 
             }
  

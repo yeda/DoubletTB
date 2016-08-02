@@ -451,9 +451,11 @@ void printResolution(TString runnum){
             h1D->Fit(fitfunc1,"QR");
             
             fitname = TString("fitgauspol_") + histname;
-            fitfunc2 = new TF1(fitname.Data(),"gaus+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
-            h1D->Fit(fitfunc2,"QR");
+            fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
+		fitfunc2->SetLineColor(kGreen);
+	fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
 
+           h1D->Fit(fitfunc2,"+QR");
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
             double spat_res_err =fitfunc2->GetParError(2) / sqrt(2);
             double sys_err = fabs(spat_res_err - fitfunc1->GetParError(2) / sqrt(2));
@@ -466,6 +468,8 @@ void printResolution(TString runnum){
     
     histname = angularRes_histname + TString("Down");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+            mean = h1D->GetMean();
+            rms = h1D->GetRMS();
     max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
     /*
     fitname = TString("fit_") + histname;
@@ -478,8 +482,10 @@ void printResolution(TString runnum){
     h1D->Fit(fitfunc1,"QR");
     
     fitname = TString("fitgauspol_") + histname;
-    fitfunc2 = new TF1(fitname.Data(),"gaus+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
-    h1D->Fit(fitfunc2,"QR");
+            fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
+		fitfunc2->SetLineColor(kGreen);
+	fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
+    h1D->Fit(fitfunc2,"+QR");
     
     double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
     double ang_res_err =fitfunc2->GetParError(2) / sqrt(2);
