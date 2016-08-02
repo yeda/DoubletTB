@@ -45,8 +45,8 @@ vector<float> *hit_position;
 double alignmentpar[NLayer];
 
 // for efficieancy calculation
-unsigned int layercount[NLayer];
-unsigned int expectedcount[NLayer];
+unsigned int layercount[NLayer]={0};
+unsigned int expectedcount[NLayer]={0};
 
 int main(int argc, char *argv[]){
 
@@ -566,7 +566,7 @@ void createHistos(){
     histname = angularRes_histname + TString("Down");
     if (rootobjects.find(histname) == rootobjects.end()) {
         title = TString("Angular Resolution (Down); Angle difference (degrees);Number of entries");
-        h1D = new TH1D(histname.Data(), title.Data(), 1000,-10, 10);
+        h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
         rootobjects.insert(pair<TString,TObject*>(histname,h1D));
     }
     
