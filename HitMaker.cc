@@ -48,6 +48,7 @@ TString output_tree_name = TString("hitsTree");
 TString NclusterPerEvent = TString("nClusterPerEvent_");
 TString NhitPerEvent = TString("nHitPerEvent_");
 TString hitamp_histname = TString("hitamplitude_");
+TString clusize_histname = TString("clustersize_");
 
 std::map<int,TString> apvIDmap;
 
@@ -194,6 +195,10 @@ int main(int argc, char *argv[]){
                             histname = hitamp_histname + i_layer->first;
                             h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
                             h1D->Fill(acluster._hit_amplitude);
+                            
+                            histname = clusize_histname + i_layer->first;
+                            h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+                            h1D->Fill(clusize);
                             
                             tcluster_size.push_back(clusize) ;
                             thit_amplitude.push_back(tot_sig);
@@ -343,6 +348,12 @@ void createOtherHistos(){
             rootobjects.insert(pair<TString,TObject*>(histname,h));
         }
         
+        histname = clusize_histname + i_layer->first;
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Cluster Size ")+i_layer->first+TString(";Cluster Size;Number of entries");
+            h = new TH1D(histname.Data(), title.Data(), 100,0, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h));
+        }
         
     }
     
