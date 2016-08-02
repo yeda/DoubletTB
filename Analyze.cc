@@ -451,7 +451,7 @@ void printResolution(TString runnum){
             h1D->Fit(fitfunc1,"QR");
             
             fitname = TString("fitgauspol_") + histname;
-            fitfunc2 = new TF1(fitname.Data(),"gaus+pol0", max_inxaxis-0.4,max_inxaxis+0.4);
+            fitfunc2 = new TF1(fitname.Data(),"gaus+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
             h1D->Fit(fitfunc2,"QR");
 
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
@@ -478,7 +478,7 @@ void printResolution(TString runnum){
     h1D->Fit(fitfunc1,"QR");
     
     fitname = TString("fitgauspol_") + histname;
-    fitfunc2 = new TF1(fitname.Data(),"gaus+pol0", max_inxaxis-0.4,max_inxaxis+0.4);
+    fitfunc2 = new TF1(fitname.Data(),"gaus+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
     h1D->Fit(fitfunc2,"QR");
     
     double ang_res =fitfunc2->GetParameter(2) / sqrt(2);

@@ -508,7 +508,7 @@ void createHitMapHistos(){
         
         histname = signal_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            h = new TH1D(histname.Data(), histname.Data(), 1000,0, 100);
+            h = new TH1D(histname.Data(), histname.Data(), 1000,0, 1000);
             rootobjects.insert(pair<TString,TObject*>(histname,h));
         }
         
