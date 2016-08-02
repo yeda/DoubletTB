@@ -453,11 +453,11 @@ void printResolution(TString runnum){
 
            h1D->Fit(fitfunc2,"+QR");
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
-            double spat_res_err =fitfunc2->GetParError(2) / sqrt(2);
-            double sys_err = fabs(spat_res_err - fitfunc1->GetParError(2) / sqrt(2));
-            spat_res_err = spat_res_err+sys_err;
+            double stat_err =fitfunc2->GetParError(2) / sqrt(2);
+            double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
+            double spat_res_err = stat_err+sys_err;
             
-            cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)"<< endl;
+            cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
             outfile<<spat_res<<";"<<spat_res_err<<";";
         }
     }
@@ -479,12 +479,12 @@ void printResolution(TString runnum){
     h1D->Fit(fitfunc2,"+QR");
     
     double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
-    double ang_res_err =fitfunc2->GetParError(2) / sqrt(2);
-    double sys_err = fabs(ang_res_err - fitfunc1->GetParError(2) / sqrt(2));
-    ang_res_err = ang_res_err+sys_err;
+    double stat_err =fitfunc2->GetParError(2) / sqrt(2);
+    double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
+    double ang_res_err = stat_err+sys_err;
 
     
-     cout<< "angular resolution of Down is "<< ang_res <<" +/- "<< ang_res_err<<" degrees"<<endl;
+     cout<< "angular resolution of Down is "<< ang_res <<" +/- "<< ang_res_err<<" degrees      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" <<endl;
     outfile<<ang_res<<";"<<ang_res_err<<";"<<endl;
     outfile.close();
 

@@ -273,7 +273,7 @@ void makeMultiGraps(){
         
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
-        if ( histname.Index(eff_histoname) != -1) { // pick eff plots
+        if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -338,7 +338,7 @@ void makeMultiGraps(){
     TCanvas *cc = new TCanvas("cc","",800,600);
     formatCanvas1D(cc);
     for (int i=0; i<2; i++) {
-        mgr_eff[i]->SetMinimum(0.5);
+        mgr_eff[i]->SetMinimum(0.8);
         mgr_eff[i]->SetMaximum(1.1);
         
         histname = mgr_eff[i]->GetName();
