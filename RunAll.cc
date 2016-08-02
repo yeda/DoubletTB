@@ -79,9 +79,10 @@ void makePlots(){
     double comb_result[2][3][2][4][30]={0};
     // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
     double comb_ang_res[2][3][30]={0};
-    double angle_err[30]={0};
+    double angle_err[30];
     fill(angle_err, angle_err+30, 0.5);
-    
+    double zero_err[30]={0};
+
     int i_point[2] = {0};
     for (map< int, Meas* >::iterator i_meas=measurements.begin(); i_meas != measurements.end(); i_meas++) {
         runnum = i_meas->first;
@@ -188,12 +189,12 @@ void makePlots(){
                     else if(imeastype==2) histname.ReplaceAll("MEAS", res_histoname);
                     
                     if (imeastype==1) {
-                        gr = new TGraph(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1]);
-                        gr->SetName(histname.Data());
+                        gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1], angle_err, zero_err);
+                        gre->SetName(histname.Data());
                         title= histname + TString(";Tilt angle (degrees);Efficiency");
-                        gr->SetTitle(title.Data());
-                        gr->SetMarkerStyle(20);
-                        gr->Sort();
+                        gre->SetTitle(title.Data());
+                        gre->SetMarkerStyle(20);
+                        gre->Sort();
                         rootobjects.insert(pair<TString,TObject*>(histname,gr));
                     } else if (imeastype==2){
                         if (idet!=2){
