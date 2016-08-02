@@ -447,16 +447,16 @@ void printResolution(TString runnum){
  */
 
             fitname = TString("fitgaus_") + histname;
-            fitfunc1 = new TF1(fitname.Data(),"gaus()", mean-3*rms,mean+3*rms);
+            fitfunc1 = new TF1(fitname.Data(),"TMath::gaus(x,[0][1],0)", mean-3*rms,mean+3*rms);
             h1D->Fit(fitfunc1,"QR");
             
             fitname = TString("fitgauspol_") + histname;
-            fitfunc2 = new TF1(fitname.Data(),"gaus(0)+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
+            fitfunc2 = new TF1(fitname.Data(),"TMath::gaus(x,[0][1],0)+[2]", max_inxaxis-0.4,max_inxaxis+0.4);
             h1D->Fit(fitfunc2,"QR");
 
-            double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
-            double spat_res_err =fitfunc2->GetParError(2) / sqrt(2);
-            double sys_err = fabs(spat_res_err - fitfunc1->GetParError(2) / sqrt(2));
+            double spat_res =fitfunc2->GetParameter(1) / sqrt(1);
+            double spat_res_err =fitfunc2->GetParError(1) / sqrt(1);
+            double sys_err = fabs(spat_res_err - fitfunc1->GetParError(1) / sqrt(1));
             spat_res_err = spat_res_err+sys_err;
             
             cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)"<< endl;
@@ -474,16 +474,16 @@ void printResolution(TString runnum){
     
     
     fitname = TString("fitgaus_") + histname;
-    fitfunc1 = new TF1(fitname.Data(),"gaus()", mean-3*rms,mean+3*rms);
+    fitfunc1 = new TF1(fitname.Data(),"TMath::gaus(x,[0][1],0)", mean-3*rms,mean+3*rms);
     h1D->Fit(fitfunc1,"QR");
     
     fitname = TString("fitgauspol_") + histname;
-    fitfunc2 = new TF1(fitname.Data(),"gaus(0)+pol0(3)", max_inxaxis-0.4,max_inxaxis+0.4);
+    fitfunc2 = new TF1(fitname.Data(),"TMath::gaus(x,[0][1],0)+[2]", max_inxaxis-0.4,max_inxaxis+0.4);
     h1D->Fit(fitfunc2,"QR");
     
-    double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
-    double ang_res_err =fitfunc2->GetParError(2) / sqrt(2);
-    double sys_err = fabs(ang_res_err - fitfunc1->GetParError(2) / sqrt(2));
+    double ang_res =fitfunc2->GetParameter(1) / sqrt(1);
+    double ang_res_err =fitfunc2->GetParError(1) / sqrt(1);
+    double sys_err = fabs(ang_res_err - fitfunc1->GetParError(1) / sqrt(1));
     ang_res_err = ang_res_err+sys_err;
 
     
