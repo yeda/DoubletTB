@@ -215,10 +215,6 @@ void calculateEfficiency(){
 
 
 
-
-
-
-
 double getExpectedHit(double x1, double y1, double x2, double y2, double at_y){
     double eq_a, eq_b, eq_c, x;
     // calculate expected hit position on the layer
