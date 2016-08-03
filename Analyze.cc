@@ -269,6 +269,16 @@ void fillHistos(){
         
     }
     
+    // match pointnumber with layers
+    // it is ordered as xlayers[i]
+    //      so p[0] is ref, p[1] is Up, p[2] is Down
+    
+    double p_exp[3];
+    p_exp[2] = p[2][2];
+    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
+    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
+   
+    
     for (unsigned int i=1; i<3; i++) {
         // correlation
         histname = corr_histname + IDlayermap[xlayers[i]];
@@ -282,11 +292,11 @@ void fillHistos(){
         // spatial resolution
         histname = spatialRes_histname + IDlayermap[xlayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p[0][0] - p[i][0]);
+        h1D->Fill(p_exp[0] - p[i][0]);
         
         histname = spatialRes_histname + IDlayermap[ylayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p[0][1] - p[i][1]);
+        h1D->Fill(p_exp[1] - p[i][1]);
         
     }
     
@@ -299,15 +309,7 @@ void fillHistos(){
     }
     
     // Angular resolution
-    
-    // match pointnumber with layers
-    // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is Up, p[2] is Down
-    double p_exp[3];
-    p_exp[2] = p[2][2];
-    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
-    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-    
+  
     
     histname = angularRes_histname + TString("Down");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
@@ -530,17 +532,17 @@ void createHistos(){
     }
     
     for (unsigned int i=1; i<3; i++) {
-        // point resolution
+        // spatial resolution
         histname = spatialRes_histname + IDlayermap[xlayers[i]];
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[xlayers[0]]+TString(" - ")+IDlayermap[xlayers[i]]+TString(" (mm);Number of entries");
+            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
         
         histname = spatialRes_histname + IDlayermap[ylayers[i]];
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[ylayers[0]]+TString(" - ")+IDlayermap[ylayers[i]]+TString(" (mm);Number of entries");
+            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
