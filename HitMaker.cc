@@ -48,7 +48,10 @@ TString output_tree_name = TString("hitsTree");
 TString NclusterPerEvent = TString("nClusterPerEvent_");
 TString NhitPerEvent = TString("nHitPerEvent_");
 TString hitamp_histname = TString("hitamplitude_");
+TString hitamp2D_histname = TString("hitamplitude2D_");
 TString clusize_histname = TString("clustersize_");
+
+
 
 std::map<int,TString> apvIDmap;
 
@@ -263,6 +266,10 @@ int main(int argc, char *argv[]){
     cout<<"Total number of events: "<<nentries<<endl;
     return 0;
 }
+
+
+
+
 
 
 bool isGoodEvent(vector<Cluster> clus){

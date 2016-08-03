@@ -23,6 +23,7 @@ void fillHistos();
 
 void readAlignmentParameters(TString alignmenttxt, double alignmentpar[]);
 void calculateEfficiency();
+void fillHitMap2D();
 
 void printResolution(TString runnum);
 void printEfficiency(TString runnum);
