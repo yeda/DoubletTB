@@ -4,6 +4,7 @@
 #pragma link C++ class vector<vector<short> >+;
 #pragma link C++ class vector<unsigned short> +;
 #pragma link C++ class vector<float> +;
+#pragma link C++ class vector<double> +;
 
 #endif
 

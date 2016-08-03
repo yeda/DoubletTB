@@ -32,6 +32,8 @@ bool isGoodEvent();
 void setBranches(TTree* input_tree);
 void createOutputFile(TFile *fout);
 
+map< int, vector<float> > getHits(string str);
+
 double getAngleABC(double A[] , double B[], double C[]);
 void findRefLayers(int layerid, int* arr);
 double getExpectedHit(double x1, double y1, double x2, double y2, double at_y);

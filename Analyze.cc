@@ -236,21 +236,24 @@ double getExpectedHit(double x1, double y1, double x2, double y2, double at_y){
 void fillHitMap2D(){
     TString histname,layername,tempname;
     TH2D* h2D;
-    double x,y;
-    vector<double> vec_x;
-    vector<double> vec_y;
-
-    map< int, vector<float> > hits = getAlignedHits();
+    float x,y;
+    vector<float> vec_x;
+    vector<float> vec_y;
+    
+    map< int, vector<float> > hit = getHits("hitamp");
     
     for (int i_layer=0; i_layer<3; i_layer++) {
-        vec_x =  hit[xlayers[i_layer]];
-        vec_y =  hit[ylayers[i_layer]];
+        
+        vec_x = hit[xlayers[i_layer]];
+        vec_y = hit[ylayers[i_layer]];
+
+    
         
         layername = IDlayermap[xlayers[i_layer]];
         tempname = layername(0, layername.Length() -1);
         histname = hitamp2D_histname + tempname;
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
-       
+        
         if (vec_x.size() != 0 && vec_y.size() != 0) {
             for (int i_x=0; i_x<vec_x.size(); i_x++) {
                 x = vec_x[i_x];
@@ -277,12 +280,14 @@ void fillHitMap2D(){
         else {
             x=0;
             y=0;
-             h2D->Fill(x,y);
+            h2D->Fill(x,y);
         }
     }
 }
 
-map< int, vector<float> > getAlignedHits(){
+map< int, vector<float> > getHits(string str){
+    map< int, vector<float> > hit;
+    
     double newpos;
     for (int i=0; i<NLayer; i++) {
         vector<float> bla;
@@ -291,10 +296,15 @@ map< int, vector<float> > getAlignedHits(){
     }
     
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
-        newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
+        if (str == string("hitpos"))
+            newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
+        else if (str == string("hitamp"))
+            newpos = hit_amplitude->at(ihit);
+
         hit[layerID->at(ihit)].push_back(newpos);
     }
     
+    return hit;
 }
 
 void fillHistos(){
@@ -339,7 +349,7 @@ void fillHistos(){
     p_exp[2] = p[2][2];
     p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
     p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-   
+    
     
     for (unsigned int i=1; i<3; i++) {
         // correlation
@@ -371,7 +381,7 @@ void fillHistos(){
     }
     
     // Angular resolution
-  
+    
     
     histname = angularRes_histname + TString("Down");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
@@ -591,7 +601,7 @@ void createHistos(){
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
         
- 
+        
     }
     
     for (unsigned int i=1; i<3; i++) {
@@ -643,9 +653,9 @@ void createHistos(){
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
-        histname = hitamp2D_histname + it->second;
+        histname = hitamp2D_histname + s[i];
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Hit Amplitude 2D ")+ it->second + TString(";X (mm);Y (mm)");
+            title = TString("Hit Amplitude 2D ")+ s[i] + TString(";X (mm);Y (mm)");
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 10000,1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
