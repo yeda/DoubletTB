@@ -267,9 +267,6 @@ void fillHistos(){
     TH2D* h2D;
     
     double newpos;
-    
-    
-    double newpos;
     // [pointnumber][x,y,z]
     double p[3][3];
     
