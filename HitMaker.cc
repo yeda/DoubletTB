@@ -174,9 +174,10 @@ int main(int argc, char *argv[]){
                         prev_chan = i_chan->first;
                         
                     } else {
-                        
+                       TString layerdirection = i_layer->first;
+			layerdirection = layerdirection(layerdirection.Length() -1, layerdirection.Length()); 
                         // process and save the cluster
-                        if (  clusize >2 ){
+                        if (  (layerdirection == TString("X") && clusize >CluSizeCutX) || (layerdirection == TString("Y") && clusize >CluSizeCutY)  ){
                             
                             Cluster acluster;
                             if (layerIDmap[i_layer->first]==2) {

@@ -31,6 +31,9 @@ const int NLayer=6;
 //////////// HitMaker /////////
 
 int SignalCut = 20;
+int CluSizeCutX = 2;
+int CluSizeCutY = 2;
+
 const unsigned int MaxEventNum = 10000000;
 //const unsigned int MaxEventNum = 1000000;
 const unsigned int MAXEVENTTOPLOT = 10;

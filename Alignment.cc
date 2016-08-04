@@ -147,8 +147,7 @@ void alignLayers(){
     TString layername, histname, fitname;
     TF1* fitfunc;
     TH1D* h1D;
-    double max_inxaxis;
-
+    
     double mean_pos[2][3];
     for (unsigned int i=0; i<3; i++) {
         if (i==0) {
@@ -159,19 +158,17 @@ void alignLayers(){
             layername = IDlayermap[xlayers[i]];
             histname =  dx_histname + layername;
             h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-            max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
             fitname = TString("fit_") + histname;
-            fitfunc = new TF1(fitname.Data(),"gaus",max_inxaxis-0.2,max_inxaxis+0.2);
-            h1D->Fit(fitfunc,"QR");
+            fitfunc = new TF1(fitname.Data(),"gaus");
+            h1D->Fit(fitfunc,"Q");
             mean_pos[0][i]=fitfunc->GetParameter(1);
             
             layername = IDlayermap[ylayers[i]];
             histname =  dy_histname + layername;
             h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-            max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
             fitname = TString("fit_") + histname;
-            fitfunc = new TF1(fitname.Data(),"gaus",max_inxaxis-0.2,max_inxaxis+0.2);
-            h1D->Fit(fitfunc,"QR");
+            fitfunc = new TF1(fitname.Data(),"gaus");
+            h1D->Fit(fitfunc,"Q");
             mean_pos[1][i]=fitfunc->GetParameter(1);
             
         }
@@ -207,55 +204,49 @@ void fillHistosAfterAlignment(double alignmentpar[]){
     TH1D* h1D;
     TH2D* h2D;
     
-    
     double newpos;
-    // [pointnumber][x,y,z]
-    double p[3][3];
+    
+    double px[3];
+    double py[3];
     
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         
         layername = IDlayermap[layerID->at(ihit)];
         
-        histname = hitpos_histname + layername;
+        histname = aligned_hitpos_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
         h1D->Fill(newpos);
         
-        histname = hitamp_histname + layername;
-        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(hit_amplitude->at(ihit));
-        
         for (unsigned int i=0; i<3; i++) {
             if (layerID->at(ihit) == xlayers[i]) {
-                p[i][0] = newpos;
-                p[i][2] = layerZposition[layerID->at(ihit)];
+                px[i] = newpos;
             }
             else if (layerID->at(ihit) == ylayers[i])
-                p[i][1] = newpos;
+                py[i] = newpos;
         }
         
     }
     
-    // match pointnumber with layers
-    // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is Up, p[2] is Down
-    
-    double p_exp[3];
-    p_exp[2] = p[2][2];
-    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
-    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-    
-    
     for (unsigned int i=1; i<3; i++) {
-        //dx
+        // correlation
         
-        histname = dx_histname + IDlayermap[xlayers[i]];
-        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[0] - p[i][0]);
+        histname = aligned_corr_histname + IDlayermap[xlayers[i]];
+        h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
+        h2D->Fill(px[0], px[i]);
         
-        histname = dy_histname + IDlayermap[ylayers[i]];
+        histname = aligned_corr_histname + IDlayermap[ylayers[i]];
+        h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
+        h2D->Fill(py[0], py[i]);
+        
+        histname = aligned_dx_histname + IDlayermap[xlayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[1] - p[i][1]);
+        h1D->Fill(px[i]-px[0]);
+        
+        histname = aligned_dy_histname + IDlayermap[ylayers[i]];
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+        h1D->Fill(py[i]-py[0]);
+        
     }
     
 }
@@ -267,8 +258,9 @@ void fillHistos(){
     TH2D* h2D;
     
     double newpos;
-    // [pointnumber][x,y,z]
-    double p[3][3];
+    
+    double px[3];
+    double py[3];
     
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         
@@ -276,8 +268,7 @@ void fillHistos(){
         
         histname = hitpos_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        newpos = hit_position->at(ihit);
-        h1D->Fill(newpos);
+        h1D->Fill(hit_position->at(ihit));
         
         histname = hitamp_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
@@ -285,59 +276,30 @@ void fillHistos(){
         
         for (unsigned int i=0; i<3; i++) {
             if (layerID->at(ihit) == xlayers[i]) {
-                p[i][0] = newpos;
-                p[i][2] = layerZposition[layerID->at(ihit)];
+                px[i] = hit_position->at(ihit);
             }
             else if (layerID->at(ihit) == ylayers[i])
-                p[i][1] = newpos;
+                py[i] = hit_position->at(ihit);
         }
         
     }
     
-    // match pointnumber with layers
-    // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is Up, p[2] is Down
-    
-    double p_exp[3];
-    p_exp[2] = p[2][2];
-    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
-    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-    
-    
     for (unsigned int i=1; i<3; i++) {
-        
-        //dx
+        // correlation
         
         histname = dx_histname + IDlayermap[xlayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[0] - p[i][0]);
+        h1D->Fill(px[i]-px[0]);
         
         histname = dy_histname + IDlayermap[ylayers[i]];
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[1] - p[i][1]);
-
+        h1D->Fill(py[i]-py[0]);
         
     }
-   
     
     
-}
-
-
-double getExpectedHit(double x1, double y1, double x2, double y2, double at_y){
-    double eq_a, eq_b, eq_c, x;
-    // calculate expected hit position on the layer
     
-    // line eq -> ax+by+c=0
-    // (y1-y2) * x + (x2-x1) * y + (x1y2-x2y1) = 0
     
-    eq_a = y1-y2;
-    eq_b = x2-x1;
-    eq_c = x1*y2 - x2*y1;
-    
-    x = -1*(eq_c + at_y * eq_b) / eq_a;
-    
-    return x;
 }
 
 
@@ -451,7 +413,6 @@ void setBranches(TTree* input_tree){
     input_tree->SetBranchAddress("hit_amplitude",&hit_amplitude);
     input_tree->SetBranchAddress("hit_position",&hit_position);
 }
-
 
 
 

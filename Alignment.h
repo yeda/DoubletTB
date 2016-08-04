@@ -30,10 +30,8 @@ void setBranches(TTree* input_tree);
 void createHistos();
 
 void createOutputFile(TFile *fout);
-double getExpectedHit(double x1, double y1, double x2, double y2, double at_y);
 
 
 #endif
-
 
 

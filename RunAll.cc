@@ -48,9 +48,9 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-    //    runHitMaker();
+        runHitMaker();
     //    runAlignment();
-    //system("./alignment 134");
+    system("./alignment 134");
     runAnalyze();
     
     readMeasEff();
@@ -273,7 +273,8 @@ void makeMultiGraps(){
         
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
-        if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
+        if ( histname.Index(eff_histoname) != -1 ){
+//&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
