@@ -258,6 +258,7 @@ int main(int argc, char *argv[]){
         else{
             if(iplotbadevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
                 plotEvent("badevent");
+                iplotbadevent++;
             }
         }
         
