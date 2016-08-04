@@ -83,6 +83,7 @@ int main(int argc, char *argv[]){
             
         }
     }
+    //
     
     printResolution(runnum);
     printEfficiency(runnum);
@@ -124,7 +125,7 @@ void findRefLayers(int layerid, int* arr){
 void calculateEfficiency(){
     int reflayersX[2];
     int reflayersY[2];
-    
+
     map< int, vector<float> > hit;
     double  x1, x2,x3, y1, y2,y3, z1,z2,z3, x, y;
     TH1D *h1D;
@@ -137,13 +138,13 @@ void calculateEfficiency(){
         bla.clear();
         hit[i] = bla;
     }
-    
+
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
         hit[layerID->at(ihit)].push_back(newpos);
     }
     
-    
+
     for (int i_layer=0; i_layer<3; i_layer++) {
         //current xlayer = xlayers[i_layer]
         //current ylayer = ylayers[i_layer]

@@ -29,8 +29,14 @@ const double pitchsize = 0.25; // in mm
 const int NLayer=6;
 
 //////////// HitMaker /////////
+int SignalCut = 1;
+std::map<TString, double> HitAmplitudeCut={
+    {TString("DownX"),30},{TString("DownY"),200},
+    {TString("UpX"),100},{TString("UpY"),400},
+    {TString("RefX"),200},{TString("RefY"),700}
+};
 
-int SignalCut = 20;
+// local coordinates
 int CluSizeCutX = 0;
 int CluSizeCutY = 0;
 
@@ -119,9 +125,9 @@ std::map<unsigned short,double> layerZposition={
 };
 
 std::map<unsigned short,double> layerResolution={
-    {0,200.0},{1,200.0},
-    {2,200.0},{3,200.0},
-    {4,200.0},{5,200.0}
+    {0,2000.0},{1,2000.0},
+    {2,2000.0},{3,2000.0},
+    {4,2000.0},{5,2000.0}
 };
 
 #endif

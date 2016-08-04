@@ -48,10 +48,10 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-        runHitMaker();
+    //    runHitMaker();
     //    runAlignment();
-    system("./alignment 134");
-    runAnalyze();
+    //system("./alignment 134");
+    //runAnalyze();
     
     readMeasEff();
     readMeasRes();
@@ -339,7 +339,7 @@ void makeMultiGraps(){
     TCanvas *cc = new TCanvas("cc","",800,600);
     formatCanvas1D(cc);
     for (int i=0; i<2; i++) {
-        mgr_eff[i]->SetMinimum(0.8);
+        mgr_eff[i]->SetMinimum(0.7);
         mgr_eff[i]->SetMaximum(1.1);
         
         histname = mgr_eff[i]->GetName();
@@ -350,7 +350,7 @@ void makeMultiGraps(){
         cc->SaveAs(pdfname.Data());
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
-        mgr_res[i]->SetMinimum(0.10);
+        mgr_res[i]->SetMinimum(0.);
         mgr_res[i]->SetMaximum(0.25);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");

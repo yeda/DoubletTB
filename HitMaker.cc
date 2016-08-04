@@ -177,43 +177,47 @@ int main(int argc, char *argv[]){
                         prev_chan = i_chan->first;
                         
                     } else {
-                       TString layerdirection = i_layer->first;
-			layerdirection = layerdirection(layerdirection.Length() -1, layerdirection.Length()); 
+                        TString layerdirection = i_layer->first;
+                        layerdirection = layerdirection(layerdirection.Length() -1, layerdirection.Length());
                         // process and save the cluster
-                        if (  (layerdirection == TString("X") && clusize >CluSizeCutX) || (layerdirection == TString("Y") && clusize >CluSizeCutY)  ){
-                            
-                            Cluster acluster;
-                            if (layerIDmap[i_layer->first]==2) {
-                                acluster._layerID = 3;
-                                tlayerID.push_back(3);
+                        if (  (layerdirection == TString("X") && clusize >CluSizeCutX) || (layerdirection == TString("Y") && clusize >CluSizeCutY)  )
+                            if (tot_sig > HitAmplitudeCut[i_layer->first]){
+                                
+                                Cluster acluster;
+                                if (layerIDmap[i_layer->first]==2) {
+                                    acluster._layerID = 3;
+                                    tlayerID.push_back(3);
+                                }
+                                else if(layerIDmap[i_layer->first]==3){
+                                    acluster._layerID = 2;
+                                    tlayerID.push_back(2);
+                                }
+                                else {
+                                    acluster._layerID = layerIDmap[i_layer->first];
+                                    tlayerID.push_back(layerIDmap[i_layer->first]);
+                                }
+                                acluster._cluster_size = clusize;
+                                acluster._hit_amplitude = tot_sig;
+                                acluster._hit_position = (weight/tot_sig) * pitchsize;
+                                
+                                
+                                histname = hitamp_histname + i_layer->first;
+                                h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+                                h1D->Fill(acluster._hit_amplitude);
+                                
+                                histname = clusize_histname + i_layer->first;
+                                h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+                                h1D->Fill(clusize);
+                                
+                                tcluster_size.push_back(clusize) ;
+                                thit_amplitude.push_back(tot_sig);
+                                thit_position.push_back((weight/tot_sig) * pitchsize);
+                                
+                                clusters.push_back(acluster);
+                                clu_count++;
+                                
                             }
-                            else if(layerIDmap[i_layer->first]==3){
-                                acluster._layerID = 2;
-                                tlayerID.push_back(2);
-                            }
-                            else {
-                                acluster._layerID = layerIDmap[i_layer->first];
-                                tlayerID.push_back(layerIDmap[i_layer->first]);
-                            }
-                            acluster._cluster_size = clusize;
-                            acluster._hit_amplitude = tot_sig;
-                            acluster._hit_position = (weight/tot_sig) * pitchsize;
-                            
-                            histname = hitamp_histname + i_layer->first;
-                            h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-                            h1D->Fill(acluster._hit_amplitude);
-                            
-                            histname = clusize_histname + i_layer->first;
-                            h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-                            h1D->Fill(clusize);
-                            
-                            tcluster_size.push_back(clusize) ;
-                            thit_amplitude.push_back(tot_sig);
-                            thit_position.push_back((weight/tot_sig) * pitchsize);
-                            
-                            clusters.push_back(acluster);
-                            clu_count++;
-                        }
+                        
                         
                         tot_sig=0;
                         weight=0;
@@ -258,6 +262,7 @@ int main(int argc, char *argv[]){
             }
         }
         else if (isNoHitOnLayer(clusters) == true){
+            //processEvent(clusters);
             if(iplotnothitevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
                 plotEvent("nohit");
                 iplotnothitevent++;
@@ -434,7 +439,7 @@ void plotEvent(TString prefix){
         }
         
         // signal vs time for highest signal strip
-        
+  /*
         histname = event_name + it->second + TString("_highChan_signalVStime");
         title = histname+TString(";signal;time (ns)");
         if (rootobjects.find(histname) == rootobjects.end()) {
@@ -442,7 +447,7 @@ void plotEvent(TString prefix){
             hhighChan_signalVStime = new TH1D(histname.Data(), title.Data(), 27, 0, 675);
             rootobjects.insert(pair<TString,TObject*>(histname,hhighChan_signalVStime));
         }
-        
+  */
         
     }
     
@@ -484,16 +489,19 @@ void plotEvent(TString prefix){
     timedist.clear();
     layername = apvIDmap[apv_id->at(highest_chan_entry)];
     //    &timedist = apv_q->at(highest_chan_entry);
-    
+    /*
+
     for (unsigned int itime=0; itime<timedist.size(); itime++) {
         time_ns = itime*25;
         histname = event_name + layername + TString("_highChan_signalVStime");
         hhighChan_signalVStime = dynamic_cast<TH1D*> (rootobjects[histname]);
         // hhighChan_signalVStime->Fill(time_ns,vecRef[highest_chan_entry][itime]);
+         
         hhighChan_signalVStime->Fill(time_ns,(apv_q->at(highest_chan_entry)).at(itime));
         // hhighChan_signalVStime->Fill(time_ns,vecRef[highest_chan_entry][itime]);
+         
     }
-    
+    */
 }
 
 
@@ -549,7 +557,7 @@ void createHitMapHistos(){
         
         histname = signal_histname + it->second;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            h = new TH1D(histname.Data(), histname.Data(), 1000,0, 1000);
+            h = new TH1D(histname.Data(), histname.Data(), 1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h));
         }
         
