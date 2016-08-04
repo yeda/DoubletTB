@@ -18,7 +18,8 @@ TString output_resolution_txtfile= TString("./results/resolution.txt");
 TString output_efficiency_txtfile= TString("./results/efficiency.txt");
 
 // should end with /
-TString inputPath = TString("/afs/desy.de/user/y/yeda/nfs_yeda/mainz_data/desyTBMMData/data/");
+//TString inputPath = TString("/afs/desy.de/user/y/yeda/nfs_yeda/mainz_data/desyTBMMData/data/");
+TString inputPath = TString("./input/");
 TString outputPath = TString("./output/");
 
 TString inputRawTreeName = TString("raw");
@@ -31,7 +32,7 @@ const int NLayer=6;
 //////////// HitMaker /////////
 
 int SignalCut = 20;
-int CluSizeCutX = 2;
+int CluSizeCutX = 1;
 int CluSizeCutY = 2;
 
 const unsigned int MaxEventNum = 10000000;
