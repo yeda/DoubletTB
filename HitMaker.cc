@@ -111,6 +111,8 @@ int main(int argc, char *argv[]){
     }
     int iplotgoodevent=0;
     int iplotbadevent=0;
+    int iplotnothitevent=0;
+    
     // store all clusters in an event to a vector
     unsigned int count=0;
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
@@ -247,17 +249,24 @@ int main(int argc, char *argv[]){
         
         
         
-        if (isGoodEvent(clusters)) {
+        if (isGoodEvent(clusters) == true) {
             count++;
             processEvent(clusters);
             if(iplotgoodevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
-                plotEvent("goodevent");
+                plotEvent("good");
                 iplotgoodevent++;
             }
         }
+        else if (isNoHitOnLayer(clusters) == true){
+            if(iplotnothitevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
+                plotEvent("nohit");
+                iplotnothitevent++;
+            }
+
+        }
         else{
             if(iplotbadevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
-                plotEvent("badevent");
+                plotEvent("bad");
                 iplotbadevent++;
             }
         }
@@ -297,6 +306,22 @@ bool isGoodEvent(vector<Cluster> clus){
     return onlyonehit;
 }
 
+bool isNoHitOnLayer(vector<Cluster> clus){
+    
+    short nhits[NLayer]={0};
+    bool nohit = false;
+    
+    // also check if every layer has only 1 cluster
+    for (unsigned int i=0; i<clus.size(); i++) {
+        nhits[clus[i]._layerID]++;
+    }
+    // well now all values should be 1
+    for (unsigned int i=0; i<NLayer; i++) {
+        if (nhits[i]==0) nohit = true;
+    }
+    
+    return nohit;
+}
 
 
 void processEvent(vector<Cluster> clusters){
