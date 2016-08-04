@@ -44,7 +44,7 @@ void createHitMapHistos();
 
 void createOutputFile(TFile *fout);
 
-void plotEvent();
+void plotEvent(TString prefix);
 void processEvent(vector<Cluster> clusters);
 
 void createOtherHistos();

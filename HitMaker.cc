@@ -110,6 +110,7 @@ int main(int argc, char *argv[]){
         cout << "raw and data trees don't have same number of events"<< endl;
     }
     int iplotgoodevent=0;
+    int iplotbadevent=0;
     // store all clusters in an event to a vector
     unsigned int count=0;
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
@@ -124,7 +125,7 @@ int main(int argc, char *argv[]){
         
         if (apv_evt > MaxEventNum) break;
         
-        if (apv_evt < MAXEVENTTOPLOT) plotEvent();
+        if (apv_evt < MAXEVENTTOPLOT) plotEvent("event");
         vector<Cluster> clusters;
         clusters.clear();
         // the mm_strip and its apv_qmax paired and stored in a map for each layer... and mapped with layer name
@@ -250,8 +251,13 @@ int main(int argc, char *argv[]){
             count++;
             processEvent(clusters);
             if(iplotgoodevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
-                plotEvent();
+                plotEvent("goodevent");
                 iplotgoodevent++;
+            }
+        }
+        else{
+            if(iplotbadevent<MAXEVENTTOPLOT && apv_evt > MAXEVENTTOPLOT ){
+                plotEvent("badevent");
             }
         }
         
@@ -370,12 +376,13 @@ void createOtherHistos(){
 }
 
 
-void plotEvent(){
+void plotEvent(TString prefix){
     TH1D* hmaxsignalVSchannel;
     TH1D* hhighChan_signalVStime;
     TH2D* htimeVSchannel;
     
     TString event_name = TString("event_XXX");
+    event_name = prefix + event_name;
     event_name.ReplaceAll("XXX",TString::Itoa(apv_evt,10));
     TString histname,title;
     
