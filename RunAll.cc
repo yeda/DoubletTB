@@ -48,10 +48,10 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-    //    runHitMaker();
+        runHitMaker();
     //    runAlignment();
-    //system("./alignment 134");
-    //runAnalyze();
+    system("./alignment 134");
+    runAnalyze();
     
     readMeasEff();
     readMeasRes();

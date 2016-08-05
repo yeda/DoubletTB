@@ -30,11 +30,20 @@ const int NLayer=6;
 
 //////////// HitMaker /////////
 int SignalCut = 1;
+/*
 std::map<TString, double> HitAmplitudeCut={
     {TString("DownX"),30},{TString("DownY"),200},
     {TString("UpX"),100},{TString("UpY"),400},
     {TString("RefX"),200},{TString("RefY"),700}
 };
+*/
+
+std::map<TString, double> HitAmplitudeCut={
+    {TString("DownX"),1},{TString("DownY"),1},
+    {TString("UpX"),1},{TString("UpY"),1},
+    {TString("RefX"),1},{TString("RefY"),1}
+};
+
 
 // local coordinates
 int CluSizeCutX = 0;
