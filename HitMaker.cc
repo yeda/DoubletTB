@@ -50,6 +50,7 @@ TString output_tree_name = TString("hitsTree");
 TString NclusterPerEvent = TString("nClusterPerEvent_");
 TString NhitPerEvent = TString("nHitPerEvent_");
 TString hitamp_histname = TString("hitamplitude_");
+TString seedhitamp_histname = TString("hitamplitude_");
 TString hitamp2D_histname = TString("hitamplitude2D_");
 TString clusize_histname = TString("clustersize_");
 
@@ -158,7 +159,7 @@ int main(int argc, char *argv[]){
             double weight = 0;
             unsigned int clusize = 0;
             unsigned int prev_chan = 0;
-            
+            double seedchanAmp = 0;
             unsigned int clu_count=0;
             
             i_layer->second.insert( make_pair(1000000, 0));
@@ -171,12 +172,16 @@ int main(int argc, char *argv[]){
                     weight = double(i_chan->first) * double(i_chan->second);
                     clusize = 1;
                     prev_chan = i_chan->first;
+                    seedchanAmp =double(i_chan->second);
                 }
                 else{
                     if (i_chan->first == prev_chan+1 || i_chan->first == prev_chan+2) {
                         tot_sig += double (i_chan->second);
                         weight += double (i_chan->first * i_chan->second);
                         clusize++;
+                        if (double (i_chan->second) > seedchanAmp) {
+                            seedchanAmp =double (i_chan->second);
+                        }
                         prev_chan = i_chan->first;
                         
                     } else {
@@ -207,6 +212,10 @@ int main(int argc, char *argv[]){
                                 h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
                                 h1D->Fill(acluster._hit_amplitude);
                                 
+                                histname = seedhitamp_histname + i_layer->first;
+                                h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+                                h1D->Fill(seedchanAmp);
+
                                 histname = clusize_histname + i_layer->first;
                                 h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
                                 h1D->Fill(clusize);
@@ -394,7 +403,13 @@ void createOtherHistos(){
             h = new TH1D(histname.Data(), title.Data(), 1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h));
         }
-        
+        histname = seedhitamp_histname + i_layer->first;
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("seed chan amplitude of all clusters in ")+i_layer->first+TString(";Hit Amplitude;Number of entries");
+            h = new TH1D(histname.Data(), title.Data(), 1000,0, 10000);
+            rootobjects.insert(pair<TString,TObject*>(histname,h));
+        }
+
         histname = clusize_histname + i_layer->first;
         if (rootobjects.find(histname) == rootobjects.end()) {
             title = TString("Cluster Size ")+i_layer->first+TString(";Cluster Size;Number of entries");
