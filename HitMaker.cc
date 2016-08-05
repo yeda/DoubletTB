@@ -56,7 +56,7 @@ TString clusize_histname = TString("clustersize_");
 
 
 std::map<int,TString> apvIDmap;
-map<TString, double> HitAmplitudeCut;
+map<TString, float> HitAmplitudeCut;
 
 int main(int argc, char *argv[]){
     
@@ -185,7 +185,6 @@ int main(int argc, char *argv[]){
                         // process and save the cluster
                         if (  (layerdirection == TString("X") && clusize >CluSizeCutX) || (layerdirection == TString("Y") && clusize >CluSizeCutY)  )
                             if (tot_sig > HitAmplitudeCut[i_layer->first]){
-                                
                                 Cluster acluster;
                                 if (layerIDmap[i_layer->first]==2) {
                                     acluster._layerID = 3;
@@ -588,8 +587,7 @@ void readHitAmplitudeCuts(TString runnum){
     // first line
     getline(fileinfo_file,line);
     vector<string> titles = splitstring(line,';');
-    while(!fileinfo_file.eof()){
-        getline(fileinfo_file,line);
+    while(getline(fileinfo_file,line)){
         vector<string> elems = splitstring(line,';');
         
         if (elems[0] == runnum) {
@@ -600,8 +598,9 @@ void readHitAmplitudeCuts(TString runnum){
                 }
                 
                 float value = atof(elems[i].c_str());
-                HitAmplitudeCut.insert(make_pair( TString(titles[i]),double(value) ));
-                
+                HitAmplitudeCut.insert(make_pair( titles[i],value ));
+                runnum_found = true;
+
             }
         }
     }
@@ -609,7 +608,7 @@ void readHitAmplitudeCuts(TString runnum){
     if (runnum_found == false) {
         cout<<" No entry found for runnum "<<runnum<<" in file "<<hitAmplitudeCut_file<<endl;
     }
-    
+
 }
 /*
 

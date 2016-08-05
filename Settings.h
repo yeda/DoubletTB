@@ -21,7 +21,6 @@ using namespace std;
 TString output_resolution_txtfile= TString("./results/resolution.txt");
 TString output_efficiency_txtfile= TString("./results/efficiency.txt");
 
-TString hitAmplitudeCut_file= TString("./HitAmplitudeCuts.txt");
 
 // should end with /
 TString inputPath = TString("./input/");
@@ -35,6 +34,7 @@ const double pitchsize = 0.25; // in mm
 const int NLayer=6;
 
 //////////// HitMaker /////////
+TString hitAmplitudeCut_file= TString("./HitAmplitudeCuts.txt");
 int SignalCut = 1;
 
 
