@@ -50,7 +50,7 @@ TString output_tree_name = TString("hitsTree");
 TString NclusterPerEvent = TString("nClusterPerEvent_");
 TString NhitPerEvent = TString("nHitPerEvent_");
 TString hitamp_histname = TString("hitamplitude_");
-TString seedhitamp_histname = TString("hitamplitude_");
+TString seedhitamp_histname = TString("seedchanamplitude_");
 TString hitamp2D_histname = TString("hitamplitude2D_");
 TString clusize_histname = TString("clustersize_");
 
