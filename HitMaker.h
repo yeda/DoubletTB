@@ -50,6 +50,7 @@ void processEvent(vector<Cluster> clusters);
 void createOtherHistos();
 bool isGoodEvent(vector<Cluster> clus);
 bool isNoHitOnLayer(vector<Cluster> clus);
+void readHitAmplitudeCuts(TString runnum);
 
 
 #endif

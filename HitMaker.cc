@@ -10,6 +10,8 @@
 #include <map>
 #include <utility>
 #include <algorithm>
+#include <fstream>
+#include <stdlib.h>
 
 #include "TString.h"
 #include "TFile.h"
@@ -54,6 +56,7 @@ TString clusize_histname = TString("clustersize_");
 
 
 std::map<int,TString> apvIDmap;
+map<TString, double> HitAmplitudeCut;
 
 int main(int argc, char *argv[]){
     
@@ -69,7 +72,7 @@ int main(int argc, char *argv[]){
         cout<<"APV ID Map cannot be found!!!"<<endl;
     }
     
-    
+    readHitAmplitudeCuts(runnum);
     
     TString fin_name = inputPath + TString("run")+ runnum + TString(".root");
     TFile * fin = TFile::Open(fin_name.Data());
@@ -571,7 +574,53 @@ void createHitMapHistos(){
 }
 
 
+void readHitAmplitudeCuts(TString runnum){
+    cout<< "Reading HitAmplitudeCuts from "<<hitAmplitudeCut_file<<endl;
+    
+    
+    string line;
+    string tmpstr;
+    bool runnum_found = false;
 
+    ifstream fileinfo_file(hitAmplitudeCut_file.Data());
+    //      0           1          2    3       4   5       6   7   8   9   10      11  12
+    // MMDataRunNum;BeamEnergy;Angle1;Angle2;DownX;DownY;RefX;RefY;UpX;UpY;config;map;Comment;
+    // first line
+    getline(fileinfo_file,line);
+    vector<string> titles = splitstring(line,';');
+    while(!fileinfo_file.eof()){
+        getline(fileinfo_file,line);
+        vector<string> elems = splitstring(line,';');
+        
+        if (elems[0] == runnum) {
+            for (int i=4; i<10; i++) {
+                if (elems.size() < 12){
+                    cout << "There is something wrong with entry of run "<<runnum<<" in file "<<hitAmplitudeCut_file<<endl;
+                    return;
+                }
+                
+                float value = atof(elems[i].c_str());
+                HitAmplitudeCut.insert(make_pair( TString(titles[i]),double(value) ));
+                
+            }
+        }
+    }
+    
+    if (runnum_found == false) {
+        cout<<" No entry found for runnum "<<runnum<<" in file "<<hitAmplitudeCut_file<<endl;
+    }
+    
+}
+/*
 
+vector<string> splitstring(string s, char delim) {
+    vector<string> elems;
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
 
-
+*/

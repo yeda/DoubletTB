@@ -9,6 +9,10 @@
 
 #include <iostream>
 #include <map>
+#include <string>
+#include <stdlib.h>
+#include <sstream>
+
 
 #include "TString.h"
 
@@ -16,6 +20,8 @@ using namespace std;
 
 TString output_resolution_txtfile= TString("./results/resolution.txt");
 TString output_efficiency_txtfile= TString("./results/efficiency.txt");
+
+TString hitAmplitudeCut_file= TString("./HitAmplitudeCuts.txt");
 
 // should end with /
 TString inputPath = TString("./input/");
@@ -30,20 +36,17 @@ const int NLayer=6;
 
 //////////// HitMaker /////////
 int SignalCut = 1;
-/*
-std::map<TString, double> HitAmplitudeCut={
-    {TString("DownX"),30},{TString("DownY"),200},
-    {TString("UpX"),100},{TString("UpY"),400},
-    {TString("RefX"),200},{TString("RefY"),700}
-};
-*/
 
+
+
+
+/*
 std::map<TString, double> HitAmplitudeCut={
     {TString("DownX"),1},{TString("DownY"),1},
     {TString("UpX"),1},{TString("UpY"),1},
     {TString("RefX"),1},{TString("RefY"),1}
 };
-
+*/
 
 // local coordinates
 int CluSizeCutX = 0;
@@ -138,6 +141,18 @@ std::map<unsigned short,double> layerResolution={
     {2,2000.0},{3,2000.0},
     {4,2000.0},{5,2000.0}
 };
+
+
+
+vector<string> splitstring(string s, char delim) {
+    vector<string> elems;
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
+}
 
 #endif
 
