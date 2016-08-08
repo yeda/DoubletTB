@@ -48,11 +48,11 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-        runHitMaker();
+    //runHitMaker();
     //    runAlignment();
-    system("./alignment 134");
-    system("rm results/efficiency.txt"); system("rm results/resolution.txt");
-    runAnalyze();
+    //system("./alignment 134");
+    //system("rm results/efficiency.txt"); system("rm results/resolution.txt");
+    //runAnalyze();
     
     readMeasEff();
     readMeasRes();
@@ -243,14 +243,19 @@ void makeMultiGraps(){
     TGraphErrors *gre;
     
     TMultiGraph *mgr_eff[2];
-    mgr_eff[0]= new TMultiGraph("mgr_eff_tiltX","Tilt around X; Tilt angle (degrees); Efficiency");
-    mgr_eff[1]= new TMultiGraph("mgr_eff_tiltY","Tilt around Y; Tilt angle (degrees); Efficiency");
+    mgr_eff[0]= new TMultiGraph("mgr_eff_tiltX","; Tilt Angle (degrees); Efficiency");
+    mgr_eff[1]= new TMultiGraph("mgr_eff_tiltY","; Tilt Angle (degrees); Efficiency");
+    //mgr_eff[0]= new TMultiGraph("mgr_eff_tiltX","Tilt around X; Tilt angle (degrees); Efficiency");
+    //mgr_eff[1]= new TMultiGraph("mgr_eff_tiltY","Tilt around Y; Tilt angle (degrees); Efficiency");
     
     TMultiGraph *mgr_res[2];
-    mgr_res[0]= new TMultiGraph("mgr_res_tiltX","Tilt around X; Tilt angle (degrees); Spatial Resolution (mm)");
-    mgr_res[1]= new TMultiGraph("mgr_res_tiltY","Tilt around Y; Tilt angle (degrees); Spatial Resolution (mm)");
+    mgr_res[0]= new TMultiGraph("mgr_res_tiltX","; Tilt angle (degrees); Spatial Resolution (mm)");
+    mgr_res[1]= new TMultiGraph("mgr_res_tiltY","; Tilt angle (degrees); Spatial Resolution (mm)");
+    //mgr_res[0]= new TMultiGraph("mgr_res_tiltX","Tilt around X; Tilt angle (degrees); Spatial Resolution (mm)");
+    //mgr_res[1]= new TMultiGraph("mgr_res_tiltY","Tilt around Y; Tilt angle (degrees); Spatial Resolution (mm)");
     
-    TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","Down Layer; Tilt angle (degrees); Angular Resolution (degrees)");
+    TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","; Tilt Angle (degrees); Angular Resolution (degrees)");
+    //TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","Down Layer; Tilt angle (degrees); Angular Resolution (degrees)");
     TString histname;
     
     TLegend *leg_eff[2];
@@ -352,7 +357,7 @@ void makeMultiGraps(){
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.25);
+        mgr_res[i]->SetMaximum(0.35);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         mgr_res[i]->Draw("AP");

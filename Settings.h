@@ -50,7 +50,7 @@ std::map<TString, double> HitAmplitudeCut={
 
 // local coordinates
 int CluSizeCutX = 1;
-int CluSizeCutY = 5;
+int CluSizeCutY = 1;
 
 const unsigned int MaxEventNum = 10000000;
 //const unsigned int MaxEventNum = 1000000;

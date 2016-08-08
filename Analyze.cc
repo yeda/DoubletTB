@@ -525,6 +525,7 @@ void printResolution(TString runnum){
             fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
             fitfunc2->SetLineColor(kGreen);
             fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
+    fitfunc2->SetParLimits(3,0,10000);
             
             h1D->Fit(fitfunc2,"+QR");
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
@@ -545,17 +546,18 @@ void printResolution(TString runnum){
     
     fitname = TString("fitgaus_") + histname;
     fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
-    h1D->Fit(fitfunc1,"QR");
+    h1D->Fit(fitfunc1,"R");
     
     fitname = TString("fitgauspol_") + histname;
     fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
     fitfunc2->SetLineColor(kGreen);
     fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
-    h1D->Fit(fitfunc2,"+QR");
+    fitfunc2->SetParLimits(3,0,10000);
+    h1D->Fit(fitfunc2,"+R");
     
     double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
     double stat_err =fitfunc2->GetParError(2) / sqrt(2);
-    double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
+    double sys_err = fabs(stat_err - (fitfunc1->GetParError(2) / sqrt(2)));
     double ang_res_err = stat_err+sys_err;
     
     
@@ -616,7 +618,7 @@ void createHistos(){
         
         histname = spatialRes_histname + IDlayermap[ylayers[i]];
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
+            title = TString("Spatial Resolution;")+IDlayermap[ylayers[i]]+TString("_{expected} - ")+IDlayermap[ylayers[i]]+TString("_{measured} (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }

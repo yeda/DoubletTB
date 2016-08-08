@@ -238,6 +238,7 @@ int main(int argc, char *argv[]){
                         weight = double(i_chan->first) * double(i_chan->second);
                         clusize = 1;
                         prev_chan = i_chan->first;
+                    seedchanAmp =double(i_chan->second);
                     }
                     
                     
