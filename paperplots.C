@@ -39,6 +39,8 @@ cc->cd();
 htime->Draw("colz");
 ss = TString("results/") + TString(htime->GetName()) +  TString(".pdf");
 cc->SaveAs(ss.Data());
+    ss = TString("results/") + TString(htime->GetName()) +  TString(".C");
+    cc->SaveAs(ss.Data());
 
 }
 
@@ -57,21 +59,21 @@ if (i==0){
 	h1D->SetAxisRange(1.5,3.5,"X");
 	fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX");
 	fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX");
- 	h1D->SetTitle(";dx (mm);Number of Entries");
+ 	h1D->SetTitle(";X_{measured}-X_{expected} (mm);Number of Entries");
 }
 else if (i==1){
 	h1D = (TH1D*)_file0->Get("spatialRes_DownY");
 	h1D->SetAxisRange(-1,1,"X");
 	fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY");
 	fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY");
-	h1D->SetTitle(";dy (mm);Number of Entries");
+	h1D->SetTitle(";Y_{measured}-Y_{expected} (mm);Number of Entries");
 }
 else{
         h1D = (TH1D*)_file0->Get("angularRes_Down");
         h1D->SetAxisRange(1.0,5.0,"X");
         fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_Down");
         fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_Down");
-	h1D->SetTitle(";d#theta (degrees);Number of Entries");
+	h1D->SetTitle(";#theta_{measured}-#theta_{expected} (degrees);Number of Entries");
 }
     h1D->GetXaxis()->SetLabelSize(0.045);
     h1D->GetXaxis()->SetTitleSize(0.05);
@@ -84,18 +86,47 @@ else{
     h1D->SetLineWidth(2);
     h1D->SetLineColor(kBlack);
     h1D->SetStats(0);
+    h1D->SetFillColor(kOrange);
+    
+    fpol->SetLineWidth(2);
+    fpol->SetLineColor(kBlue);
+    fgaus->SetLineWidth(2);
+    fgaus->SetLineColor(kRed);
 
-fpol->SetLineColor(kBlue);
+    double res =fpol->GetParameter(2) / sqrt(2);
+    double stat_err =fpol->GetParError(2) / sqrt(2);
+    double sys_err = fabs(stat_err - (fgaus->GetParError(2) / sqrt(2)));
+    double res_err = stat_err+sys_err;
 
-TLegend *leg = new TLegend(0.55,0.65,0.87,0.85);
+    TLatex *latex =new TLatex();
+    latex->SetNDC();
+    latex->SetTextFont(43);
+    latex->SetTextColor(1);
+    latex->SetTextSize(26);
+    latex->SetTextColor(kOrange+7);
+    
+    std::ostringstream ss;
+    ss<< string("#bf{#sigma = ")<< fixed<< setprecision(2)<< res << string(" #pm ")<<fixed<<setprecision(2)<<res_err<<string("}");
+    TString tmp_str = TString(ss.str());
+
+    
+TLegend *leg = new TLegend(0.55,0.65,0.87,0.93);
+    leg->SetFillColor(0);
+    leg->SetLineColor(0);
+
+    leg->AddEntry(h1D,"Data","f");
 leg->AddEntry(fgaus,"Gaussian","l");
 leg->AddEntry(fpol,"Gaussian + Constant","l");
 
 cc->cd();
 h1D->Draw();
 leg->Draw();
+    latex->DrawLatex(0.6,0.5,tmp_str.Data());
+
 ss = TString("results/") + TString(h1D->GetName()) +  TString(".pdf");
 cc->SaveAs(ss.Data());
+    ss = TString("results/") + TString(h1D->GetName()) +  TString(".C");
+    cc->SaveAs(ss.Data());
 
 }
 }

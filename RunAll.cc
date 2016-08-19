@@ -261,25 +261,29 @@ void makeMultiGraps(){
     TLegend *leg_eff[2];
     TLegend *leg_res[2];
     TLegend *leg_angres = new TLegend(0.35, 0.9, 0.65, 0.8);
+    leg_angres->SetFillColor(0);
+    leg_angres->SetLineColor(0);
+
     for (int i=0; i<2; i++) {
         leg_eff[i] = new TLegend(0.35, 0.35, 0.65, 0.2);
         leg_eff[i]->SetFillColor(0);
-        leg_eff[i]->SetLineColor(1);
+        leg_eff[i]->SetLineColor(0);
         leg_eff[i]->SetNColumns(2);
         
         leg_res[i] = new TLegend(0.35, 0.9, 0.65, 0.8);
         leg_res[i]->SetFillColor(0);
-        leg_res[i]->SetLineColor(1);
+        leg_res[i]->SetLineColor(0);
         leg_res[i]->SetNColumns(2);
-        
     }
+    
+    
     TString legname;
     int icolor[5]={0};
     for (map<TString,TObject*>::iterator it=rootobjects.begin(); it != rootobjects.end(); it++) {
         
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
-        if ( histname.Index(eff_histoname) != -1 ){
+        if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
 //&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
@@ -305,7 +309,7 @@ void makeMultiGraps(){
             }
             
         }
-        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ // res plots
+        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1 && histname.Index("Ref") == -1){ // res plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -327,7 +331,7 @@ void makeMultiGraps(){
                 
             }
         }
-        else if (histname.Index(angres_histoname) != -1){
+        else if (histname.Index(angres_histoname) != -1 && histname.Index("Ref") == -1){
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -341,7 +345,7 @@ void makeMultiGraps(){
         }
         
     }
-    TString pdfname;
+    TString pdfname, Cfilename;
     TCanvas *cc = new TCanvas("cc","",800,600);
     formatCanvas1D(cc);
     for (int i=0; i<2; i++) {
@@ -350,34 +354,40 @@ void makeMultiGraps(){
         
         histname = mgr_eff[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
+        Cfilename = TString("./results/") + histname +TString(".C");
         mgr_eff[i]->Draw("AP");
         leg_eff[i]->Draw();
         formatMultiGraph(mgr_eff[i]);
         cc->SaveAs(pdfname.Data());
+        cc->SaveAs(Cfilename.Data());
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
         mgr_res[i]->SetMaximum(0.35);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
+        Cfilename = TString("./results/") + histname +TString(".C");
         mgr_res[i]->Draw("AP");
         leg_res[i]->Draw();
         mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
         formatMultiGraph(mgr_res[i]);
         cc->SaveAs(pdfname.Data());
-        
+        cc->SaveAs(Cfilename.Data());
+
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_res[i]));
         
     }
     
     histname = mgr_angres->GetName();
     pdfname = TString("./results/") + histname +TString(".pdf");
+    Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
     leg_angres->Draw();
     mgr_angres->GetXaxis()->SetRangeUser(-1,11);
     formatMultiGraph(mgr_angres);
     cc->SaveAs(pdfname.Data());
-    
+    cc->SaveAs(Cfilename.Data());
+
     
 }
 
