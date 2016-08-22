@@ -66,23 +66,23 @@
     for (int i=0; i<3; i++){
         if (i==0){
             h1D = (TH1D*)_file0->Get("spatialRes_DownX_mod");
-            h1D->SetAxisRange(1.0,4.0,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX");
+            h1D->SetAxisRange(-1.3,1.7,"X");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX_mod");
             h1D->SetTitle(";X_{measured}-X_{expected} (mm);Number of Entries");
         }
         else if (i==1){
             h1D = (TH1D*)_file0->Get("spatialRes_DownY_mod");
-            h1D->SetAxisRange(-1.5,1.7,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY");
+            h1D->SetAxisRange(-1.3,1.7,"X");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY_mod");
             h1D->SetTitle(";Y_{measured}-Y_{expected} (mm);Number of Entries");
         }
         else{
             h1D = (TH1D*)_file0->Get("angularRes_Down_mod");
-            h1D->SetAxisRange(0.5,5.7,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_Down");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_Down");
+            h1D->SetAxisRange(-2.8,3.2,"X");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_Down_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_Down_mod");
             h1D->SetTitle(";#theta_{measured}-#theta_{expected} (degrees);Number of Entries");
         }
         h1D->GetXaxis()->SetLabelSize(0.045);

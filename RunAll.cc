@@ -51,9 +51,9 @@ int main(int argc, char *argv[]){
      runHitMaker();
      //runAlignment();
      system("./alignment 134");
+     */
      system("rm results/efficiency.txt"); system("rm results/resolution.txt");
      runAnalyze();
-     */
     readMeasEff();
     readMeasRes();
     
