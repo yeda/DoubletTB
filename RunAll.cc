@@ -47,13 +47,13 @@ map<TString,TObject*> rootobjects;
 int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
-   /* 
-    runHitMaker();
-    //runAlignment();
-    system("./alignment 134");
-    system("rm results/efficiency.txt"); system("rm results/resolution.txt");
-    runAnalyze();
-   */ 
+    /*
+     runHitMaker();
+     //runAlignment();
+     system("./alignment 134");
+     system("rm results/efficiency.txt"); system("rm results/resolution.txt");
+     runAnalyze();
+     */
     readMeasEff();
     readMeasRes();
     
@@ -214,7 +214,7 @@ void makePlots(){
                             gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][3],angle_err,comb_result[itilt][idet][ixy][4]);
                             gre->SetName(histname.Data());
                             gre->SetMarkerStyle(20);
-                        gre->SetMarkerSize(1.6);
+                            gre->SetMarkerSize(1.6);
                             
                             title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
                             gre->Sort();
@@ -255,7 +255,7 @@ void makePlots(){
 
 void makeMultiGraps(){
     TGraphErrors *gre;
-TLatex *latex =new TLatex();
+    TLatex *latex =new TLatex();
     latex->SetNDC();
     latex->SetTextFont(43);
     latex->SetTextColor(1);
@@ -280,25 +280,25 @@ TLatex *latex =new TLatex();
     TLegend *leg_eff[2];
     TLegend *leg_res[2];
     TLegend *leg_angres;
-        leg_angres = new TLegend(0.6, 0.9, 0.8, 0.7);
+    leg_angres = new TLegend(0.6, 0.9, 0.8, 0.7);
     leg_angres->SetFillColor(0);
     leg_angres->SetLineColor(0);
     leg_angres->SetTextSize(0.05);
     leg_angres->SetFillStyle(0);
-
+    
     for (int i=0; i<2; i++) {
         leg_eff[i] = new TLegend(0.5, 0.9, 0.8, 0.7);
         leg_eff[i]->SetFillColor(0);
         leg_eff[i]->SetLineColor(0);
         leg_eff[i]->SetNColumns(2);
-    leg_eff[i]->SetTextSize(0.05);
-    leg_eff[i]->SetFillStyle(0);
-               leg_res[i] = new TLegend(0.5, 0.9, 0.8, 0.7);
+        leg_eff[i]->SetTextSize(0.05);
+        leg_eff[i]->SetFillStyle(0);
+        leg_res[i] = new TLegend(0.5, 0.9, 0.8, 0.7);
         leg_res[i]->SetFillColor(0);
         leg_res[i]->SetLineColor(0);
         leg_res[i]->SetNColumns(2);
-    leg_res[i]->SetTextSize(0.05);
-    leg_res[i]->SetFillStyle(0);
+        leg_res[i]->SetTextSize(0.05);
+        leg_res[i]->SetFillStyle(0);
     }
     
     
@@ -308,17 +308,17 @@ TLatex *latex =new TLatex();
         
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
-
-	if(legname == TString("DownX") ) legname = TString("B - L2");
-	else if(legname == TString("DownY") ) legname = TString("B - L1");
-	else if(legname == TString("UpX") ) legname = TString("A - L2");
-	else if(legname == TString("UpY") ) legname = TString("A - L1");
-
+        
+        if(legname == TString("DownX") ) legname = TString("B - L2");
+        else if(legname == TString("DownY") ) legname = TString("B - L1");
+        else if(legname == TString("UpX") ) legname = TString("A - L2");
+        else if(legname == TString("UpY") ) legname = TString("A - L1");
+        
         if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
-//&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
+            //&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
-                        gre->SetMarkerSize(1.6);
+            gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             
@@ -366,7 +366,7 @@ TLatex *latex =new TLatex();
         else if (histname.Index(angres_histoname) != -1 && histname.Index("Ref") == -1){
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
-                        gre->SetMarkerSize(1.6);
+            gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             gre->SetMarkerColor(color[icolor[4]]);
@@ -384,16 +384,16 @@ TLatex *latex =new TLatex();
     for (int i=0; i<2; i++) {
         mgr_eff[i]->SetMinimum(0.7);
         mgr_eff[i]->SetMaximum(1.25);
-
+        
         histname = mgr_eff[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
         mgr_eff[i]->Draw("AP");
         leg_eff[i]->Draw();
         formatMultiGraph(mgr_eff[i]);
-    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
-    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
-
+        latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+        latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+        
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
@@ -407,31 +407,31 @@ TLatex *latex =new TLatex();
         leg_res[i]->Draw();
         mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
         formatMultiGraph(mgr_res[i]);
-    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
-    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
-
+        latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+        latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+        
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
-
+        
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_res[i]));
         
     }
     
     histname = mgr_angres->GetName();
-        mgr_angres->SetMinimum(0);
-        mgr_angres->SetMaximum(0.55);
+    mgr_angres->SetMinimum(0);
+    mgr_angres->SetMaximum(0.55);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
     leg_angres->Draw();
     mgr_angres->GetXaxis()->SetRangeUser(-1,11);
     formatMultiGraph(mgr_angres);
-
+    
     latex->DrawLatex(0.17,0.8,"DESY Testbeam");
     latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
     cc->SaveAs(pdfname.Data());
     cc->SaveAs(Cfilename.Data());
-
+    
     
 }
 
@@ -601,43 +601,43 @@ void readMeasEff(){
     
     ifstream fileinfo_file(output_efficiency_txtfile.Data());
     string line;
-       getline(fileinfo_file,line);
- 
+    getline(fileinfo_file,line);
+    
     Meas* ameas;
     int runnum;
     double temp_d[2];
     while(getline(fileinfo_file,line)){
-vector<string> elems = splitstring(line,';');
-
-if(elems.size()!=13){
-cout<<"line in "<< output_efficiency_txtfile<<" is not valid"<<endl; 
-continue;
-}
+        vector<string> elems = splitstring(line,';');
+        
+        if(elems.size()!=13){
+            cout<<"line in "<< output_efficiency_txtfile<<" is not valid"<<endl;
+            continue;
+        }
         runnum = atoi(elems[0].c_str());
         
-            ameas = dynamic_cast<Meas*> (measurements[runnum]);
-            
-            ameas->set_eff_DownX(atof(elems[1].c_str()));
-            ameas->set_eff_DownX_err(atof(elems[2].c_str()));
-            
-            ameas->set_eff_DownY(atof(elems[3].c_str()));
-            ameas->set_eff_DownY_err(atof(elems[4].c_str()));
-            
-            ameas->set_eff_UpX(atof(elems[5].c_str()));
-            ameas->set_eff_UpX_err(atof(elems[6].c_str()));
-
-            ameas->set_eff_UpY(atof(elems[7].c_str()));
-            ameas->set_eff_UpY_err(atof(elems[8].c_str()));
-            
-            ameas->set_eff_RefX(atof(elems[9].c_str()));
-            ameas->set_eff_RefX_err(atof(elems[10].c_str()));
-
-            ameas->set_eff_RefY(atof(elems[11].c_str()));
-            ameas->set_eff_RefY_err(atof(elems[12].c_str()));
-
-            measurements[runnum] = ameas;
-            
-        }
+        ameas = dynamic_cast<Meas*> (measurements[runnum]);
+        
+        ameas->set_eff_DownX(atof(elems[1].c_str()));
+        ameas->set_eff_DownX_err(atof(elems[2].c_str()));
+        
+        ameas->set_eff_DownY(atof(elems[3].c_str()));
+        ameas->set_eff_DownY_err(atof(elems[4].c_str()));
+        
+        ameas->set_eff_UpX(atof(elems[5].c_str()));
+        ameas->set_eff_UpX_err(atof(elems[6].c_str()));
+        
+        ameas->set_eff_UpY(atof(elems[7].c_str()));
+        ameas->set_eff_UpY_err(atof(elems[8].c_str()));
+        
+        ameas->set_eff_RefX(atof(elems[9].c_str()));
+        ameas->set_eff_RefX_err(atof(elems[10].c_str()));
+        
+        ameas->set_eff_RefY(atof(elems[11].c_str()));
+        ameas->set_eff_RefY_err(atof(elems[12].c_str()));
+        
+        measurements[runnum] = ameas;
+        
+    }
     
 }
 

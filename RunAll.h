@@ -41,7 +41,7 @@ struct Meas {
     double eff_Down_err[2];
     double eff_Up_err[2];
     double eff_Ref_err[2];
-
+    
     double res_Down[2];
     double res_Down_err[2];
     double res_Up[2];

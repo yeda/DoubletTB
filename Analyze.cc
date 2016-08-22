@@ -84,9 +84,23 @@ int main(int argc, char *argv[]){
         }
     }
     //
+  
+    
+    // modified res plots, mean shifted to zero
+    for (Long64_t ientry=0; ientry<nentries;ientry++) {
+        input_tree->GetEntry(ientry);
+        if(isGoodEvent()){
+            fillModifiedHistos();
+        }
+    }
+
+    
     
     printResolution(runnum);
     printEfficiency(runnum);
+    
+    
+    
     createOutputFile(fout);
     
     return 0;
@@ -125,7 +139,7 @@ void findRefLayers(int layerid, int* arr){
 void calculateEfficiency(){
     int reflayersX[2];
     int reflayersY[2];
-
+    
     map< int, vector<float> > hit;
     double  x1, x2,x3, y1, y2,y3, z1,z2,z3, x, y;
     TH1D *h1D;
@@ -138,13 +152,13 @@ void calculateEfficiency(){
         bla.clear();
         hit[i] = bla;
     }
-
+    
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
         hit[layerID->at(ihit)].push_back(newpos);
     }
     
-
+    
     for (int i_layer=0; i_layer<3; i_layer++) {
         //current xlayer = xlayers[i_layer]
         //current ylayer = ylayers[i_layer]
@@ -247,8 +261,8 @@ void fillHitMap2D(){
         
         vec_x = hit[xlayers[i_layer]];
         vec_y = hit[ylayers[i_layer]];
-
-    
+        
+        
         
         layername = IDlayermap[xlayers[i_layer]];
         tempname = layername(0, layername.Length() -1);
@@ -301,7 +315,7 @@ map< int, vector<float> > getHits(string str){
             newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
         else if (str == string("hitamp"))
             newpos = hit_amplitude->at(ihit);
-
+        
         hit[layerID->at(ihit)].push_back(newpos);
     }
     
@@ -393,6 +407,72 @@ void fillHistos(){
 }
 
 
+void fillModifiedHistos(){
+    
+    TString histname,layername;
+    TH1D *h1D;
+    TH1D *h1D_mod;
+    
+    double newpos;
+    // [pointnumber][x,y,z]
+    double p[3][3];
+    
+    for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
+        
+        layername = IDlayermap[layerID->at(ihit)];
+        newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
+       
+        for (unsigned int i=0; i<3; i++) {
+            if (layerID->at(ihit) == xlayers[i]) {
+                p[i][0] = newpos;
+                p[i][2] = layerZposition[layerID->at(ihit)];
+            }
+            else if (layerID->at(ihit) == ylayers[i])
+                p[i][1] = newpos;
+        }
+        
+    }
+    
+    // match pointnumber with layers
+    // it is ordered as xlayers[i]
+    //      so p[0] is ref, p[1] is Up, p[2] is Down
+    
+    double p_exp[3];
+    p_exp[2] = p[2][2];
+    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
+    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
+    
+    
+    for (unsigned int i=1; i<3; i++) {
+        
+        // spatial resolution
+        histname = spatialRes_histname + IDlayermap[xlayers[i]];
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+        histname = spatialRes_histname + IDlayermap[xlayers[i]]+ TString("_mod");
+        h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
+        h1D_mod->Fill(p_exp[0] - p[i][0]-h1D->GetMean());
+        
+        histname = spatialRes_histname + IDlayermap[ylayers[i]];
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+        histname = spatialRes_histname + IDlayermap[ylayers[i]] + TString("_mod");
+        h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
+        h1D_mod->Fill(p_exp[1] - p[i][1]-h1D->GetMean());
+        
+    }
+    
+    // Angular resolution
+    
+    
+    histname = angularRes_histname + TString("Down");
+    h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+    histname = angularRes_histname + TString("Down_mod");
+    h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
+    // angle between down_meas - up_meas - down_exp
+    h1D_mod->Fill(getAngleABC(p[2],p[1],p_exp)-h1D->GetMean());
+    
+    
+}
+
 
 double getAngleABC(double A[] , double B[], double C[]){
     // measuring angle on side B
@@ -441,7 +521,7 @@ void printEfficiency(TString runnum){
     outfile << runnum << ";";
     for (unsigned short i_layer=0; i_layer<NLayer; i_layer++){
         double eff = double (layercount[i_layer])/double (expectedcount[i_layer]);
-	double eff_err = sqrt(eff*(1-eff)/double (expectedcount[i_layer]));
+        double eff_err = sqrt(eff*(1-eff)/double (expectedcount[i_layer]));
         cout<<"Layer: "<<IDlayermap[i_layer]<<" efficiency: "<<eff<<" +/- "<< eff_err<<"       found hits: "<<layercount[i_layer]<<" expected hits: "<<expectedcount[i_layer]<<endl;
         outfile<< eff << ";"<<eff_err<<";";
     }
@@ -511,7 +591,7 @@ void printResolution(TString runnum){
             if (j==0) layername =IDlayermap[xlayers[i]];
             if (j==1) layername =IDlayermap[ylayers[i]];
             
-            histname =  spatialRes_histname + layername;
+            histname =  spatialRes_histname + layername + TString("_mod");
             h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
             mean = h1D->GetMean();
             rms = h1D->GetRMS();
@@ -526,7 +606,7 @@ void printResolution(TString runnum){
             fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
             fitfunc2->SetLineColor(kGreen);
             fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
-    fitfunc2->SetParLimits(3,0,10000);
+            fitfunc2->SetParLimits(3,0,10000);
             
             h1D->Fit(fitfunc2,"+QR");
             double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
@@ -539,7 +619,7 @@ void printResolution(TString runnum){
         }
     }
     
-    histname = angularRes_histname + TString("Down");
+    histname = angularRes_histname + TString("Down_mod");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     mean = h1D->GetMean();
     rms = h1D->GetRMS();
@@ -624,7 +704,21 @@ void createHistos(){
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
         
+        // modified spatial resolution
+        histname = spatialRes_histname + IDlayermap[xlayers[i]]+TString("_mod");
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
+            h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+        }
         
+        histname = spatialRes_histname + IDlayermap[ylayers[i]]+TString("_mod");
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Spatial Resolution;")+IDlayermap[ylayers[i]]+TString("_{expected} - ")+IDlayermap[ylayers[i]]+TString("_{measured} (mm);Number of entries");
+            h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+        }
+
         
         // correlation
         histname = corr_histname + IDlayermap[xlayers[i]];
@@ -648,7 +742,14 @@ void createHistos(){
         h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
         rootobjects.insert(pair<TString,TObject*>(histname,h1D));
     }
-    
+    // angular resolution
+    histname = angularRes_histname + TString("Down_mod");
+    if (rootobjects.find(histname) == rootobjects.end()) {
+        title = TString("Angular Resolution (Down); Angle difference (degrees);Number of entries");
+        h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
+        rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+    }
+
     TString s[3] = {"Down","Up","Ref"};
     for (unsigned int i=0; i<3; i++) {
         histname = hitmap_histname + s[i];
@@ -664,16 +765,6 @@ void createHistos(){
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
     }
-    
-    
-    /*
-     histname = angularRes_histname + TString("Up");
-     if (rootobjects.find(histname) == rootobjects.end()) {
-     title = TString("Angular Resolution (Up); Angle difference (degrees);Number of entries");
-     h1D = new TH1D(histname.Data(), title.Data(), 1000,-10, 10);
-     rootobjects.insert(pair<TString,TObject*>(histname,h1D));
-     }
-     */
     
 }
 

@@ -20,6 +20,7 @@ using namespace std;
 
 void createHistos();
 void fillHistos();
+void fillModifiedHistos();
 
 void readAlignmentParameters(TString alignmenttxt, double alignmentpar[]);
 void calculateEfficiency();
