@@ -3,6 +3,7 @@
 
 {
 #include <sstream>
+TGaxis::SetMaxDigits(3);
 
 TCanvas *cc = new TCanvas("cc","",800,600);
     cc->SetRightMargin(0.125);
@@ -53,7 +54,6 @@ TLatex *latex =new TLatex();
     latex->SetTextFont(43);
     latex->SetTextColor(1);
     latex->SetTextSize(26);
-    latex->SetTextColor(kOrange+7);
     
 
 
@@ -66,21 +66,21 @@ TF1* fpol;
 for (int i=0; i<3; i++){
 if (i==0){
 	h1D = (TH1D*)_file0->Get("spatialRes_DownX");
-	h1D->SetAxisRange(1.5,3.5,"X");
+	h1D->SetAxisRange(1.0,4.0,"X");
 	fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX");
 	fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX");
  	h1D->SetTitle(";X_{measured}-X_{expected} (mm);Number of Entries");
 }
 else if (i==1){
 	h1D = (TH1D*)_file0->Get("spatialRes_DownY");
-	h1D->SetAxisRange(-1,1,"X");
+	h1D->SetAxisRange(-1.5,1.7,"X");
 	fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY");
 	fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY");
 	h1D->SetTitle(";Y_{measured}-Y_{expected} (mm);Number of Entries");
 }
 else{
         h1D = (TH1D*)_file0->Get("angularRes_Down");
-        h1D->SetAxisRange(1.0,5.0,"X");
+        h1D->SetAxisRange(0.5,5.7,"X");
         fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_Down");
         fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_Down");
 	h1D->SetTitle(";#theta_{measured}-#theta_{expected} (degrees);Number of Entries");
@@ -108,25 +108,28 @@ else{
     double sys_err = fabs(stat_err - (fgaus->GetParError(2) / sqrt(2)));
     double res_err = stat_err+sys_err;
 cout << res <<" "<< stat_err <<" "<< sys_err <<" "<< res_err<<endl;
-cout<<"here1"<<endl;
 sss.str("");
-    sss<< string("#bf{#sigma = ")<< fixed<< setprecision(2)<< res << string(" #pm ")<<fixed<<setprecision(2)<<res_err<<string("}");
+    sss<< string("#bf{#sigma = ")<< fixed<< setprecision(2)<<scientific<< res << string(" #pm ")<<fixed<<setprecision(2)<<scientific<<res_err<<string("}");
     tmp_str = TString(sss.str());
     
-cout<<"here2"<<endl;
-TLegend *leg = new TLegend(0.55,0.65,0.87,0.92);
+TLegend *leg = new TLegend(0.55,0.65,0.9,0.92);
     leg->SetFillColor(0);
+    leg->SetFillStyle(0);
     leg->SetLineColor(0);
+    leg->SetTextSize(0.05);
 
     leg->AddEntry(h1D,"Data","f");
 leg->AddEntry(fgaus,"Gaussian","l");
-leg->AddEntry(fpol,"Gaussian + Constant","l");
+leg->AddEntry(fpol,"#splitline{Gaussian}{   + Constant}","l");
 
-cout<<"here3"<<endl;
 cc->cd();
 h1D->Draw();
 leg->Draw();
-    latex->DrawLatex(0.6,0.5,tmp_str.Data());
+    latex->SetTextColor(kOrange+7);
+    latex->DrawLatex(0.54,0.5,tmp_str.Data());
+    latex->SetTextColor(kBlack);
+    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
 
 ss = TString("results/") + TString(h1D->GetName()) +  TString(".pdf");
 cc->SaveAs(ss.Data());

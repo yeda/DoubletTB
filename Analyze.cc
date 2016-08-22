@@ -441,8 +441,9 @@ void printEfficiency(TString runnum){
     outfile << runnum << ";";
     for (unsigned short i_layer=0; i_layer<NLayer; i_layer++){
         double eff = double (layercount[i_layer])/double (expectedcount[i_layer]);
-        cout<<"Layer: "<<IDlayermap[i_layer]<<" efficiency: "<<eff<<"       found hits: "<<layercount[i_layer]<<" expected hits: "<<expectedcount[i_layer]<<endl;
-        outfile<< eff << ";";
+	double eff_err = sqrt(eff*(1-eff)/double (expectedcount[i_layer]));
+        cout<<"Layer: "<<IDlayermap[i_layer]<<" efficiency: "<<eff<<" +/- "<< eff_err<<"       found hits: "<<layercount[i_layer]<<" expected hits: "<<expectedcount[i_layer]<<endl;
+        outfile<< eff << ";"<<eff_err<<";";
     }
     outfile<<endl;
     outfile.close();

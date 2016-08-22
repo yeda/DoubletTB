@@ -38,6 +38,10 @@ struct Meas {
     double eff_Up[2];
     double eff_Ref[2];
     
+    double eff_Down_err[2];
+    double eff_Up_err[2];
+    double eff_Ref_err[2];
+
     double res_Down[2];
     double res_Down_err[2];
     double res_Up[2];
@@ -48,7 +52,6 @@ struct Meas {
     
     Meas(){};
     ~Meas(){};
-    
     void set_eff_DownX(double avalue) {eff_Down[0] = avalue;}
     void set_eff_DownY(double avalue) {eff_Down[1] = avalue;}
     void set_eff_UpX(double avalue) {eff_Up[0] = avalue;}
@@ -62,6 +65,20 @@ struct Meas {
     double get_eff_UpY() {return eff_Up[1];}
     double get_eff_RefX() {return eff_Ref[0];}
     double get_eff_RefY() {return eff_Ref[1];}
+    
+    void set_eff_DownX_err(double avalue) {eff_Down_err[0] = avalue;}
+    void set_eff_DownY_err(double avalue) {eff_Down_err[1] = avalue;}
+    void set_eff_UpX_err(double avalue) {eff_Up_err[0] = avalue;}
+    void set_eff_UpY_err(double avalue) {eff_Up_err[1] = avalue;}
+    void set_eff_RefX_err(double avalue) {eff_Ref_err[0] = avalue;}
+    void set_eff_RefY_err(double avalue) {eff_Ref_err[1] = avalue;}
+    
+    double get_eff_DownX_err() {return eff_Down_err[0];}
+    double get_eff_DownY_err() {return eff_Down_err[1];}
+    double get_eff_UpX_err() {return eff_Up_err[0];}
+    double get_eff_UpY_err() {return eff_Up_err[1];}
+    double get_eff_RefX_err() {return eff_Ref_err[0];}
+    double get_eff_RefY_err() {return eff_Ref_err[1];}
     
     void set_res_DownX(double avalue) {res_Down[0] = avalue;}
     void set_res_DownY(double avalue) {res_Down[1] = avalue;}

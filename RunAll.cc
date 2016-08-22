@@ -20,8 +20,10 @@
 #include "TObject.h"
 #include "TGraphErrors.h"
 #include "TMultiGraph.h"
+#include "TLatex.h"
 
 #include "RunAll.h"
+#include "Settings.h"
 
 
 using namespace std;
@@ -30,8 +32,6 @@ const double NOTSET = 100000;
 
 map<int,bool> is_tiltX ={ {71, false},{74, false},{76, false},{79, false},{84, false},{86, false},{88, false},{90, false},{92, false},{139, true}, {137, true}, {102, true}, {104, true}, {106, true}, {110, true}, {112, true}, {118, true}, {124, true}, {127, true}};
 
-TString output_resolution_txtfile= TString("./results/resolution.txt");
-TString output_efficiency_txtfile= TString("./results/efficiency.txt");
 
 TString output_root_filename = TString("./results/measurementResults.root");
 
@@ -47,13 +47,13 @@ map<TString,TObject*> rootobjects;
 int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
-    
-    //runHitMaker();
-    //    runAlignment();
-    //system("./alignment 134");
-    //system("rm results/efficiency.txt"); system("rm results/resolution.txt");
-    //runAnalyze();
-    
+   /* 
+    runHitMaker();
+    //runAlignment();
+    system("./alignment 134");
+    system("rm results/efficiency.txt"); system("rm results/resolution.txt");
+    runAnalyze();
+   */ 
     readMeasEff();
     readMeasRes();
     
@@ -76,7 +76,7 @@ void makePlots(){
     TString tiltname;
     TString basehistname;
     // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
-    double comb_result[2][3][2][4][30]={0};
+    double comb_result[2][3][2][5][30]={0};
     // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
     double comb_ang_res[2][3][30]={0};
     double angle_err[30];
@@ -91,34 +91,40 @@ void makePlots(){
         if (is_tiltX.find(runnum) == is_tiltX.end()) continue;
         
         if(is_tiltX[runnum]){
-            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,eff_err,spa_res,spa_res_err][meas]
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[0][0][0][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_DownX();
-            comb_result[0][0][0][2][i_point[0]]=ameas->get_res_DownX();
-            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_DownX_err();
+            comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_DownX_err();
+            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_DownX();
+            comb_result[0][0][0][4][i_point[0]]=ameas->get_res_DownX_err();
             
             comb_result[0][0][1][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_DownY();
-            comb_result[0][0][1][2][i_point[0]]=ameas->get_res_DownY();
-            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_DownY_err();
+            comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_DownY_err();
+            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_DownY();
+            comb_result[0][0][1][4][i_point[0]]=ameas->get_res_DownY_err();
             
             comb_result[0][1][0][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_UpX();
-            comb_result[0][1][0][2][i_point[0]]=ameas->get_res_UpX();
-            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_UpX_err();
+            comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_UpX_err();
+            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_UpX();
+            comb_result[0][1][0][4][i_point[0]]=ameas->get_res_UpX_err();
             
             comb_result[0][1][1][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_UpY();
-            comb_result[0][1][1][2][i_point[0]]=ameas->get_res_UpY();
-            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_UpY_err();
+            comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_UpY_err();
+            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_UpY();
+            comb_result[0][1][1][4][i_point[0]]=ameas->get_res_UpY_err();
             
             comb_result[0][2][0][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RefX();
+            comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RefX_err();
             
             comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RefY();
+            comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RefY_err();
             
             comb_ang_res[0][0][i_point[0]]=ameas->get_Angle2();
             comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
@@ -127,34 +133,40 @@ void makePlots(){
             
         }
         else {
-            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,eff_err,spa_res,spa_res_err][meas]
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[1][0][0][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_DownX();
-            comb_result[1][0][0][2][i_point[1]]=ameas->get_res_DownX();
-            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_DownX_err();
+            comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_DownX_err();
+            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_DownX();
+            comb_result[1][0][0][4][i_point[1]]=ameas->get_res_DownX_err();
             
             comb_result[1][0][1][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_DownY();
-            comb_result[1][0][1][2][i_point[1]]=ameas->get_res_DownY();
-            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_DownY_err();
+            comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_DownY_err();
+            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_DownY();
+            comb_result[1][0][1][4][i_point[1]]=ameas->get_res_DownY_err();
             
             comb_result[1][1][0][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_UpX();
-            comb_result[1][1][0][2][i_point[1]]=ameas->get_res_UpX();
-            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_UpX_err();
+            comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_UpX_err();
+            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_UpX();
+            comb_result[1][1][0][4][i_point[1]]=ameas->get_res_UpX_err();
             
             comb_result[1][1][1][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_UpY();
-            comb_result[1][1][1][2][i_point[1]]=ameas->get_res_UpY();
-            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_UpY_err();
+            comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_UpY_err();
+            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_UpY();
+            comb_result[1][1][1][4][i_point[1]]=ameas->get_res_UpY_err();
             
             comb_result[1][2][0][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RefX();
+            comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RefX_err();
             
             comb_result[1][2][1][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RefY();
+            comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RefY_err();
             
             comb_ang_res[1][0][i_point[1]]=ameas->get_Angle1();
             comb_ang_res[1][1][i_point[1]]=ameas->get_ang_res();
@@ -164,7 +176,7 @@ void makePlots(){
         }
         
     }
-    // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+    // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,eff_err,spa_res,spa_res_err][meas]
     
     cout<< "i_point[0] "<<i_point[0]<<" i_point[1] "<<i_point[1]<<endl;
     
@@ -189,18 +201,20 @@ void makePlots(){
                     else if(imeastype==2) histname.ReplaceAll("MEAS", res_histoname);
                     
                     if (imeastype==1) {
-                        gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1], angle_err, zero_err);
+                        gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][1], angle_err, comb_result[itilt][idet][ixy][2]);
                         gre->SetName(histname.Data());
                         title= histname + TString(";Tilt angle (degrees);Efficiency");
                         gre->SetTitle(title.Data());
                         gre->SetMarkerStyle(20);
+                        gre->SetMarkerSize(1.6);
                         gre->Sort();
                         rootobjects.insert(pair<TString,TObject*>(histname,gre));
                     } else if (imeastype==2){
                         if (idet!=2){
-                            gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][2],angle_err,comb_result[itilt][idet][ixy][3]);
+                            gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][3],angle_err,comb_result[itilt][idet][ixy][4]);
                             gre->SetName(histname.Data());
                             gre->SetMarkerStyle(20);
+                        gre->SetMarkerSize(1.6);
                             
                             title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
                             gre->Sort();
@@ -241,6 +255,11 @@ void makePlots(){
 
 void makeMultiGraps(){
     TGraphErrors *gre;
+TLatex *latex =new TLatex();
+    latex->SetNDC();
+    latex->SetTextFont(43);
+    latex->SetTextColor(1);
+    latex->SetTextSize(26);
     
     TMultiGraph *mgr_eff[2];
     mgr_eff[0]= new TMultiGraph("mgr_eff_tiltX","; Tilt Angle (degrees); Efficiency");
@@ -260,20 +279,26 @@ void makeMultiGraps(){
     
     TLegend *leg_eff[2];
     TLegend *leg_res[2];
-    TLegend *leg_angres = new TLegend(0.35, 0.9, 0.65, 0.8);
+    TLegend *leg_angres;
+        leg_angres = new TLegend(0.6, 0.9, 0.8, 0.7);
     leg_angres->SetFillColor(0);
     leg_angres->SetLineColor(0);
+    leg_angres->SetTextSize(0.05);
+    leg_angres->SetFillStyle(0);
 
     for (int i=0; i<2; i++) {
-        leg_eff[i] = new TLegend(0.35, 0.35, 0.65, 0.2);
+        leg_eff[i] = new TLegend(0.5, 0.9, 0.8, 0.7);
         leg_eff[i]->SetFillColor(0);
         leg_eff[i]->SetLineColor(0);
         leg_eff[i]->SetNColumns(2);
-        
-        leg_res[i] = new TLegend(0.35, 0.9, 0.65, 0.8);
+    leg_eff[i]->SetTextSize(0.05);
+    leg_eff[i]->SetFillStyle(0);
+               leg_res[i] = new TLegend(0.5, 0.9, 0.8, 0.7);
         leg_res[i]->SetFillColor(0);
         leg_res[i]->SetLineColor(0);
         leg_res[i]->SetNColumns(2);
+    leg_res[i]->SetTextSize(0.05);
+    leg_res[i]->SetFillStyle(0);
     }
     
     
@@ -283,10 +308,17 @@ void makeMultiGraps(){
         
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
+
+	if(legname == TString("DownX") ) legname = TString("B - L2");
+	else if(legname == TString("DownY") ) legname = TString("B - L1");
+	else if(legname == TString("UpX") ) legname = TString("A - L2");
+	else if(legname == TString("UpY") ) legname = TString("A - L1");
+
         if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
 //&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
+                        gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             
@@ -334,6 +366,7 @@ void makeMultiGraps(){
         else if (histname.Index(angres_histoname) != -1 && histname.Index("Ref") == -1){
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
+                        gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             gre->SetMarkerColor(color[icolor[4]]);
@@ -350,20 +383,23 @@ void makeMultiGraps(){
     formatCanvas1D(cc);
     for (int i=0; i<2; i++) {
         mgr_eff[i]->SetMinimum(0.7);
-        mgr_eff[i]->SetMaximum(1.1);
-        
+        mgr_eff[i]->SetMaximum(1.25);
+
         histname = mgr_eff[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
         mgr_eff[i]->Draw("AP");
         leg_eff[i]->Draw();
         formatMultiGraph(mgr_eff[i]);
+    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.35);
+        mgr_res[i]->SetMaximum(0.40);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
@@ -371,6 +407,9 @@ void makeMultiGraps(){
         leg_res[i]->Draw();
         mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
         formatMultiGraph(mgr_res[i]);
+    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
 
@@ -379,12 +418,17 @@ void makeMultiGraps(){
     }
     
     histname = mgr_angres->GetName();
+        mgr_angres->SetMinimum(0);
+        mgr_angres->SetMaximum(0.55);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
     leg_angres->Draw();
     mgr_angres->GetXaxis()->SetRangeUser(-1,11);
     formatMultiGraph(mgr_angres);
+
+    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
+    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
     cc->SaveAs(pdfname.Data());
     cc->SaveAs(Cfilename.Data());
 
@@ -455,7 +499,7 @@ void runAnalyze(){
      {4,TString("RefX")},{5,TString("RefY")},
      };
      */
-    out_eff<<"RunNum;DownX;DownY;UpX;UpY;RefX;RefY;"<<endl;
+    out_eff<<"RunNum;DownX;DownX_err;DownY;DownY_err;UpX;UpX_err;UpY;UpY_err;RefX;RefX_err;RefY;RefY_err;"<<endl;
     out_eff.close();
     
     
@@ -556,54 +600,44 @@ void readMeasEff(){
     cout<< "Reading "<<output_efficiency_txtfile<<endl;
     
     ifstream fileinfo_file(output_efficiency_txtfile.Data());
-    string firstline;
-    getline(fileinfo_file,firstline);
-    
+    string line;
+       getline(fileinfo_file,line);
+ 
     Meas* ameas;
     int runnum;
     double temp_d[2];
-    string s;
-    while(!fileinfo_file.eof()){
-        getline(fileinfo_file,s,';');
-        runnum = atoi(s.c_str());
+    while(getline(fileinfo_file,line)){
+vector<string> elems = splitstring(line,';');
+
+if(elems.size()!=13){
+cout<<"line in "<< output_efficiency_txtfile<<" is not valid"<<endl; 
+continue;
+}
+        runnum = atoi(elems[0].c_str());
         
-        if (runnum == 0) {
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_DownX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_DownY(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_UpX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_UpY(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_RefX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_eff_RefY(atof(s.c_str()));
-        }
-        else {
             ameas = dynamic_cast<Meas*> (measurements[runnum]);
             
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_DownX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_DownY(atof(s.c_str()));
+            ameas->set_eff_DownX(atof(elems[1].c_str()));
+            ameas->set_eff_DownX_err(atof(elems[2].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_UpX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_UpY(atof(s.c_str()));
+            ameas->set_eff_DownY(atof(elems[3].c_str()));
+            ameas->set_eff_DownY_err(atof(elems[4].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_RefX(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_eff_RefY(atof(s.c_str()));
+            ameas->set_eff_UpX(atof(elems[5].c_str()));
+            ameas->set_eff_UpX_err(atof(elems[6].c_str()));
+
+            ameas->set_eff_UpY(atof(elems[7].c_str()));
+            ameas->set_eff_UpY_err(atof(elems[8].c_str()));
+            
+            ameas->set_eff_RefX(atof(elems[9].c_str()));
+            ameas->set_eff_RefX_err(atof(elems[10].c_str()));
+
+            ameas->set_eff_RefY(atof(elems[11].c_str()));
+            ameas->set_eff_RefY_err(atof(elems[12].c_str()));
+
             measurements[runnum] = ameas;
             
         }
-    }
     
 }
 
