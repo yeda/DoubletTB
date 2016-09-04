@@ -52,8 +52,8 @@ int main(int argc, char *argv[]){
      //runAlignment();
      system("./alignment 134");
      */
-     system("rm results/efficiency.txt"); system("rm results/resolution.txt");
-     runAnalyze();
+    system("rm results/efficiency.txt"); system("rm results/resolution.txt");
+    runAnalyze();
     readMeasEff();
     readMeasRes();
     
@@ -311,8 +311,8 @@ void makeMultiGraps(){
         
         if(legname == TString("DownX") ) legname = TString("B - L2");
         else if(legname == TString("DownY") ) legname = TString("B - L1");
-        else if(legname == TString("UpX") ) legname = TString("A - L2");
-        else if(legname == TString("UpY") ) legname = TString("A - L1");
+        else if(legname == TString("UpX") ) legname = TString("A - L1");
+        else if(legname == TString("UpY") ) legname = TString("A - L2");
         
         if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
             //&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
@@ -341,7 +341,7 @@ void makeMultiGraps(){
             }
             
         }
-        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1 && histname.Index("Ref") == -1){ // res plots
+        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ //&& histname.Index("Ref") == -1){ // res plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -399,7 +399,7 @@ void makeMultiGraps(){
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.40);
+        mgr_res[i]->SetMaximum(0.6);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
@@ -419,7 +419,7 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     mgr_angres->SetMinimum(0);
-    mgr_angres->SetMaximum(0.55);
+    mgr_angres->SetMaximum(0.65);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");

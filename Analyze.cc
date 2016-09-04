@@ -609,9 +609,9 @@ void printResolution(TString runnum){
             fitfunc2->SetParLimits(3,0,10000);
             
             h1D->Fit(fitfunc2,"+QR");
-            double spat_res =fitfunc2->GetParameter(2) / sqrt(2);
-            double stat_err =fitfunc2->GetParError(2) / sqrt(2);
-            double sys_err = fabs(stat_err - fitfunc1->GetParError(2) / sqrt(2));
+            double spat_res =fitfunc2->GetParameter(2);
+            double stat_err =fitfunc2->GetParError(2);
+            double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
             double spat_res_err = stat_err+sys_err;
             
             cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
@@ -636,9 +636,9 @@ void printResolution(TString runnum){
     fitfunc2->SetParLimits(3,0,10000);
     h1D->Fit(fitfunc2,"+R");
     
-    double ang_res =fitfunc2->GetParameter(2) / sqrt(2);
-    double stat_err =fitfunc2->GetParError(2) / sqrt(2);
-    double sys_err = fabs(stat_err - (fitfunc1->GetParError(2) / sqrt(2)));
+    double ang_res =fitfunc2->GetParameter(2) ;
+    double stat_err =fitfunc2->GetParError(2) ;
+    double sys_err = fabs(stat_err - (fitfunc1->GetParError(2)));
     double ang_res_err = stat_err+sys_err;
     
     
