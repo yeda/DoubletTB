@@ -374,6 +374,8 @@ void makeMultiGraps(){
             icolor[4]++;
             mgr_angres->Add(gre);
             legname =histname(histname.Last('_')-5, 5);
+	    if(legname == TString("tiltX")) legname = TString("Tilt around vertical axis");
+	    if(legname == TString("tiltY")) legname = TString("Tilt around horizontal axis");
             leg_angres->AddEntry(gre, legname.Data(), "ep");
         }
         
