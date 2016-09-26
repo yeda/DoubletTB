@@ -69,14 +69,14 @@
             h1D->SetAxisRange(-1.3,1.7,"X");
             fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX_mod");
             fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX_mod");
-            h1D->SetTitle(";X_{measured}-X_{expected} (mm);Number of Entries");
+            h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else if (i==1){
             h1D = (TH1D*)_file0->Get("spatialRes_DownY_mod");
             h1D->SetAxisRange(-1.3,1.7,"X");
             fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY_mod");
             fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY_mod");
-            h1D->SetTitle(";Y_{measured}-Y_{expected} (mm);Number of Entries");
+            h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else{
             h1D = (TH1D*)_file0->Get("angularRes_Down_mod");
