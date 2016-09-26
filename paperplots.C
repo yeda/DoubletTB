@@ -254,11 +254,11 @@ if(i==1){
 	legname = TString("B - L1");
 }
 if(i==2){ 
-	histname = histname + TString("UpX");
+	histname = histname + TString("UpY");
 	legname = TString("A - L1");
 }
 if(i==3){ 
-	histname = histname + TString("UpY");
+	histname = histname + TString("UpX");
 	legname = TString("A - L2");
 }
 h1D = (TH1D*)_file0->Get(histname.Data());
