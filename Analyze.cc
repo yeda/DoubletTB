@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
     
     // run through events
     Long64_t nentries = input_tree->GetEntries();
-
+    
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
         
         input_tree->GetEntry(ientry);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
         calculateEfficiency();
         fillHitMap2D();
         if(isGoodEvent()){
-             fillHistos();
+            fillHistos();
         }
     }
     //
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]){
             fillModifiedHistos();
         }
     }
-
+    
     printResolution(runnum);
     printEfficiency(runnum);
     
@@ -106,7 +106,7 @@ void findRefLayers(int layerid, int* arr){
     bool is_x_axis=false;
     for (unsigned int i=0; i<3; i++) {
         if (xlayers[i]==layerid) is_x_axis = true;
-        }
+    }
     
     int reflayercount=0;
     
@@ -126,7 +126,7 @@ void findRefLayers(int layerid, int* arr){
             }
         }
     }
- 
+    
 }
 
 
@@ -416,7 +416,7 @@ void fillModifiedHistos(){
         
         layername = IDlayermap[layerID->at(ihit)];
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
-       
+        
         for (unsigned int i=0; i<3; i++) {
             if (layerID->at(ihit) == xlayers[i]) {
                 p[i][0] = newpos;
@@ -510,14 +510,15 @@ double getAngleABC(double A[] , double B[], double C[]){
 
 void printEfficiency(TString runnum){
     std::ofstream outfile;
-    
+    // here
     outfile.open(output_efficiency_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     
     outfile << runnum << ";";
-    for (unsigned short i_layer=0; i_layer<NLayer; i_layer++){
-        double eff = double (layercount[i_layer])/double (expectedcount[i_layer]);
-        double eff_err = sqrt(eff*(1-eff)/double (expectedcount[i_layer]));
-        cout<<"Layer: "<<IDlayermap[i_layer]<<" efficiency: "<<eff<<" +/- "<< eff_err<<"       found hits: "<<layercount[i_layer]<<" expected hits: "<<expectedcount[i_layer]<<endl;
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+
+        double eff = double (layercount[it->first])/double (expectedcount[it->first]);
+        double eff_err = sqrt(eff*(1-eff)/double (expectedcount[it->first]));
+        cout<<"Layer: "<<IDlayermap[it->first]<<" efficiency: "<<eff<<" +/- "<< eff_err<<"       found hits: "<<layercount[it->first]<<" expected hits: "<<expectedcount[it->first]<<endl;
         outfile<< eff << ";"<<eff_err<<";";
     }
     outfile<<endl;
@@ -549,7 +550,7 @@ void readAlignmentParameters(TString alignmenttxt, double alignmentpar[]){
     
     getline(alignmentFile,alignmentline);
     //LayerID; LayerName; AlignmentShift;
-
+    
     while ( getline(alignmentFile,alignmentline) ){
         vector<string> elems = splitstring(alignmentline,';');
         // layer ID
@@ -576,39 +577,39 @@ void printResolution(TString runnum){
     outfile.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     outfile << runnum << ";";
     
-    for (unsigned int i=1; i<3; i++) {
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+        
         // point resolution
-        for (unsigned int j=0; j<2; j++) {
-            if (j==0) layername =IDlayermap[xlayers[i]];
-            if (j==1) layername =IDlayermap[ylayers[i]];
-            
-            histname =  spatialRes_histname + layername + TString("_mod");
-            h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-            mean = h1D->GetMean();
-            rms = h1D->GetRMS();
-            
-            max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
-            
-            fitname = TString("fitgaus_") + histname;
-            fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
-            h1D->Fit(fitfunc1,"QR");
-            
-            fitname = TString("fitgauspol_") + histname;
-            fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
-            fitfunc2->SetLineColor(kGreen);
-            fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
-            fitfunc2->SetParLimits(3,0,10000);
-            
-            h1D->Fit(fitfunc2,"+QR");
-            double spat_res =fitfunc2->GetParameter(2);
-            double stat_err =fitfunc2->GetParError(2);
-            double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
-            double spat_res_err = stat_err+sys_err;
-            
-            cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
-            outfile<<spat_res<<";"<<spat_res_err<<";";
-        }
+        
+        layername =it->second;
+        
+        histname =  spatialRes_histname + layername + TString("_mod");
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+        mean = h1D->GetMean();
+        rms = h1D->GetRMS();
+        
+        max_inxaxis =  h1D->GetXaxis()->GetBinCenter(h1D->GetMaximumBin());
+        
+        fitname = TString("fitgaus_") + histname;
+        fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
+        h1D->Fit(fitfunc1,"QR");
+        
+        fitname = TString("fitgauspol_") + histname;
+        fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);
+        fitfunc2->SetLineColor(kGreen);
+        fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
+        fitfunc2->SetParLimits(3,0,10000);
+        
+        h1D->Fit(fitfunc2,"+QR");
+        double spat_res =fitfunc2->GetParameter(2);
+        double stat_err =fitfunc2->GetParError(2);
+        double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
+        double spat_res_err = stat_err+sys_err;
+        
+        cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
+        outfile<<spat_res<<";"<<spat_res_err<<";";
     }
+    
     
     histname = angularRes_histname + TString("B_mod");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
@@ -709,7 +710,7 @@ void createHistos(){
             h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
-
+        
         
         // correlation
         histname = corr_histname + IDlayermap[xlayers[i]];
@@ -740,7 +741,7 @@ void createHistos(){
         h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
         rootobjects.insert(pair<TString,TObject*>(histname,h1D));
     }
-
+    
     TString s[3] = {"B","A","R"};
     for (unsigned int i=0; i<3; i++) {
         histname = hitmap_histname + s[i];

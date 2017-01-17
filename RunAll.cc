@@ -513,13 +513,24 @@ void runAnalyze(){
      {4,TString("R-L2")},{5,TString("R-L1")},
      };
      */
-    out_eff<<"RunNum;B-L2;B-L2_err;B-L1;B-L1_err;A-L2;A-L2_err;A-L1;A-L1_err;R-L2;R-L2_err;R-L1;R-L1_err;"<<endl;
+    out_eff<<"RunNum;";
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+        out_eff<<it->second<<";"<<it->second<<"_err;";
+    }
+
+    out_eff<<endl;
     out_eff.close();
     
     
     std::ofstream out_res;
     out_res.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
-    out_res<<"RunNum;A-L2;A-L2_err;A-L1;A-L1_err;B-L2;B-L2_err;B-L1;B-L1_err;Angular;Angular_err;"<<endl;
+    out_res<<"RunNum;";
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+        // we don't calculate resolution of the fixed layers, which have layer ids 0 and 1 (see Settings.h)
+        if (it->first != 0 && it->first != 1)
+            out_res<<it->second<<";"<<it->second<<"_err;";
+    }
+    out_res<<"Angular;Angular_err;"<<endl;
     out_res.close();
     
     for (unsigned int irun=0; irun<runlist.size(); irun++) {
@@ -579,14 +590,14 @@ void readMeasRes(){
             ameas = measurements[runnum];
             
             getline(fileinfo_file,s,';');
-            ameas->set_res_AL2(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_res_AL2_err(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
             ameas->set_res_AL1(atof(s.c_str()));
             getline(fileinfo_file,s,';');
             ameas->set_res_AL1_err(atof(s.c_str()));
+            
+            getline(fileinfo_file,s,';');
+            ameas->set_res_AL2(atof(s.c_str()));
+            getline(fileinfo_file,s,';');
+            ameas->set_res_AL2_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
             ameas->set_res_BL2(atof(s.c_str()));
@@ -631,23 +642,23 @@ void readMeasEff(){
         
         ameas = dynamic_cast<Meas*> (measurements[runnum]);
         
-        ameas->set_eff_BL2(atof(elems[1].c_str()));
-        ameas->set_eff_BL2_err(atof(elems[2].c_str()));
+        ameas->set_eff_RL2(atof(elems[1].c_str()));
+        ameas->set_eff_RL2_err(atof(elems[2].c_str()));
         
-        ameas->set_eff_BL1(atof(elems[3].c_str()));
-        ameas->set_eff_BL1_err(atof(elems[4].c_str()));
+        ameas->set_eff_RL1(atof(elems[3].c_str()));
+        ameas->set_eff_RL1_err(atof(elems[4].c_str()));
         
-        ameas->set_eff_AL2(atof(elems[5].c_str()));
-        ameas->set_eff_AL2_err(atof(elems[6].c_str()));
+        ameas->set_eff_AL1(atof(elems[5].c_str()));
+        ameas->set_eff_AL1_err(atof(elems[6].c_str()));
         
-        ameas->set_eff_AL1(atof(elems[7].c_str()));
-        ameas->set_eff_AL1_err(atof(elems[8].c_str()));
+        ameas->set_eff_AL2(atof(elems[7].c_str()));
+        ameas->set_eff_AL2_err(atof(elems[8].c_str()));
         
-        ameas->set_eff_RL2(atof(elems[9].c_str()));
-        ameas->set_eff_RL2_err(atof(elems[10].c_str()));
+        ameas->set_eff_BL2(atof(elems[9].c_str()));
+        ameas->set_eff_BL2_err(atof(elems[10].c_str()));
         
-        ameas->set_eff_RL1(atof(elems[11].c_str()));
-        ameas->set_eff_RL1_err(atof(elems[12].c_str()));
+        ameas->set_eff_BL1(atof(elems[11].c_str()));
+        ameas->set_eff_BL1_err(atof(elems[12].c_str()));
         
         measurements[runnum] = ameas;
         

@@ -150,7 +150,6 @@ std::map<unsigned short,double> layerResolution={
 };
 
 
-
 vector<string> splitstring(string s, char delim) {
     vector<string> elems;
     stringstream ss(s);
