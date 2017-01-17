@@ -1,4 +1,4 @@
-MMDataRunNum;BeamEnergy;Angle1;Angle2;DownX;DownY;RefX;RefY;UpX;UpY;config;map;Comment;
+MMDataRunNum;BeamEnergy;Angle1;Angle2;B-L2;B-L1;R-L2;R-L1;A-L2;A-L1;config;map;Comment;
 71;4.4;0;0;80;300;200;700;80;500;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 74;4.4;1.023193304;0;80;300;200;700;80;500;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;
 84;4.4;4.096043758;0;80;300;100;700;80;200;desyTBUntil11_05_2016_15_30.config;desyTBUntil11_05_2016_15_15.map;;

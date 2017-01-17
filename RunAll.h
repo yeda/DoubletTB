@@ -52,53 +52,53 @@ struct Meas {
     
     Meas(){};
     ~Meas(){};
-    void set_eff_DownX(double avalue) {eff_Down[0] = avalue;}
-    void set_eff_DownY(double avalue) {eff_Down[1] = avalue;}
-    void set_eff_UpX(double avalue) {eff_Up[0] = avalue;}
-    void set_eff_UpY(double avalue) {eff_Up[1] = avalue;}
-    void set_eff_RefX(double avalue) {eff_Ref[0] = avalue;}
-    void set_eff_RefY(double avalue) {eff_Ref[1] = avalue;}
+    void set_eff_BL2(double avalue) {eff_Down[0] = avalue;}
+    void set_eff_BL1(double avalue) {eff_Down[1] = avalue;}
+    void set_eff_AL2(double avalue) {eff_Up[0] = avalue;}
+    void set_eff_AL1(double avalue) {eff_Up[1] = avalue;}
+    void set_eff_RL2(double avalue) {eff_Ref[0] = avalue;}
+    void set_eff_RL1(double avalue) {eff_Ref[1] = avalue;}
     
-    double get_eff_DownX() {return eff_Down[0];}
-    double get_eff_DownY() {return eff_Down[1];}
-    double get_eff_UpX() {return eff_Up[0];}
-    double get_eff_UpY() {return eff_Up[1];}
-    double get_eff_RefX() {return eff_Ref[0];}
-    double get_eff_RefY() {return eff_Ref[1];}
+    double get_eff_BL2() {return eff_Down[0];}
+    double get_eff_BL1() {return eff_Down[1];}
+    double get_eff_AL2() {return eff_Up[0];}
+    double get_eff_AL1() {return eff_Up[1];}
+    double get_eff_RL2() {return eff_Ref[0];}
+    double get_eff_RL1() {return eff_Ref[1];}
     
-    void set_eff_DownX_err(double avalue) {eff_Down_err[0] = avalue;}
-    void set_eff_DownY_err(double avalue) {eff_Down_err[1] = avalue;}
-    void set_eff_UpX_err(double avalue) {eff_Up_err[0] = avalue;}
-    void set_eff_UpY_err(double avalue) {eff_Up_err[1] = avalue;}
-    void set_eff_RefX_err(double avalue) {eff_Ref_err[0] = avalue;}
-    void set_eff_RefY_err(double avalue) {eff_Ref_err[1] = avalue;}
+    void set_eff_BL2_err(double avalue) {eff_Down_err[0] = avalue;}
+    void set_eff_BL1_err(double avalue) {eff_Down_err[1] = avalue;}
+    void set_eff_AL2_err(double avalue) {eff_Up_err[0] = avalue;}
+    void set_eff_AL1_err(double avalue) {eff_Up_err[1] = avalue;}
+    void set_eff_RL2_err(double avalue) {eff_Ref_err[0] = avalue;}
+    void set_eff_RL1_err(double avalue) {eff_Ref_err[1] = avalue;}
     
-    double get_eff_DownX_err() {return eff_Down_err[0];}
-    double get_eff_DownY_err() {return eff_Down_err[1];}
-    double get_eff_UpX_err() {return eff_Up_err[0];}
-    double get_eff_UpY_err() {return eff_Up_err[1];}
-    double get_eff_RefX_err() {return eff_Ref_err[0];}
-    double get_eff_RefY_err() {return eff_Ref_err[1];}
+    double get_eff_BL2_err() {return eff_Down_err[0];}
+    double get_eff_BL1_err() {return eff_Down_err[1];}
+    double get_eff_AL2_err() {return eff_Up_err[0];}
+    double get_eff_AL1_err() {return eff_Up_err[1];}
+    double get_eff_RL2_err() {return eff_Ref_err[0];}
+    double get_eff_RL1_err() {return eff_Ref_err[1];}
     
-    void set_res_DownX(double avalue) {res_Down[0] = avalue;}
-    void set_res_DownY(double avalue) {res_Down[1] = avalue;}
-    void set_res_DownX_err(double avalue) {res_Down_err[0] = avalue;}
-    void set_res_DownY_err(double avalue) {res_Down_err[1] = avalue;}
-    void set_res_UpX(double avalue) {res_Up[0] = avalue;}
-    void set_res_UpY(double avalue) {res_Up[1] = avalue;}
-    void set_res_UpX_err(double avalue) {res_Up_err[0] = avalue;}
-    void set_res_UpY_err(double avalue) {res_Up_err[1] = avalue;}
+    void set_res_BL2(double avalue) {res_Down[0] = avalue;}
+    void set_res_BL1(double avalue) {res_Down[1] = avalue;}
+    void set_res_BL2_err(double avalue) {res_Down_err[0] = avalue;}
+    void set_res_BL1_err(double avalue) {res_Down_err[1] = avalue;}
+    void set_res_AL2(double avalue) {res_Up[0] = avalue;}
+    void set_res_AL1(double avalue) {res_Up[1] = avalue;}
+    void set_res_AL2_err(double avalue) {res_Up_err[0] = avalue;}
+    void set_res_AL1_err(double avalue) {res_Up_err[1] = avalue;}
     void set_ang_res(double avalue) {ang_res = avalue;}
     void set_ang_res_err(double avalue) {ang_res_err = avalue;}
     
-    double get_res_DownX() {return res_Down[0];}
-    double get_res_DownY() {return res_Down[1];}
-    double get_res_DownX_err() {return res_Down_err[0];}
-    double get_res_DownY_err() {return res_Down_err[1];}
-    double get_res_UpX() {return res_Up[0];}
-    double get_res_UpY() {return res_Up[1];}
-    double get_res_UpX_err() {return res_Up_err[0];}
-    double get_res_UpY_err() {return res_Up_err[1];}
+    double get_res_BL2() {return res_Down[0];}
+    double get_res_BL1() {return res_Down[1];}
+    double get_res_BL2_err() {return res_Down_err[0];}
+    double get_res_BL1_err() {return res_Down_err[1];}
+    double get_res_AL2() {return res_Up[0];}
+    double get_res_AL1() {return res_Up[1];}
+    double get_res_AL2_err() {return res_Up_err[0];}
+    double get_res_AL1_err() {return res_Up_err[1];}
     double get_ang_res() {return ang_res;}
     double get_ang_res_err() {return ang_res_err;}
     

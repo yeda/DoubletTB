@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
     
     // run through events
     Long64_t nentries = input_tree->GetEntries();
-    
+
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
         
         input_tree->GetEntry(ientry);
@@ -79,12 +79,10 @@ int main(int argc, char *argv[]){
         calculateEfficiency();
         fillHitMap2D();
         if(isGoodEvent()){
-            fillHistos();
-            
+             fillHistos();
         }
     }
     //
-  
     
     // modified res plots, mean shifted to zero
     for (Long64_t ientry=0; ientry<nentries;ientry++) {
@@ -94,12 +92,8 @@ int main(int argc, char *argv[]){
         }
     }
 
-    
-    
     printResolution(runnum);
     printEfficiency(runnum);
-    
-    
     
     createOutputFile(fout);
     
@@ -107,10 +101,16 @@ int main(int argc, char *argv[]){
 }
 
 void findRefLayers(int layerid, int* arr){
-    TString ilayerName = IDlayermap[layerid];
     
-    if (ilayerName.First("X") != -1) {
-        int reflayercount=0;
+    // find if Layer is in x axis
+    bool is_x_axis=false;
+    for (unsigned int i=0; i<3; i++) {
+        if (xlayers[i]==layerid) is_x_axis = true;
+        }
+    
+    int reflayercount=0;
+    
+    if (is_x_axis) {
         for (unsigned int i=0; i<3; i++) {
             if (xlayers[i]!=layerid) {
                 arr[reflayercount] = xlayers[i];
@@ -118,8 +118,7 @@ void findRefLayers(int layerid, int* arr){
             }
         }
     }
-    else if (ilayerName.First("Y") != -1) {
-        int reflayercount=0;
+    else {
         for (unsigned int i=0; i<3; i++) {
             if (ylayers[i]!=layerid) {
                 arr[reflayercount] = ylayers[i];
@@ -127,11 +126,7 @@ void findRefLayers(int layerid, int* arr){
             }
         }
     }
-    else {
-        cout<<"Reference layers of layer "<<ilayerName<<" cannot be found!"<<endl;
-    }
-    
-    
+ 
 }
 
 
@@ -265,7 +260,7 @@ void fillHitMap2D(){
         
         
         layername = IDlayermap[xlayers[i_layer]];
-        tempname = layername(0, layername.Length() -1);
+        tempname = layername(0, 1);
         histname = hitamp2D_histname + tempname;
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
         
@@ -358,7 +353,7 @@ void fillHistos(){
     
     // match pointnumber with layers
     // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is Up, p[2] is Down
+    //      so p[0] is ref, p[1] is A, p[2] is B
     
     double p_exp[3];
     p_exp[2] = p[2][2];
@@ -389,7 +384,7 @@ void fillHistos(){
     
     for (unsigned int i=0; i<3; i++) {
         layername = IDlayermap[xlayers[i]];
-        TString tempname = layername(0, layername.Length() -1);
+        TString tempname = layername(0, 1);
         histname = hitmap_histname + tempname;
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
         h2D->Fill(p[i][0], p[i][1]);
@@ -398,9 +393,9 @@ void fillHistos(){
     // Angular resolution
     
     
-    histname = angularRes_histname + TString("Down");
+    histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-    // angle between down_meas - up_meas - down_exp
+    // angle between B_meas - A_meas - B_exp
     h1D->Fill(getAngleABC(p[2],p[1],p_exp));
     
     
@@ -435,7 +430,7 @@ void fillModifiedHistos(){
     
     // match pointnumber with layers
     // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is Up, p[2] is Down
+    //      so p[0] is R, p[1] is A, p[2] is B
     
     double p_exp[3];
     p_exp[2] = p[2][2];
@@ -463,9 +458,9 @@ void fillModifiedHistos(){
     // Angular resolution
     
     
-    histname = angularRes_histname + TString("Down");
+    histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-    histname = angularRes_histname + TString("Down_mod");
+    histname = angularRes_histname + TString("B_mod");
     h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
     // angle between down_meas - up_meas - down_exp
     h1D_mod->Fill(getAngleABC(p[2],p[1],p_exp)-h1D->GetMean());
@@ -551,22 +546,18 @@ void readAlignmentParameters(TString alignmenttxt, double alignmentpar[]){
     string alignmentline, a_layername;
     int a_layerID;
     double a_alignmentpar;
+    
     getline(alignmentFile,alignmentline);
+    //LayerID; LayerName; AlignmentShift;
+
     while ( getline(alignmentFile,alignmentline) ){
-        
-        size_t charpos, prev_charpos;
+        vector<string> elems = splitstring(alignmentline,';');
         // layer ID
-        charpos = alignmentline.find(";");
-        a_layerID = stoi( alignmentline.substr(0,charpos) );
+        a_layerID = stoi( elems[0].c_str() );
         // layer name
-        prev_charpos = charpos;
-        charpos = alignmentline.find(";",prev_charpos+1);
-        a_layername = alignmentline.substr(prev_charpos+1,charpos-prev_charpos-1);
+        a_layername = string (elems[1]);
         // alignment parameter
-        prev_charpos = charpos;
-        charpos = alignmentline.find(";",prev_charpos+1);
-        
-        a_alignmentpar = stod( alignmentline.substr(prev_charpos+1,charpos-prev_charpos-1));
+        a_alignmentpar = atof(elems[2].c_str());
         alignmentpar[a_layerID] = a_alignmentpar;
     }
     
@@ -619,7 +610,7 @@ void printResolution(TString runnum){
         }
     }
     
-    histname = angularRes_histname + TString("Down_mod");
+    histname = angularRes_histname + TString("B_mod");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     mean = h1D->GetMean();
     rms = h1D->GetRMS();
@@ -642,7 +633,7 @@ void printResolution(TString runnum){
     double ang_res_err = stat_err+sys_err;
     
     
-    cout<< "angular resolution of Down is "<< ang_res <<" +/- "<< ang_res_err<<" degrees      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" <<endl;
+    cout<< "angular resolution of B is "<< ang_res <<" +/- "<< ang_res_err<<" degrees      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" <<endl;
     outfile<<ang_res<<";"<<ang_res_err<<";"<<endl;
     outfile.close();
     
@@ -736,21 +727,21 @@ void createHistos(){
         
     }
     // angular resolution
-    histname = angularRes_histname + TString("Down");
+    histname = angularRes_histname + TString("B");
     if (rootobjects.find(histname) == rootobjects.end()) {
-        title = TString("Angular Resolution (Down); Angle difference (degrees);Number of entries");
+        title = TString("Angular Resolution (B); Angle difference (degrees);Number of entries");
         h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
         rootobjects.insert(pair<TString,TObject*>(histname,h1D));
     }
     // angular resolution
-    histname = angularRes_histname + TString("Down_mod");
+    histname = angularRes_histname + TString("B_mod");
     if (rootobjects.find(histname) == rootobjects.end()) {
-        title = TString("Angular Resolution (Down); Angle difference (degrees);Number of entries");
+        title = TString("Angular Resolution (B); Angle difference (degrees);Number of entries");
         h1D = new TH1D(histname.Data(), title.Data(), 1000,-30, 30);
         rootobjects.insert(pair<TString,TObject*>(histname,h1D));
     }
 
-    TString s[3] = {"Down","Up","Ref"};
+    TString s[3] = {"B","A","R"};
     for (unsigned int i=0; i<3; i++) {
         histname = hitmap_histname + s[i];
         if (rootobjects.find(histname) == rootobjects.end()) {

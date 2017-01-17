@@ -95,36 +95,36 @@ void makePlots(){
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[0][0][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_DownX();
-            comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_DownX_err();
-            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_DownX();
-            comb_result[0][0][0][4][i_point[0]]=ameas->get_res_DownX_err();
+            comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_BL2();
+            comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_BL2_err();
+            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_BL2();
+            comb_result[0][0][0][4][i_point[0]]=ameas->get_res_BL2_err();
             
             comb_result[0][0][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_DownY();
-            comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_DownY_err();
-            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_DownY();
-            comb_result[0][0][1][4][i_point[0]]=ameas->get_res_DownY_err();
+            comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_BL1();
+            comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_BL1_err();
+            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_BL1();
+            comb_result[0][0][1][4][i_point[0]]=ameas->get_res_BL1_err();
             
             comb_result[0][1][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_UpX();
-            comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_UpX_err();
-            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_UpX();
-            comb_result[0][1][0][4][i_point[0]]=ameas->get_res_UpX_err();
+            comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_AL2();
+            comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_AL2_err();
+            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_AL2();
+            comb_result[0][1][0][4][i_point[0]]=ameas->get_res_AL2_err();
             
             comb_result[0][1][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_UpY();
-            comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_UpY_err();
-            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_UpY();
-            comb_result[0][1][1][4][i_point[0]]=ameas->get_res_UpY_err();
+            comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_AL1();
+            comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_AL1_err();
+            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_AL1();
+            comb_result[0][1][1][4][i_point[0]]=ameas->get_res_AL1_err();
             
             comb_result[0][2][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RefX();
-            comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RefX_err();
+            comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RL2();
+            comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RL2_err();
             
             comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RefY();
-            comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RefY_err();
+            comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RL1();
+            comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RL1_err();
             
             comb_ang_res[0][0][i_point[0]]=ameas->get_Angle2();
             comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
@@ -137,36 +137,36 @@ void makePlots(){
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
             comb_result[1][0][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_DownX();
-            comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_DownX_err();
-            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_DownX();
-            comb_result[1][0][0][4][i_point[1]]=ameas->get_res_DownX_err();
+            comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_BL2();
+            comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_BL2_err();
+            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_BL2();
+            comb_result[1][0][0][4][i_point[1]]=ameas->get_res_BL2_err();
             
             comb_result[1][0][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_DownY();
-            comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_DownY_err();
-            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_DownY();
-            comb_result[1][0][1][4][i_point[1]]=ameas->get_res_DownY_err();
+            comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_BL1();
+            comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_BL1_err();
+            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_BL1();
+            comb_result[1][0][1][4][i_point[1]]=ameas->get_res_BL1_err();
             
             comb_result[1][1][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_UpX();
-            comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_UpX_err();
-            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_UpX();
-            comb_result[1][1][0][4][i_point[1]]=ameas->get_res_UpX_err();
+            comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_AL2();
+            comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_AL2_err();
+            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_AL2();
+            comb_result[1][1][0][4][i_point[1]]=ameas->get_res_AL2_err();
             
             comb_result[1][1][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_UpY();
-            comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_UpY_err();
-            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_UpY();
-            comb_result[1][1][1][4][i_point[1]]=ameas->get_res_UpY_err();
+            comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_AL1();
+            comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_AL1_err();
+            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_AL1();
+            comb_result[1][1][1][4][i_point[1]]=ameas->get_res_AL1_err();
             
             comb_result[1][2][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RefX();
-            comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RefX_err();
+            comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RL2();
+            comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RL2_err();
             
             comb_result[1][2][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RefY();
-            comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RefY_err();
+            comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RL1();
+            comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RL1_err();
             
             comb_ang_res[1][0][i_point[1]]=ameas->get_Angle1();
             comb_ang_res[1][1][i_point[1]]=ameas->get_ang_res();
@@ -309,13 +309,13 @@ void makeMultiGraps(){
         histname = it->first;
         legname = histname(histname.Last('_')+1, histname.Length()-histname.Last('_'));
         
-        if(legname == TString("DownX") ) legname = TString("B - L2");
-        else if(legname == TString("DownY") ) legname = TString("B - L1");
-        else if(legname == TString("UpX") ) legname = TString("A - L2");
-        else if(legname == TString("UpY") ) legname = TString("A - L1");
+        if(legname == TString("B-L2") ) legname = TString("B - L2");
+        else if(legname == TString("B-L1") ) legname = TString("B - L1");
+        else if(legname == TString("A-L2") ) legname = TString("A - L2");
+        else if(legname == TString("A-L1") ) legname = TString("A - L1");
         
         if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
-            //&& histname.Index("Ref") == -1 && histname.Index("DownX") == -1 && histname.Index("UpY") == -1) { // pick eff plots
+            //&& histname.Index("Ref") == -1 && histname.Index("B-L2") == -1 && histname.Index("A-L1") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetMarkerSize(1.6);
@@ -494,18 +494,18 @@ void runAnalyze(){
     out_eff.open(output_efficiency_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     /*
      std::map<unsigned short,TString> IDlayermap={
-     {0,TString("DownX")},{1,TString("DownY")},
-     {2,TString("UpX")},{3,TString("UpY")},
-     {4,TString("RefX")},{5,TString("RefY")},
+     {0,TString("B-L2")},{1,TString("B-L1")},
+     {2,TString("A-L2")},{3,TString("A-L1")},
+     {4,TString("R-L2")},{5,TString("R-L1")},
      };
      */
-    out_eff<<"RunNum;DownX;DownX_err;DownY;DownY_err;UpX;UpX_err;UpY;UpY_err;RefX;RefX_err;RefY;RefY_err;"<<endl;
+    out_eff<<"RunNum;B-L2;B-L2_err;B-L1;B-L1_err;A-L2;A-L2_err;A-L1;A-L1_err;R-L2;R-L2_err;R-L1;R-L1_err;"<<endl;
     out_eff.close();
     
     
     std::ofstream out_res;
     out_res.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
-    out_res<<"RunNum;UpX;UpXerr;UpY;UpYerr;DownX;DownXerr;DownY;DownYerr;Angular;Angularerr;"<<endl;
+    out_res<<"RunNum;A-L2;A-L2_err;A-L1;A-L1_err;B-L2;B-L2_err;B-L1;B-L1_err;Angular;Angular_err;"<<endl;
     out_res.close();
     
     for (unsigned int irun=0; irun<runlist.size(); irun++) {
@@ -537,24 +537,24 @@ void readMeasRes(){
         
         if (runnum == 0) {
             getline(fileinfo_file,s,';');
-            //ameas->set_res_UpX(atof(s.c_str()));
+            //ameas->set_res_AL2(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            //ameas->set_res_UpX_err(atof(s.c_str()));
+            //ameas->set_res_AL2_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            //ameas->set_res_UpY(atof(s.c_str()));
+            //ameas->set_res_AL1(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            //ameas->set_res_UpY_err(atof(s.c_str()));
+            //ameas->set_res_AL1_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            //ameas->set_res_DownX(atof(s.c_str()));
+            //ameas->set_res_BL2(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            //ameas->set_res_DownX_err(atof(s.c_str()));
+            //ameas->set_res_BL2_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            //ameas->set_res_DownY(atof(s.c_str()));
+            //ameas->set_res_BL1(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            //ameas->set_res_DownY_err(atof(s.c_str()));
+            //ameas->set_res_BL1_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
             //ameas->set_ang_res(atof(s.c_str()));
@@ -565,24 +565,24 @@ void readMeasRes(){
             ameas = measurements[runnum];
             
             getline(fileinfo_file,s,';');
-            ameas->set_res_UpX(atof(s.c_str()));
+            ameas->set_res_AL2(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            ameas->set_res_UpX_err(atof(s.c_str()));
+            ameas->set_res_AL2_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            ameas->set_res_UpY(atof(s.c_str()));
+            ameas->set_res_AL1(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            ameas->set_res_UpY_err(atof(s.c_str()));
+            ameas->set_res_AL1_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            ameas->set_res_DownX(atof(s.c_str()));
+            ameas->set_res_BL2(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            ameas->set_res_DownX_err(atof(s.c_str()));
+            ameas->set_res_BL2_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
-            ameas->set_res_DownY(atof(s.c_str()));
+            ameas->set_res_BL1(atof(s.c_str()));
             getline(fileinfo_file,s,';');
-            ameas->set_res_DownY_err(atof(s.c_str()));
+            ameas->set_res_BL1_err(atof(s.c_str()));
             
             getline(fileinfo_file,s,';');
             ameas->set_ang_res(atof(s.c_str()));
@@ -617,23 +617,23 @@ void readMeasEff(){
         
         ameas = dynamic_cast<Meas*> (measurements[runnum]);
         
-        ameas->set_eff_DownX(atof(elems[1].c_str()));
-        ameas->set_eff_DownX_err(atof(elems[2].c_str()));
+        ameas->set_eff_BL2(atof(elems[1].c_str()));
+        ameas->set_eff_BL2_err(atof(elems[2].c_str()));
         
-        ameas->set_eff_DownY(atof(elems[3].c_str()));
-        ameas->set_eff_DownY_err(atof(elems[4].c_str()));
+        ameas->set_eff_BL1(atof(elems[3].c_str()));
+        ameas->set_eff_BL1_err(atof(elems[4].c_str()));
         
-        ameas->set_eff_UpX(atof(elems[5].c_str()));
-        ameas->set_eff_UpX_err(atof(elems[6].c_str()));
+        ameas->set_eff_AL2(atof(elems[5].c_str()));
+        ameas->set_eff_AL2_err(atof(elems[6].c_str()));
         
-        ameas->set_eff_UpY(atof(elems[7].c_str()));
-        ameas->set_eff_UpY_err(atof(elems[8].c_str()));
+        ameas->set_eff_AL1(atof(elems[7].c_str()));
+        ameas->set_eff_AL1_err(atof(elems[8].c_str()));
         
-        ameas->set_eff_RefX(atof(elems[9].c_str()));
-        ameas->set_eff_RefX_err(atof(elems[10].c_str()));
+        ameas->set_eff_RL2(atof(elems[9].c_str()));
+        ameas->set_eff_RL2_err(atof(elems[10].c_str()));
         
-        ameas->set_eff_RefY(atof(elems[11].c_str()));
-        ameas->set_eff_RefY_err(atof(elems[12].c_str()));
+        ameas->set_eff_RL1(atof(elems[11].c_str()));
+        ameas->set_eff_RL1_err(atof(elems[12].c_str()));
         
         measurements[runnum] = ameas;
         

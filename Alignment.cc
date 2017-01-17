@@ -122,20 +122,13 @@ void readAlignmentParameters(double alignmentpar[]){
     double a_alignmentpar;
     getline(alignmentFile,alignmentline);
     while ( getline(alignmentFile,alignmentline) ){
-        
-        size_t charpos, prev_charpos;
+        vector<string> elems = splitstring(alignmentline,';');
         // layer ID
-        charpos = alignmentline.find(";");
-        a_layerID = stoi( alignmentline.substr(0,charpos) );
+        a_layerID = stoi( elems[0].c_str() );
         // layer name
-        prev_charpos = charpos;
-        charpos = alignmentline.find(";",prev_charpos+1);
-        a_layername = alignmentline.substr(prev_charpos+1,charpos-prev_charpos-1);
+        a_layername = string (elems[1]);
         // alignment parameter
-        prev_charpos = charpos;
-        charpos = alignmentline.find(";",prev_charpos+1);
-        
-        a_alignmentpar = stod( alignmentline.substr(prev_charpos+1,charpos-prev_charpos-1));
+        a_alignmentpar = atof(elems[2].c_str());
         alignmentpar[a_layerID] = a_alignmentpar;
     }
     
