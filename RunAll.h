@@ -25,15 +25,15 @@ TString runlistfile = TString("./MM_DESYTB_May_2016.txt");
 
 Color_t color[9] = {kBlack, kRed, kBlue, kGreen+2, kMagenta+1, kOrange-3, kPink-9, kViolet+1, kCyan+2};
 
-    // Doublet B (Down) correction --> doublet b res = m*(real res)+b 
+    // Doublet B (B) correction --> doublet b res = m*(real res)+b 
     //	m = 2.54091, b = 0.00527 mm
-    // Doublet A (Up) correction --> doublet a res = m*(real res)+b 
+    // Doublet A (A) correction --> doublet a res = m*(real res)+b 
     //	m = 1.31425, b = 0.00640 mm
 
-double m_Down = 2.54091;
-double b_Down = 0.00527;
-double m_Up = 1.31425;
-double b_Up = 0.00640;
+double m_B = 2.54091;
+double b_B = 0.00527;
+double m_A = 1.31425;
+double b_A = 0.00640;
 
 void readRunList(TString filename);
 
@@ -43,71 +43,71 @@ struct Meas {
     double Angle2;
     double BeamEnergy;
     
-    double eff_Down[2];
-    double eff_Up[2];
-    double eff_Ref[2];
+    double eff_B[2];
+    double eff_A[2];
+    double eff_R[2];
     
-    double eff_Down_err[2];
-    double eff_Up_err[2];
-    double eff_Ref_err[2];
+    double eff_B_err[2];
+    double eff_A_err[2];
+    double eff_R_err[2];
     
-    double res_Down[2];
-    double res_Down_err[2];
-    double res_Up[2];
-    double res_Up_err[2];
+    double res_B[2];
+    double res_B_err[2];
+    double res_A[2];
+    double res_A_err[2];
     
     double ang_res;
     double ang_res_err;
     
     Meas(){};
     ~Meas(){};
-    void set_eff_BL2(double avalue) {eff_Down[0] = avalue;}
-    void set_eff_BL1(double avalue) {eff_Down[1] = avalue;}
-    void set_eff_AL2(double avalue) {eff_Up[0] = avalue;}
-    void set_eff_AL1(double avalue) {eff_Up[1] = avalue;}
-    void set_eff_RL2(double avalue) {eff_Ref[0] = avalue;}
-    void set_eff_RL1(double avalue) {eff_Ref[1] = avalue;}
+    void set_eff_BL1(double avalue) {eff_B[0] = avalue;}
+    void set_eff_BL2(double avalue) {eff_B[1] = avalue;}
+    void set_eff_AL1(double avalue) {eff_A[0] = avalue;}
+    void set_eff_AL2(double avalue) {eff_A[1] = avalue;}
+    void set_eff_RL1(double avalue) {eff_R[0] = avalue;}
+    void set_eff_RL2(double avalue) {eff_R[1] = avalue;}
     
-    double get_eff_BL2() {return eff_Down[0];}
-    double get_eff_BL1() {return eff_Down[1];}
-    double get_eff_AL2() {return eff_Up[0];}
-    double get_eff_AL1() {return eff_Up[1];}
-    double get_eff_RL2() {return eff_Ref[0];}
-    double get_eff_RL1() {return eff_Ref[1];}
+    double get_eff_BL1() {return eff_B[0];}
+    double get_eff_BL2() {return eff_B[1];}
+    double get_eff_AL1() {return eff_A[0];}
+    double get_eff_AL2() {return eff_A[1];}
+    double get_eff_RL1() {return eff_R[0];}
+    double get_eff_RL2() {return eff_R[1];}
     
-    void set_eff_BL2_err(double avalue) {eff_Down_err[0] = avalue;}
-    void set_eff_BL1_err(double avalue) {eff_Down_err[1] = avalue;}
-    void set_eff_AL2_err(double avalue) {eff_Up_err[0] = avalue;}
-    void set_eff_AL1_err(double avalue) {eff_Up_err[1] = avalue;}
-    void set_eff_RL2_err(double avalue) {eff_Ref_err[0] = avalue;}
-    void set_eff_RL1_err(double avalue) {eff_Ref_err[1] = avalue;}
+    void set_eff_BL1_err(double avalue) {eff_B_err[0] = avalue;}
+    void set_eff_BL2_err(double avalue) {eff_B_err[1] = avalue;}
+    void set_eff_AL1_err(double avalue) {eff_A_err[0] = avalue;}
+    void set_eff_AL2_err(double avalue) {eff_A_err[1] = avalue;}
+    void set_eff_RL1_err(double avalue) {eff_R_err[0] = avalue;}
+    void set_eff_RL2_err(double avalue) {eff_R_err[1] = avalue;}
     
-    double get_eff_BL2_err() {return eff_Down_err[0];}
-    double get_eff_BL1_err() {return eff_Down_err[1];}
-    double get_eff_AL2_err() {return eff_Up_err[0];}
-    double get_eff_AL1_err() {return eff_Up_err[1];}
-    double get_eff_RL2_err() {return eff_Ref_err[0];}
-    double get_eff_RL1_err() {return eff_Ref_err[1];}
+    double get_eff_BL1_err() {return eff_B_err[0];}
+    double get_eff_BL2_err() {return eff_B_err[1];}
+    double get_eff_AL1_err() {return eff_A_err[0];}
+    double get_eff_AL2_err() {return eff_A_err[1];}
+    double get_eff_RL1_err() {return eff_R_err[0];}
+    double get_eff_RL2_err() {return eff_R_err[1];}
     
-    void set_res_BL2(double avalue) {res_Down[0] = avalue;}
-    void set_res_BL1(double avalue) {res_Down[1] = avalue;}
-    void set_res_BL2_err(double avalue) {res_Down_err[0] = avalue;}
-    void set_res_BL1_err(double avalue) {res_Down_err[1] = avalue;}
-    void set_res_AL2(double avalue) {res_Up[0] = avalue;}
-    void set_res_AL1(double avalue) {res_Up[1] = avalue;}
-    void set_res_AL2_err(double avalue) {res_Up_err[0] = avalue;}
-    void set_res_AL1_err(double avalue) {res_Up_err[1] = avalue;}
+    void set_res_BL1(double avalue) {res_B[0] = avalue;}
+    void set_res_BL2(double avalue) {res_B[1] = avalue;}
+    void set_res_BL1_err(double avalue) {res_B_err[0] = avalue;}
+    void set_res_BL2_err(double avalue) {res_B_err[1] = avalue;}
+    void set_res_AL1(double avalue) {res_A[0] = avalue;}
+    void set_res_AL2(double avalue) {res_A[1] = avalue;}
+    void set_res_AL1_err(double avalue) {res_A_err[0] = avalue;}
+    void set_res_AL2_err(double avalue) {res_A_err[1] = avalue;}
     void set_ang_res(double avalue) {ang_res = avalue;}
     void set_ang_res_err(double avalue) {ang_res_err = avalue;}
     
-    double get_res_BL2() {return res_Down[0];}
-    double get_res_BL1() {return res_Down[1];}
-    double get_res_BL2_err() {return res_Down_err[0];}
-    double get_res_BL1_err() {return res_Down_err[1];}
-    double get_res_AL2() {return res_Up[0];}
-    double get_res_AL1() {return res_Up[1];}
-    double get_res_AL2_err() {return res_Up_err[0];}
-    double get_res_AL1_err() {return res_Up_err[1];}
+    double get_res_BL1() {return res_B[0];}
+    double get_res_BL2() {return res_B[1];}
+    double get_res_BL1_err() {return res_B_err[0];}
+    double get_res_BL2_err() {return res_B_err[1];}
+    double get_res_AL1() {return res_A[0];}
+    double get_res_AL2() {return res_A[1];}
+    double get_res_AL1_err() {return res_A_err[0];}
+    double get_res_AL2_err() {return res_A_err[1];}
 
     double get_ang_res() {return ang_res;}
     double get_ang_res_err() {return ang_res_err;}

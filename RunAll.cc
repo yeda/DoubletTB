@@ -75,7 +75,7 @@ void makePlots(){
     
     TString tiltname;
     TString basehistname;
-    // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,spa_res,spa_res_err][meas]
+    // comb_result[tiltx/y][down/up/ref][L1/L2][angle,eff,spa_res,spa_res_err][meas]
     double comb_result[2][3][2][5][30]={0};
     // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
     double comb_ang_res[2][3][30]={0};
@@ -91,40 +91,46 @@ void makePlots(){
         if (is_tiltX.find(runnum) == is_tiltX.end()) continue;
         
         if(is_tiltX[runnum]){
-            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,eff_err,spa_res,spa_res_err][meas]
+            // comb_result[tiltx/y][B/A/R][L1/L2][angle,eff,eff_err,spa_res,spa_res_err][meas]
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
+            // tiltX, B, L1
             comb_result[0][0][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_BL2();
-            comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_BL2_err();
-            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_BL2();
-            comb_result[0][0][0][4][i_point[0]]=ameas->get_res_BL2_err();
-            
+            comb_result[0][0][0][1][i_point[0]]=ameas->get_eff_BL1();
+            comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_BL1_err();
+            comb_result[0][0][0][3][i_point[0]]=ameas->get_res_BL1();
+            comb_result[0][0][0][4][i_point[0]]=ameas->get_res_BL1_err();
+
+            // tiltX, B, L2
             comb_result[0][0][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_BL1();
-            comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_BL1_err();
-            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_BL1();
-            comb_result[0][0][1][4][i_point[0]]=ameas->get_res_BL1_err();
+            comb_result[0][0][1][1][i_point[0]]=ameas->get_eff_BL2();
+            comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_BL2_err();
+            comb_result[0][0][1][3][i_point[0]]=ameas->get_res_BL2();
+            comb_result[0][0][1][4][i_point[0]]=ameas->get_res_BL2_err();
             
+            // tiltX, A, L1
             comb_result[0][1][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_AL2();
-            comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_AL2_err();
-            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_AL2();
-            comb_result[0][1][0][4][i_point[0]]=ameas->get_res_AL2_err();
-            
+            comb_result[0][1][0][1][i_point[0]]=ameas->get_eff_AL1();
+            comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_AL1_err();
+            comb_result[0][1][0][3][i_point[0]]=ameas->get_res_AL1();
+            comb_result[0][1][0][4][i_point[0]]=ameas->get_res_AL1_err();
+
+            // tiltX, A, L2
             comb_result[0][1][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_AL1();
-            comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_AL1_err();
-            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_AL1();
-            comb_result[0][1][1][4][i_point[0]]=ameas->get_res_AL1_err();
+            comb_result[0][1][1][1][i_point[0]]=ameas->get_eff_AL2();
+            comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_AL2_err();
+            comb_result[0][1][1][3][i_point[0]]=ameas->get_res_AL2();
+            comb_result[0][1][1][4][i_point[0]]=ameas->get_res_AL2_err();
             
+            // tiltX, R, L1
             comb_result[0][2][0][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RL2();
-            comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RL2_err();
-            
+            comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RL1();
+            comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RL1_err();
+
+            // tiltX, R, L2
             comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
-            comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RL1();
-            comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RL1_err();
+            comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RL2();
+            comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RL2_err();
             
             comb_ang_res[0][0][i_point[0]]=ameas->get_Angle2();
             comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
@@ -133,40 +139,46 @@ void makePlots(){
             
         }
         else {
-            // comb_result[tiltx/y][down/up/ref][x/y][angle,eff,eff_err,spa_res,spa_res_err][meas]
+            // comb_result[tiltx/y][B/A/R][L1/L2][angle,eff,eff_err,spa_res,spa_res_err][meas]
             // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
             
+            // tiltY, B, L1
             comb_result[1][0][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_BL2();
-            comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_BL2_err();
-            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_BL2();
-            comb_result[1][0][0][4][i_point[1]]=ameas->get_res_BL2_err();
+            comb_result[1][0][0][1][i_point[1]]=ameas->get_eff_BL1();
+            comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_BL1_err();
+            comb_result[1][0][0][3][i_point[1]]=ameas->get_res_BL1();
+            comb_result[1][0][0][4][i_point[1]]=ameas->get_res_BL1_err();
             
+            // tiltY, B, L2
             comb_result[1][0][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_BL1();
-            comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_BL1_err();
-            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_BL1();
-            comb_result[1][0][1][4][i_point[1]]=ameas->get_res_BL1_err();
+            comb_result[1][0][1][1][i_point[1]]=ameas->get_eff_BL2();
+            comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_BL2_err();
+            comb_result[1][0][1][3][i_point[1]]=ameas->get_res_BL2();
+            comb_result[1][0][1][4][i_point[1]]=ameas->get_res_BL2_err();
             
+            // tiltY, A, L1
             comb_result[1][1][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_AL2();
-            comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_AL2_err();
-            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_AL2();
-            comb_result[1][1][0][4][i_point[1]]=ameas->get_res_AL2_err();
+            comb_result[1][1][0][1][i_point[1]]=ameas->get_eff_AL1();
+            comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_AL1_err();
+            comb_result[1][1][0][3][i_point[1]]=ameas->get_res_AL1();
+            comb_result[1][1][0][4][i_point[1]]=ameas->get_res_AL1_err();
             
+            // tiltY, A, L2
             comb_result[1][1][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_AL1();
-            comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_AL1_err();
-            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_AL1();
-            comb_result[1][1][1][4][i_point[1]]=ameas->get_res_AL1_err();
-            
+            comb_result[1][1][1][1][i_point[1]]=ameas->get_eff_AL2();
+            comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_AL2_err();
+            comb_result[1][1][1][3][i_point[1]]=ameas->get_res_AL2();
+            comb_result[1][1][1][4][i_point[1]]=ameas->get_res_AL2_err();
+           
+            // tiltY, R, L1
             comb_result[1][2][0][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RL2();
-            comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RL2_err();
+            comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RL1();
+            comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RL1_err();
             
+            // tiltY, R, L2
             comb_result[1][2][1][0][i_point[1]]=ameas->get_Angle1();
-            comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RL1();
-            comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RL1_err();
+            comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RL2();
+            comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RL2_err();
             
             comb_ang_res[1][0][i_point[1]]=ameas->get_Angle1();
             comb_ang_res[1][1][i_point[1]]=ameas->get_ang_res();
@@ -189,12 +201,12 @@ void makePlots(){
                     if (itilt==0) histname.ReplaceAll("111", "X");
                     else histname.ReplaceAll("111", "Y");
                     
-                    if(idet==0) histname.ReplaceAll("222", "Down");
-                    else if(idet==1) histname.ReplaceAll("222", "Up");
-                    else histname.ReplaceAll("222", "Ref");
+                    if(idet==0) histname.ReplaceAll("222", "B");
+                    else if(idet==1) histname.ReplaceAll("222", "A");
+                    else histname.ReplaceAll("222", "R");
                     
-                    if (ixy==0) histname.ReplaceAll("33", "X");
-                    else histname.ReplaceAll("33", "Y");
+                    if (ixy==0) histname.ReplaceAll("33", "-L1");
+                    else histname.ReplaceAll("33", "-L2");
                     
                     if(imeastype==0) continue;
                     else if(imeastype==1) histname.ReplaceAll("MEAS", eff_histoname);
@@ -231,7 +243,7 @@ void makePlots(){
     // comb_ang_res[tiltx/y][angle,angres,angreserr][meas]
     
     for (int itilt=0; itilt<2; itilt++) {
-        histname = TString("MEAS_tilt111_Down");
+        histname = TString("MEAS_tilt111_B");
         if (itilt==0) histname.ReplaceAll("111", "X");
         else histname.ReplaceAll("111", "Y");
         histname.ReplaceAll("MEAS", angres_histoname);
@@ -274,7 +286,7 @@ void makeMultiGraps(){
     //mgr_res[1]= new TMultiGraph("mgr_res_tiltY","Tilt around Y; Tilt angle (degrees); Spatial Resolution (mm)");
     
     TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","; Tilt Angle (degrees); Angular Resolution (degrees)");
-    //TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","Down Layer; Tilt angle (degrees); Angular Resolution (degrees)");
+    //TMultiGraph *mgr_angres= new TMultiGraph("mgr_angres","B Layer; Tilt angle (degrees); Angular Resolution (degrees)");
     TString histname;
     
     TLegend *leg_eff[2];
@@ -314,8 +326,8 @@ void makeMultiGraps(){
         else if(legname == TString("A-L2") ) legname = TString("A - L2");
         else if(legname == TString("A-L1") ) legname = TString("A - L1");
         
-        if ( histname.Index(eff_histoname) != -1 && histname.Index("Ref") == -1){
-            //&& histname.Index("Ref") == -1 && histname.Index("B-L2") == -1 && histname.Index("A-L1") == -1) { // pick eff plots
+        if ( histname.Index(eff_histoname) != -1 && histname.Index("R") == -1){
+            //&& histname.Index("R") == -1 && histname.Index("B-L2") == -1 && histname.Index("A-L1") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetMarkerSize(1.6);
@@ -341,7 +353,7 @@ void makeMultiGraps(){
             }
             
         }
-        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ //&& histname.Index("Ref") == -1){ // res plots
+        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ //&& histname.Index("R") == -1){ // res plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -363,7 +375,7 @@ void makeMultiGraps(){
                 
             }
         }
-        else if (histname.Index(angres_histoname) != -1 && histname.Index("Ref") == -1){
+        else if (histname.Index(angres_histoname) != -1 && histname.Index("R") == -1){
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetMarkerSize(1.6);
@@ -374,8 +386,8 @@ void makeMultiGraps(){
             icolor[4]++;
             mgr_angres->Add(gre);
             legname =histname(histname.Last('_')-5, 5);
-	    if(legname == TString("tiltX")) legname = TString("Tilt around vertical axis");
-	    if(legname == TString("tiltY")) legname = TString("Tilt around horizontal axis");
+	    if(legname == TString("tiltX")) legname = TString("Tilt around x-axis");
+	    if(legname == TString("tiltY")) legname = TString("Tilt around y-axis");
             leg_angres->AddEntry(gre, legname.Data(), "ep");
         }
         
