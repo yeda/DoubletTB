@@ -25,6 +25,15 @@ TString runlistfile = TString("./MM_DESYTB_May_2016.txt");
 
 Color_t color[9] = {kBlack, kRed, kBlue, kGreen+2, kMagenta+1, kOrange-3, kPink-9, kViolet+1, kCyan+2};
 
+    // Doublet B (Down) correction --> doublet b res = m*(real res)+b 
+    //	m = 2.54091, b = 0.00527 mm
+    // Doublet A (Up) correction --> doublet a res = m*(real res)+b 
+    //	m = 1.31425, b = 0.00640 mm
+
+double m_Down = 2.54091;
+double b_Down = 0.00527;
+double m_Up = 1.31425;
+double b_Up = 0.00640;
 
 void readRunList(TString filename);
 
@@ -99,6 +108,7 @@ struct Meas {
     double get_res_AL1() {return res_Up[1];}
     double get_res_AL2_err() {return res_Up_err[0];}
     double get_res_AL1_err() {return res_Up_err[1];}
+
     double get_ang_res() {return ang_res;}
     double get_ang_res_err() {return ang_res_err;}
     

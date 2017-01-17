@@ -69,14 +69,14 @@
             h1D->SetAxisRange(-1.3,1.7,"X");
             fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX_mod");
             fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX_mod");
-            h1D->SetTitle(";X_{measured}-X_{expected} (mm);Number of Entries");
+            h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else if (i==1){
             h1D = (TH1D*)_file0->Get("spatialRes_DownY_mod");
             h1D->SetAxisRange(-1.3,1.7,"X");
             fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY_mod");
             fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY_mod");
-            h1D->SetTitle(";Y_{measured}-Y_{expected} (mm);Number of Entries");
+            h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else{
             h1D = (TH1D*)_file0->Get("angularRes_Down_mod");
@@ -137,5 +137,168 @@
         cc->SaveAs(ss.Data());
         
     }
+
+
+ ////////////////   Hit Amp
+ 
+TCanvas *ccc = new TCanvas("ccc","",800,600);
+    ccc->SetRightMargin(0.125);
+    ccc->SetLeftMargin(0.125);
+    ccc->SetBottomMargin(0.13);
+    ccc->SetTopMargin(0.07);
     
+
+
+        TLegend *leg2 = new TLegend(0.55,0.65,0.9,0.92);
+        leg2->SetFillColor(0);
+        leg2->SetFillStyle(0);
+        leg2->SetLineColor(0);
+        leg2->SetTextSize(0.05);
+
+
+
+  _file0 = TFile::Open("output/analyze_102.root");
+
+TString legname;
+Color_t col[4] = {kBlack, kRed, kBlue, kGreen+2};
+TString histname;
+
+for (int i=0; i<4; i++){
+histname = TString("hitamplitude_");
+if(i==0) {
+	histname = histname + TString("DownX");
+	legname = TString("B - L2");
+
+}
+if(i==1){ 
+	histname = histname + TString("DownY");
+	legname = TString("B - L1");
+}
+if(i==2){ 
+	histname = histname + TString("UpX");
+	legname = TString("A - L1");
+}
+if(i==3){ 
+	histname = histname + TString("UpY");
+	legname = TString("A - L2");
+}
+h1D = (TH1D*)_file0->Get(histname.Data());
+h1D->SetTitle(";Total Cluster Charge (ADC);Number of Entries");
+h1D->Rebin(10);
+h1D->SetAxisRange(0,6000);
+
+        h1D->GetXaxis()->SetLabelSize(0.045);
+        h1D->GetXaxis()->SetTitleSize(0.05);
+        h1D->GetXaxis()->SetTitleOffset(1.2);
+        
+        h1D->GetYaxis()->SetLabelSize(0.045);
+        h1D->GetYaxis()->SetTitleSize(0.05);
+        h1D->GetYaxis()->SetTitleOffset(1.2);
+        
+        h1D->SetLineWidth(2);
+        h1D->SetStats(0);
+	h1D->SetLineColor(col[i]);
+
+	ccc->cd();
+        h1D->Draw("same");
+       
+        leg2->AddEntry(h1D,legname.Data(),"l");
+       
+}	
+
+  
+        ccc->cd();
+        leg2->Draw();
+        latex->SetTextColor(kBlack);
+        latex->DrawLatex(0.23,0.8,"DESY Testbeam");
+        latex->DrawLatex(0.23,0.72,"4.4 GeV   2016");
+ 
+
+        ss = TString("results/") + TString("HitAmpAll.pdf");
+        ccc->SaveAs(ss.Data());
+        ss = TString("results/") + TString("HitAmpAll.C");
+        ccc->SaveAs(ss.Data());
+
+
+
+  ////////////////   Clu size
+ 
+TCanvas *cccc = new TCanvas("cccc","",800,600);
+    cccc->SetRightMargin(0.125);
+    cccc->SetLeftMargin(0.125);
+    cccc->SetBottomMargin(0.13);
+    cccc->SetTopMargin(0.07);
+    
+
+
+        TLegend *leg3 = new TLegend(0.55,0.65,0.9,0.92);
+        leg3->SetFillColor(0);
+        leg3->SetFillStyle(0);
+        leg3->SetLineColor(0);
+        leg3->SetTextSize(0.05);
+
+
+
+  _file0 = TFile::Open("output/hitmaker_102.root");
+
+
+for (int i=0; i<4; i++){
+histname = TString("clustersize/clustersize_");
+if(i==0) {
+	histname = histname + TString("DownX");
+	legname = TString("B - L2");
+
+}
+if(i==1){ 
+	histname = histname + TString("DownY");
+	legname = TString("B - L1");
+}
+if(i==2){ 
+	histname = histname + TString("UpY");
+	legname = TString("A - L1");
+}
+if(i==3){ 
+	histname = histname + TString("UpX");
+	legname = TString("A - L2");
+}
+h1D = (TH1D*)_file0->Get(histname.Data());
+h1D->SetTitle(";Cluster Size;Number of Entries");
+h1D->SetAxisRange(0,42000,"Y");
+h1D->SetAxisRange(0,30,"X");
+
+        h1D->GetXaxis()->SetLabelSize(0.045);
+        h1D->GetXaxis()->SetTitleSize(0.05);
+        h1D->GetXaxis()->SetTitleOffset(1.2);
+        
+        h1D->GetYaxis()->SetLabelSize(0.045);
+        h1D->GetYaxis()->SetTitleSize(0.05);
+        h1D->GetYaxis()->SetTitleOffset(1.2);
+        
+        h1D->SetLineWidth(2);
+        h1D->SetStats(0);
+	h1D->SetLineColor(col[i]);
+
+	cccc->cd();
+        h1D->Draw("same");
+       
+        leg3->AddEntry(h1D,legname.Data(),"l");
+       
+}	
+
+  
+        cccc->cd();
+        leg3->Draw();
+        latex->SetTextColor(kBlack);
+        latex->DrawLatex(0.26,0.8,"DESY Testbeam");
+        latex->DrawLatex(0.26,0.72,"4.4 GeV   2016");
+ 
+
+        ss = TString("results/") + TString("CluSizeAll.pdf");
+        cccc->SaveAs(ss.Data());
+        ss = TString("results/") + TString("CluSizeAll.C");
+        cccc->SaveAs(ss.Data());
+ 
+
+
+
 }

@@ -52,8 +52,8 @@ int main(int argc, char *argv[]){
      //runAlignment();
      system("./alignment 134");
      */
-     system("rm results/efficiency.txt"); system("rm results/resolution.txt");
-     runAnalyze();
+    //system("rm results/efficiency.txt"); system("rm results/resolution.txt");
+    //runAnalyze();
     readMeasEff();
     readMeasRes();
     
@@ -341,7 +341,7 @@ void makeMultiGraps(){
             }
             
         }
-        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1 && histname.Index("Ref") == -1){ // res plots
+        else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ //&& histname.Index("Ref") == -1){ // res plots
             gre = (TGraphErrors*) it->second;
             gre->SetMarkerStyle(20);
             gre->SetLineWidth(2);
@@ -374,6 +374,8 @@ void makeMultiGraps(){
             icolor[4]++;
             mgr_angres->Add(gre);
             legname =histname(histname.Last('_')-5, 5);
+	    if(legname == TString("tiltX")) legname = TString("Tilt around vertical axis");
+	    if(legname == TString("tiltY")) legname = TString("Tilt around horizontal axis");
             leg_angres->AddEntry(gre, legname.Data(), "ep");
         }
         
@@ -399,7 +401,7 @@ void makeMultiGraps(){
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.40);
+        mgr_res[i]->SetMaximum(0.25);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
@@ -419,7 +421,7 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     mgr_angres->SetMinimum(0);
-    mgr_angres->SetMaximum(0.55);
+    mgr_angres->SetMaximum(0.65);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
