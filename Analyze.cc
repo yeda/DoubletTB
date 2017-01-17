@@ -576,10 +576,11 @@ void printResolution(TString runnum){
     
     outfile.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     outfile << runnum << ";";
-    
     for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
         
         // point resolution
+        // we don't calculate resolution of the fixed layers, which have layer ids 0 and 1 (see Settings.h)
+        if (it->first == 0 || it->first == 1) continue;
         
         layername =it->second;
         
