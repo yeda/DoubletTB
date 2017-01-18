@@ -48,9 +48,9 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-//     runHitMaker();
-     //runAlignment();
-     system("./alignment 134");
+    //runHitMaker();
+//  runAlignment();
+    system("./alignment 134");
      
     system("rm results/efficiency.txt"); system("rm results/resolution.txt");
     runAnalyze();
