@@ -52,10 +52,13 @@ vector<float> thit_position;
 TTree *output_tree;
 
 double alignmentpar[NLayer];
+double residualCut = 10.0; // times resolution
 
 // for efficieancy calculation
 unsigned int layercount[NLayer]={0};
 unsigned int expectedcount[NLayer]={0};
+
+double spa_resolution_values[NLayer];
 
 int main(int argc, char *argv[]){
     
@@ -94,7 +97,6 @@ int main(int argc, char *argv[]){
         
         input_tree->GetEntry(ientry);
         
-        calculateEfficiency();
         fillHitMap2D();
         if(isGoodEvent()){
             fillHistos();
@@ -111,6 +113,13 @@ int main(int argc, char *argv[]){
     }
     
     printResolution(runnum);
+    
+    // calculates efficiency
+    for (Long64_t ientry=0; ientry<nentries;ientry++) {
+        input_tree->GetEntry(ientry);
+      
+        calculateEfficiency();
+    }
     printEfficiency(runnum);
     
     createOutputFile(fout);
@@ -207,7 +216,9 @@ void calculateEfficiency(){
             for (int i_hit_x=0; i_hit_x<xhits.size(); i_hit_x++) {
                 x3 = xhits[i_hit_x];
                 x = getExpectedHit(x1,z1,x2,z2,z3);
-                if ( fabs(x-x3)<layerResolution[ xlayers[i_layer] ] ) {
+                if ( fabs(x-x3)< residualCut * spa_resolution_values[xlayers[i_layer] ] ) {
+           //         if ( fabs(x-x3)<layerResolution[ xlayers[i_layer] ] ) {
+ 
                     n_pairs_x++;
                 }
             }
@@ -241,7 +252,8 @@ void calculateEfficiency(){
             for (int i_hit_y=0; i_hit_y<yhits.size(); i_hit_y++) {
                 y3 = yhits[i_hit_y];
                 y = getExpectedHit(y1,z1,y2,z2,z3);
-                if ( fabs(y-y3)<layerResolution[ ylayers[i_layer] ] ) {
+                if ( fabs(y-y3)< residualCut * spa_resolution_values[ylayers[i_layer] ] ) {
+//                if ( fabs(y-y3)<layerResolution[ ylayers[i_layer] ] ) {
                     n_pairs_y++;
                 }
             }
@@ -357,9 +369,8 @@ void fillHistos(){
     TH1D *h1D;
     TH2D* h2D;
     
-    double newpos;
-    // [pointnumber][x,y,z]
-    double p[3][3];
+    double newpos, p_exp;
+    double new_p[NLayer];
     
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         
@@ -374,64 +385,56 @@ void fillHistos(){
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         h1D->Fill(hit_amplitude->at(ihit));
         
-        for (unsigned int i=0; i<3; i++) {
-            if (layerID->at(ihit) == xlayers[i]) {
-                p[i][0] = newpos;
-                p[i][2] = layerZposition[layerID->at(ihit)];
-            }
-            else if (layerID->at(ihit) == ylayers[i])
-                p[i][1] = newpos;
-        }
-        
+        new_p[layerID->at(ihit)] = newpos;
     }
-    
-    // match pointnumber with layers
-    // it is ordered as xlayers[i]
-    //      so p[0] is ref, p[1] is A, p[2] is B
-    
-    double p_exp[3];
-    p_exp[2] = p[2][2];
-    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
-    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-    
-    
+
+  
     for (unsigned int i=1; i<3; i++) {
         // correlation
         histname = corr_histname + IDlayermap[xlayers[i]];
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
-        h2D->Fill(p[0][0], p[i][0]);
+        h2D->Fill(new_p[xlayers[0]], new_p[xlayers[i]]);
         
         histname = corr_histname + IDlayermap[ylayers[i]];
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
-        h2D->Fill(p[0][1], p[i][1]);
+        h2D->Fill(new_p[ylayers[0]], new_p[ylayers[i]]);
+      }
+    
+    int reflayers[2];
+    int current_layer;
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
         
+        current_layer = it->first;
+        layername = it->second;
+        
+        findRefLayers(current_layer, reflayers);
+        
+        p_exp = getExpectedHit(new_p[reflayers[0]],layerZposition[reflayers[0]],new_p[reflayers[1]],layerZposition[reflayers[1]], layerZposition[current_layer]);
+
         // spatial resolution
-        histname = spatialRes_histname + IDlayermap[xlayers[i]];
+        histname = spatialRes_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[0] - p[i][0]);
-        
-        histname = spatialRes_histname + IDlayermap[ylayers[i]];
-        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D->Fill(p_exp[1] - p[i][1]);
-        
+        h1D->Fill(p_exp - new_p[current_layer]);
     }
     
+    
     for (unsigned int i=0; i<3; i++) {
+        // hit map
         layername = IDlayermap[xlayers[i]];
         TString tempname = layername(0, 1);
         histname = hitmap_histname + tempname;
         h2D = dynamic_cast<TH2D*> (rootobjects[histname]);
-        h2D->Fill(p[i][0], p[i][1]);
+        h2D->Fill(new_p[xlayers[i]], new_p[ylayers[i]]);
     }
     
     // Angular resolution
     
-    
+    /*
     histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     // angle between B_meas - A_meas - B_exp
     h1D->Fill(getAngleABC(p[2],p[1],p_exp));
-    
+    */
     
 }
 
@@ -442,63 +445,56 @@ void fillModifiedHistos(){
     TH1D *h1D;
     TH1D *h1D_mod;
     
-    double newpos;
-    // [pointnumber][x,y,z]
-    double p[3][3];
+    double newpos, p_exp;
+    double new_p[NLayer];
     
     for (unsigned int ihit=0; ihit<layerID->size(); ihit++) {
         
         layername = IDlayermap[layerID->at(ihit)];
+        
+        histname = hitpos_histname + layername;
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
         newpos = hit_position->at(ihit) - alignmentpar[layerID->at(ihit)];
+        h1D->Fill(newpos);
         
-        for (unsigned int i=0; i<3; i++) {
-            if (layerID->at(ihit) == xlayers[i]) {
-                p[i][0] = newpos;
-                p[i][2] = layerZposition[layerID->at(ihit)];
-            }
-            else if (layerID->at(ihit) == ylayers[i])
-                p[i][1] = newpos;
-        }
+        histname = hitamp_histname + layername;
+        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
+        h1D->Fill(hit_amplitude->at(ihit));
         
+        new_p[layerID->at(ihit)] = newpos;
     }
     
-    // match pointnumber with layers
-    // it is ordered as xlayers[i]
-    //      so p[0] is R, p[1] is A, p[2] is B
-    
-    double p_exp[3];
-    p_exp[2] = p[2][2];
-    p_exp[0] = getExpectedHit(p[0][0],p[0][2],p[1][0],p[1][2],p_exp[2]);
-    p_exp[1] = getExpectedHit(p[0][1],p[0][2],p[1][1],p[1][2],p_exp[2]);
-    
-    
-    for (unsigned int i=1; i<3; i++) {
+
+    int reflayers[2];
+    int current_layer;
+    for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+        
+        current_layer = it->first;
+        layername = it->second;
+        
+        findRefLayers(current_layer, reflayers);
+        
+        p_exp = getExpectedHit(new_p[reflayers[0]],layerZposition[reflayers[0]],new_p[reflayers[1]],layerZposition[reflayers[1]], layerZposition[current_layer]);
         
         // spatial resolution
-        histname = spatialRes_histname + IDlayermap[xlayers[i]];
+        histname = spatialRes_histname + layername;
         h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        histname = spatialRes_histname + IDlayermap[xlayers[i]]+ TString("_mod");
+        histname = spatialRes_histname + layername + TString("_mod");
         h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D_mod->Fill(p_exp[0] - p[i][0]-h1D->GetMean());
-        
-        histname = spatialRes_histname + IDlayermap[ylayers[i]];
-        h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
-        histname = spatialRes_histname + IDlayermap[ylayers[i]] + TString("_mod");
-        h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
-        h1D_mod->Fill(p_exp[1] - p[i][1]-h1D->GetMean());
-        
+        h1D_mod->Fill(p_exp - new_p[current_layer] - h1D->GetMean());
+
     }
-    
+  
     // Angular resolution
     
-    
+ /*
     histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     histname = angularRes_histname + TString("B_mod");
     h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
     // angle between down_meas - up_meas - down_exp
     h1D_mod->Fill(getAngleABC(p[2],p[1],p_exp)-h1D->GetMean());
-    
+*/
     
 }
 
@@ -614,8 +610,6 @@ void printResolution(TString runnum){
     for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
         
         // point resolution
-        // we don't calculate resolution of the fixed layers, which have layer ids 0 and 1 (see Settings.h)
-        if (it->first == 0 || it->first == 1) continue;
         
         layername =it->second;
         
@@ -642,6 +636,7 @@ void printResolution(TString runnum){
         double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
         double spat_res_err = stat_err+sys_err;
         
+        spa_resolution_values[it->first] = spat_res;
         cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
         outfile<<spat_res<<";"<<spat_res_err<<";";
     }
@@ -677,77 +672,62 @@ void printResolution(TString runnum){
 }
 
 void createHistos(){
-    TString histname,title;
+    TString histname,title, layername;
     TH1D* h1D;
     TH2D* h2D;
     
     for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+        layername = it->second;
         
         // hit position
-        histname = hitpos_histname + it->second;
+        histname = hitpos_histname + layername;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Hit position of all hits in ") + it->second + TString(";Hit Position (mm);Number of entries");
+            title = TString("Hit position of all hits in ") + layername + TString(";Hit Position (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
-        histname = exphitpos_histname + it->second;
+        histname = exphitpos_histname + layername;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Expected HitPos ")+ it->second + TString(";Hit Position (mm);Number of entries");
+            title = TString("Expected HitPos ")+ layername + TString(";Hit Position (mm);Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 10000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
         
         // hit amplitude
-        histname = hitamp_histname + it->second;
+        histname = hitamp_histname + layername;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Hit amplitude of all clusters in ") + it->second + TString(";Hit Amplitude;Number of entries");
+            title = TString("Hit amplitude of all clusters in ") + layername + TString(";Hit Amplitude;Number of entries");
             h1D = new TH1D(histname.Data(), title.Data(), 1000,0, 10000);
             rootobjects.insert(pair<TString,TObject*>(histname,h1D));
         }
         
         
-        histname = exphitmap_histname + it->second;
+        histname = exphitmap_histname + layername;
         if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("expHitMap ")+ it->second + TString(";X (mm);Y (mm)");
+            title = TString("expHitMap ")+ layername + TString(";X (mm);Y (mm)");
             h2D = new TH2D(histname.Data(), title.Data(), 1000,0, 100,1000,0, 100);
             rootobjects.insert(pair<TString,TObject*>(histname,h2D));
         }
         
         
+        histname = spatialRes_histname + layername;
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Spatial Resolution;")+layername+TString("_{expected} - ")+layername+TString("_{measured} (mm);Number of entries");
+            h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+        }
+        
+        histname = spatialRes_histname + layername +TString("_mod");
+        if (rootobjects.find(histname) == rootobjects.end()) {
+            title = TString("Spatial Resolution;")+layername+TString("_{expected} - ")+layername+TString("_{measured} (mm);Number of entries");
+            h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
+            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
+        }
+        
     }
     
     for (unsigned int i=1; i<3; i++) {
-        // spatial resolution
-        histname = spatialRes_histname + IDlayermap[xlayers[i]];
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
-            h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
-            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
-        }
-        
-        histname = spatialRes_histname + IDlayermap[ylayers[i]];
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[ylayers[i]]+TString("_{expected} - ")+IDlayermap[ylayers[i]]+TString("_{measured} (mm);Number of entries");
-            h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
-            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
-        }
-        
-        // modified spatial resolution
-        histname = spatialRes_histname + IDlayermap[xlayers[i]]+TString("_mod");
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[xlayers[i]]+TString("_{expected} - ")+IDlayermap[xlayers[i]]+TString("_{measured} (mm);Number of entries");
-            h1D = new TH1D(histname.Data(), title.Data(), 10000,-100, 100);
-            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
-        }
-        
-        histname = spatialRes_histname + IDlayermap[ylayers[i]]+TString("_mod");
-        if (rootobjects.find(histname) == rootobjects.end()) {
-            title = TString("Spatial Resolution;")+IDlayermap[ylayers[i]]+TString("_{expected} - ")+IDlayermap[ylayers[i]]+TString("_{measured} (mm);Number of entries");
-            h1D = new TH1D(histname.Data(), title.Data(), 10000, -100, 100);
-            rootobjects.insert(pair<TString,TObject*>(histname,h1D));
-        }
-        
-        
+       
         // correlation
         histname = corr_histname + IDlayermap[xlayers[i]];
         if (rootobjects.find(histname) == rootobjects.end()) {
