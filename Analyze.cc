@@ -24,6 +24,7 @@
 #include "Analyze.h"
 
 TString input_tree_name = TString("hitsTree");
+TString output_tree_name = TString("inefficiencyTree_BL2");
 
 TString hitpos_histname = TString("hitposition_");
 TString hitmap_histname = TString("hitmap_");
@@ -43,6 +44,13 @@ vector<unsigned short> *cluster_size;
 vector<float> *hit_amplitude;
 vector<float> *hit_position;
 
+unsigned int tevent_num;
+vector<unsigned short> tlayerID;
+vector<unsigned short> tcluster_size;
+vector<float> thit_amplitude;
+vector<float> thit_position;
+TTree *output_tree;
+
 double alignmentpar[NLayer];
 
 // for efficieancy calculation
@@ -57,10 +65,20 @@ int main(int argc, char *argv[]){
     TFile * fin = TFile::Open(fin_name.Data());
     TTree* input_tree = (TTree*)fin->Get(input_tree_name.Data());
     setBranches(input_tree);
-    
+ 
     TString fout_name = outputPath + TString("analyze_") + runnum + TString(".root");
     TFile *fout = new TFile(fout_name.Data(),"RECREATE");
     
+    
+    //create output tree
+    output_tree = new TTree(output_tree_name.Data(),"tree of inefficient events for B-L2");
+    output_tree->Branch("event_num",&tevent_num);
+    output_tree->Branch("layerID",&tlayerID);
+    output_tree->Branch("cluster_size",&tcluster_size);
+    output_tree->Branch("hit_amplitude",&thit_amplitude);
+    output_tree->Branch("hit_position",&thit_position);
+    rootobjects.insert(pair<TString,TObject*>(output_tree_name,output_tree));
+
     // get alignment parameters
     TString alignmentrun = TString(argv[2]);
     TString alignmenttxt = outputPath + TString("alignment_") + alignmentrun + TString(".txt");
@@ -195,6 +213,22 @@ void calculateEfficiency(){
             }
             if (n_pairs_x>0) layercount[ xlayers[i_layer] ]++;
             else{
+                if (xlayers[i_layer] == 4) {
+                    tlayerID.clear();
+                    tcluster_size.clear();
+                    thit_amplitude.clear();
+                    thit_position.clear();
+                    
+                    tevent_num = event_num;
+                    for (unsigned int ii=0; ii<layerID->size(); ii++) {
+                        tlayerID.push_back(layerID->at(ii));
+                        tcluster_size.push_back(cluster_size->at(ii));
+                        thit_amplitude.push_back(hit_amplitude->at(ii));
+                        thit_position.push_back(hit_position->at(ii));
+                    }
+                    
+                    output_tree->Fill();
+                }
                 x = getExpectedHit(x1,z1,x2,z2,z3);
                 y = getExpectedHit(y1,z1,y2,z2,z3);
                 histname = exphitmap_histname + IDlayermap[xlayers[i_layer]];
@@ -534,6 +568,7 @@ void createOutputFile(TFile *fout){
     for (map<TString,TObject*>::iterator it=rootobjects.begin(); it != rootobjects.end(); it++) {
         it->second->Write();
     }
+    
     
 }
 
