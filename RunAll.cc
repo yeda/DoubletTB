@@ -526,8 +526,6 @@ void runAnalyze(){
     out_res.open(output_resolution_txtfile.Data(), std::ofstream::out | std::ofstream::app);
     out_res<<"RunNum;";
     for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
-        // we don't calculate resolution of the fixed layers, which have layer ids 0 and 1 (see Settings.h)
-        if (it->first != 0 && it->first != 1)
             out_res<<it->second<<";"<<it->second<<"_err;";
     }
     out_res<<"Angular;Angular_err;"<<endl;
@@ -554,65 +552,38 @@ void readMeasRes(){
     
     Meas* ameas;
     int runnum;
-    
+  //  for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
+
     string s;
-    while(!fileinfo_file.eof()){
-        getline(fileinfo_file,s,';');
-        runnum = atoi(s.c_str());
+    while(getline(fileinfo_file,line)){
+        vector<string> elems = splitstring(line,';');
+
+        runnum = atoi(elems[0].c_str());
         
-        if (runnum == 0) {
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_AL2(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_AL2_err(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_AL1(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_AL1_err(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_BL2(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_BL2_err(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_BL1(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_res_BL1_err(atof(s.c_str()));
-            
-            getline(fileinfo_file,s,';');
-            //ameas->set_ang_res(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            //ameas->set_ang_res_err(atof(s.c_str()));
-        }
+        if (runnum == 0) continue;
         else {
             ameas = measurements[runnum];
             
-            getline(fileinfo_file,s,';');
-            ameas->set_res_AL1(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_res_AL1_err(atof(s.c_str()));
+            ameas->set_res_RL2(atof(elems[1].c_str()));
+            ameas->set_res_RL2_err(atof(elems[2].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_res_AL2(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_res_AL2_err(atof(s.c_str()));
+            ameas->set_res_RL1(atof(elems[3].c_str()));
+            ameas->set_res_RL1_err(atof(elems[4].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_res_BL2(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_res_BL2_err(atof(s.c_str()));
+            ameas->set_res_AL1(atof(elems[5].c_str()));
+            ameas->set_res_AL1_err(atof(elems[6].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_res_BL1(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_res_BL1_err(atof(s.c_str()));
+            ameas->set_res_AL2(atof(elems[7].c_str()));
+            ameas->set_res_AL2_err(atof(elems[8].c_str()));
             
-            getline(fileinfo_file,s,';');
-            ameas->set_ang_res(atof(s.c_str()));
-            getline(fileinfo_file,s,';');
-            ameas->set_ang_res_err(atof(s.c_str()));
+            ameas->set_res_BL2(atof(elems[9].c_str()));
+            ameas->set_res_BL2_err(atof(elems[10].c_str()));
+            
+            ameas->set_res_BL1(atof(elems[11].c_str()));
+            ameas->set_res_BL1_err(atof(elems[12].c_str()));
+            
+            ameas->set_ang_res(atof(elems[13].c_str()));
+            ameas->set_ang_res_err(atof(elems[14].c_str()));
             
             measurements[runnum] = ameas;
             
