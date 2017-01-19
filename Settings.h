@@ -135,7 +135,7 @@ std::map<unsigned short,TString> IDlayermap={
 // Ref, Up, Down --> R, A, B
 int xlayers[3] ={0,2,4};
 int ylayers[3] = {1,3,5};
-int zpos[3] = {0,138,182};
+int zpos[3] = {10,148,192};
 
 std::map<unsigned short,double> layerZposition={
     {0,0.0},{1,0.0},
@@ -144,9 +144,9 @@ std::map<unsigned short,double> layerZposition={
 };
 
 std::map<unsigned short,double> layerResolution={
-    {0,5.0},{1,5.0},
-    {2,5.0},{3,5.0},
-    {4,5.0},{5,5.0}
+    {0,10.0},{1,10.0},
+    {2,10.0},{3,10.0},
+    {4,10.0},{5,10.0}
 };
 
 
