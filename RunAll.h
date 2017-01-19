@@ -51,6 +51,8 @@ struct Meas {
     double eff_A_err[2];
     double eff_R_err[2];
     
+    double res_R[2];
+    double res_R_err[2];
     double res_B[2];
     double res_B_err[2];
     double res_A[2];
@@ -89,6 +91,10 @@ struct Meas {
     double get_eff_RL1_err() {return eff_R_err[0];}
     double get_eff_RL2_err() {return eff_R_err[1];}
     
+    void set_res_RL1(double avalue) {res_R[0] = avalue;}
+    void set_res_RL2(double avalue) {res_R[1] = avalue;}
+    void set_res_RL1_err(double avalue) {res_R_err[0] = avalue;}
+    void set_res_RL2_err(double avalue) {res_R_err[1] = avalue;}
     void set_res_BL1(double avalue) {res_B[0] = avalue;}
     void set_res_BL2(double avalue) {res_B[1] = avalue;}
     void set_res_BL1_err(double avalue) {res_B_err[0] = avalue;}
@@ -100,6 +106,10 @@ struct Meas {
     void set_ang_res(double avalue) {ang_res = avalue;}
     void set_ang_res_err(double avalue) {ang_res_err = avalue;}
     
+    double get_res_RL1() {return res_R[0];}
+    double get_res_RL2() {return res_R[1];}
+    double get_res_RL1_err() {return res_R_err[0];}
+    double get_res_RL2_err() {return res_R_err[1];}
     double get_res_BL1() {return res_B[0];}
     double get_res_BL2() {return res_B[1];}
     double get_res_BL1_err() {return res_B_err[0];}

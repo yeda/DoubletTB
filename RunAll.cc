@@ -547,14 +547,13 @@ void runAnalyze(){
 void readMeasRes(){
     cout<< "Reading "<<output_resolution_txtfile<<endl;
     ifstream fileinfo_file(output_resolution_txtfile.Data());
-    string firstline;
-    getline(fileinfo_file,firstline);
+    string line;
+    getline(fileinfo_file,line);
     
     Meas* ameas;
     int runnum;
   //  for (map<unsigned short,TString>::iterator it=IDlayermap.begin(); it != IDlayermap.end(); it++) {
 
-    string s;
     while(getline(fileinfo_file,line)){
         vector<string> elems = splitstring(line,';');
 
