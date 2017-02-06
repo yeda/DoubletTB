@@ -429,12 +429,30 @@ void fillHistos(){
     
     // Angular resolution
     
-    /*
+    double p_R[3], p_A[3], p_B[3], p_Bexp[3];
+    // see Settings.h
+    p_R[0] = new_p[xlayers[0]];
+    p_R[1] = new_p[ylayers[0]];
+    p_R[2] = zpos[0];
+    
+    p_A[0] = new_p[xlayers[1]];
+    p_A[1] = new_p[ylayers[1]];
+    p_A[2] = zpos[1];
+    
+    p_B[0] = new_p[xlayers[2]];
+    p_B[1] = new_p[ylayers[2]];
+    p_B[2] = zpos[2];
+
+    p_Bexp[0] = getExpectedHit(p_R[0],p_R[2],p_A[0],p_A[2],p_B[2]);
+    p_Bexp[1] = getExpectedHit(p_R[1],p_R[2],p_A[1],p_A[2],p_B[2]);
+    p_Bexp[2] = zpos[2];
+    
+    
     histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     // angle between B_meas - A_meas - B_exp
-    h1D->Fill(getAngleABC(p[2],p[1],p_exp));
-    */
+    h1D->Fill(getAngleABC(p_B,p_A,p_Bexp));
+    
     
 }
 
@@ -486,15 +504,31 @@ void fillModifiedHistos(){
     }
   
     // Angular resolution
+    double p_R[3], p_A[3], p_B[3], p_Bexp[3];
+    // see Settings.h
+    p_R[0] = new_p[xlayers[0]];
+    p_R[1] = new_p[ylayers[0]];
+    p_R[2] = zpos[0];
     
- /*
+    p_A[0] = new_p[xlayers[1]];
+    p_A[1] = new_p[ylayers[1]];
+    p_A[2] = zpos[1];
+    
+    p_B[0] = new_p[xlayers[2]];
+    p_B[1] = new_p[ylayers[2]];
+    p_B[2] = zpos[2];
+    
+    p_Bexp[0] = getExpectedHit(p_R[0],p_R[2],p_A[0],p_A[2],p_B[2]);
+    p_Bexp[1] = getExpectedHit(p_R[1],p_R[2],p_A[1],p_A[2],p_B[2]);
+    p_Bexp[2] = zpos[2];
+    
     histname = angularRes_histname + TString("B");
     h1D = dynamic_cast<TH1D*> (rootobjects[histname]);
     histname = angularRes_histname + TString("B_mod");
     h1D_mod = dynamic_cast<TH1D*> (rootobjects[histname]);
-    // angle between down_meas - up_meas - down_exp
-    h1D_mod->Fill(getAngleABC(p[2],p[1],p_exp)-h1D->GetMean());
-*/
+    // angle between B_meas - A_meas - B_exp
+    h1D_mod->Fill(getAngleABC(p_B,p_A,p_Bexp)-h1D->GetMean());
+
     
 }
 
