@@ -38,6 +38,17 @@ TString angularRes_histname = TString("angularRes_");
 
 map<TString,TObject*> rootobjects;
 
+// Doublet B (B) correction --> doublet b res = m*(real res)+b
+//	m = 2.54091, b = 0.00527 mm
+// Doublet A (A) correction --> doublet a res = m*(real res)+b
+//	m = 1.31425, b = 0.00640 mm
+
+double m_B = 2.54091;
+double b_B = 0.00527;
+double m_A = 1.31425;
+double b_A = 0.00640;
+
+
 unsigned int event_num;
 vector<unsigned short> *layerID;
 vector<unsigned short> *cluster_size;
@@ -665,10 +676,21 @@ void printResolution(TString runnum){
         fitfunc2->SetParLimits(3,0,10000);
         
         h1D->Fit(fitfunc2,"+QR");
-        double spat_res =fitfunc2->GetParameter(2);
-        double stat_err =fitfunc2->GetParError(2);
+        double m, b;
+        if (layername.Contains("B")){
+            m = m_B; b=b_B;
+        }
+        else if(layername.Contains("A")){
+            m = m_A; b = b_A;
+        }
+        else{
+            m = 1.0; b = 0.0;
+        }
+        
+        double spat_res = (fitfunc2->GetParameter(2)-b)/m;
+        double stat_err =fitfunc2->GetParError(2) / m;
         double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
-        double spat_res_err = stat_err+sys_err;
+        double spat_res_err = stat_err + sys_err;
         
         spa_resolution_values[it->first] = spat_res;
         cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
@@ -684,7 +706,7 @@ void printResolution(TString runnum){
     
     fitname = TString("fitgaus_") + histname;
     fitfunc1 = new TF1(fitname.Data(),"gaus", mean-3*rms,mean+3*rms);
-    h1D->Fit(fitfunc1,"R");
+    h1D->Fit(fitfunc1,"QR");
     
     fitname = TString("fitgauspol_") + histname;
     fitfunc2 = new TF1(fitname.Data(),"gaus+[3]", max_inxaxis-0.4,max_inxaxis+0.4);

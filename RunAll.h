@@ -29,12 +29,12 @@ Color_t color[9] = {kBlack, kRed, kBlue, kGreen+2, kMagenta+1, kOrange-3, kPink-
     //	m = 2.54091, b = 0.00527 mm
     // Doublet A (A) correction --> doublet a res = m*(real res)+b 
     //	m = 1.31425, b = 0.00640 mm
-
+/*
 double m_B = 2.54091;
 double b_B = 0.00527;
 double m_A = 1.31425;
 double b_A = 0.00640;
-
+*/
 void readRunList(TString filename);
 
 struct Meas {
