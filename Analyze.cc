@@ -698,7 +698,7 @@ void printResolution(TString runnum){
         double sys_err = fabs(stat_err - fitfunc1->GetParError(2));
         double spat_res_err = stat_err + sys_err;
         
-        spa_resolution_values[it->first] = spat_res;
+        spa_resolution_values[it->first] = fitfunc2->GetParError(2);
         cout<< "spatial resolution of "<< layername<< " is "<< spat_res <<" +/- "<<spat_res_err<< " (mm)      "<<stat_err<<"(stat) + "<<sys_err<<"(sys)" << endl;
         outfile<<spat_res<<";"<<spat_res_err<<";";
     }
