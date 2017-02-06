@@ -719,7 +719,7 @@ void printResolution(TString runnum){
     fitfunc2->SetLineColor(kGreen);
     fitfunc2->SetParameters(fitfunc1->GetParameter(0),fitfunc1->GetParameter(1),fitfunc1->GetParameter(2),0);
     fitfunc2->SetParLimits(3,0,10000);
-    h1D->Fit(fitfunc2,"+R");
+    h1D->Fit(fitfunc2,"+QR");
     
     double ang_res =fitfunc2->GetParameter(2) ;
     double stat_err =fitfunc2->GetParError(2) ;

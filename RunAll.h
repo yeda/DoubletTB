@@ -148,6 +148,8 @@ struct RunInfo{
     string Comment;
     
     void print(){
+        cout<<endl;
+        cout<<endl;
         cout<<"DataRun "<< DataRun <<" PedRun "<<PedRun<<" Angle1 "<<Angle1<< " Angle2 "<<Angle2<<" config "<<config<< " BeamEnergy "<< BeamEnergy <<endl;
     }
 };
