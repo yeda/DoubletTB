@@ -44,9 +44,9 @@ map<TString,TObject*> rootobjects;
 //	m = 1.31425, b = 0.00640 mm
 
 double m_B = 2.562;
-double b_B = 1.90;
+double b_B = 0.00190;
 double m_A = 1.297;
-double b_A = 7.24;
+double b_A = 0.00724;
 /*
  
  double m_B = 2.54091;
