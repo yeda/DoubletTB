@@ -43,11 +43,17 @@ map<TString,TObject*> rootobjects;
 // Doublet A (A) correction --> doublet a res = m*(real res)+b
 //	m = 1.31425, b = 0.00640 mm
 
-double m_B = 2.54091;
-double b_B = 0.00527;
-double m_A = 1.31425;
-double b_A = 0.00640;
-
+double m_B = 2.562;
+double b_B = 1.90;
+double m_A = 1.297;
+double b_A = 7.24;
+/*
+ 
+ double m_B = 2.54091;
+ double b_B = 0.00527;
+ double m_A = 1.31425;
+ double b_A = 0.00640;
+*/
 
 unsigned int event_num;
 vector<unsigned short> *layerID;
