@@ -52,8 +52,8 @@ int main(int argc, char *argv[]){
   //runAlignment();
     //system("./alignment 74");
      
-    system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
-    runAnalyze();
+    //system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
+    //runAnalyze();
     readMeasEff();
     readMeasRes();
     
@@ -413,7 +413,8 @@ void makeMultiGraps(){
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.35);
+        if (i==0) mgr_res[i]->SetMaximum(0.35);
+        if (i==1) mgr_res[i]->SetMaximum(0.25);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
@@ -433,7 +434,7 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     mgr_angres->SetMinimum(0);
-    mgr_angres->SetMaximum(0.4);
+    mgr_angres->SetMaximum(0.333);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
