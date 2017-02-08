@@ -413,7 +413,7 @@ void makeMultiGraps(){
         rootobjects.insert(pair<TString,TObject*>(histname,mgr_eff[i]));
         
         mgr_res[i]->SetMinimum(0.);
-        mgr_res[i]->SetMaximum(0.25);
+        mgr_res[i]->SetMaximum(0.35);
         histname = mgr_res[i]->GetName();
         pdfname = TString("./results/") + histname +TString(".pdf");
         Cfilename = TString("./results/") + histname +TString(".C");
@@ -433,12 +433,12 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     mgr_angres->SetMinimum(0);
-    mgr_angres->SetMaximum(0.65);
+    mgr_angres->SetMaximum(0.4);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
     leg_angres->Draw();
-    mgr_angres->GetXaxis()->SetRangeUser(-1,11);
+    mgr_angres->GetXaxis()->SetRangeUser(-1,9);
     formatMultiGraph(mgr_angres);
     
     latex->DrawLatex(0.17,0.8,"DESY Testbeam");
