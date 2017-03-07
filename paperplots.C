@@ -17,14 +17,14 @@
     TH2D *htime;
     
     // time vs channel
-    
+   /* 
     for(int i=0; i<2; i++){
         if (i==0){
-            htime = (TH2D*)f->Get("goodevent/goodevent_13DownX_timeVSchannel");
+            htime = (TH2D*)f->Get("goodevent/goodevent_13B-L2_timeVSchannel");
             htime->SetAxisRange(150,250,"X");
         }
         if (i==1){
-            htime = (TH2D*)f->Get("goodevent/goodevent_13DownY_timeVSchannel");
+            htime = (TH2D*)f->Get("goodevent/goodevent_13B-L1_timeVSchannel");
             htime->SetAxisRange(230,330,"X");
         }
         htime->GetXaxis()->SetLabelSize(0.045);
@@ -46,7 +46,7 @@
         cc->SaveAs(ss.Data());
         
     }
-    
+    */
     
     // residual plots
     TLatex *latex =new TLatex();
@@ -57,7 +57,8 @@
     
     
     
-    TFile *_file0 = TFile::Open("output/analyze_84.root");
+    TFile *_file0 = TFile::Open("output/selfaligned/analyze_110.root");
+    TFile *_file1 = TFile::Open("output/analyze_110.root");
     TH1D * h1D;
     TF1* fgaus;
     TF1* fpol;
@@ -65,24 +66,24 @@
     
     for (int i=0; i<3; i++){
         if (i==0){
-            h1D = (TH1D*)_file0->Get("spatialRes_DownX_mod");
+            h1D = (TH1D*)_file0->Get("spatialRes_A-L2_mod");
             h1D->SetAxisRange(-1.3,1.7,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownX_mod");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownX_mod");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_A-L2_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_A-L2_mod");
             h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else if (i==1){
-            h1D = (TH1D*)_file0->Get("spatialRes_DownY_mod");
+            h1D = (TH1D*)_file0->Get("spatialRes_A-L1_mod");
             h1D->SetAxisRange(-1.3,1.7,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_DownY_mod");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_DownY_mod");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_spatialRes_A-L1_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_spatialRes_A-L1_mod");
             h1D->SetTitle(";Position_{measured}-Position_{expected} (mm);Number of Entries");
         }
         else{
-            h1D = (TH1D*)_file0->Get("angularRes_Down_mod");
+            h1D = (TH1D*)_file1->Get("angularRes_B_mod");
             h1D->SetAxisRange(-2.8,3.2,"X");
-            fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_Down_mod");
-            fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_Down_mod");
+            fgaus = (TF1*)h1D->GetFunction("fitgaus_angularRes_B_mod");
+            fpol = (TF1*)h1D->GetFunction("fitgauspol_angularRes_B_mod");
             h1D->SetTitle(";#theta_{measured}-#theta_{expected} (degrees);Number of Entries");
         }
         h1D->GetXaxis()->SetLabelSize(0.045);
@@ -103,9 +104,9 @@
         fgaus->SetLineWidth(3);
         fgaus->SetLineColor(kRed);
         
-        double res =fpol->GetParameter(2) / sqrt(2);
-        double stat_err =fpol->GetParError(2) / sqrt(2);
-        double sys_err = fabs(stat_err - (fgaus->GetParError(2) / sqrt(2)));
+        double res =fpol->GetParameter(2);
+        double stat_err =fpol->GetParError(2);
+        double sys_err = fabs(stat_err - fgaus->GetParError(2));
         double res_err = stat_err+sys_err;
         cout << res <<" "<< stat_err <<" "<< sys_err <<" "<< res_err<<endl;
         sss.str("");
@@ -166,20 +167,20 @@ TString histname;
 for (int i=0; i<4; i++){
 histname = TString("hitamplitude_");
 if(i==0) {
-	histname = histname + TString("DownX");
+	histname = histname + TString("B-L2");
 	legname = TString("B - L2");
 
 }
 if(i==1){ 
-	histname = histname + TString("DownY");
+	histname = histname + TString("B-L1");
 	legname = TString("B - L1");
 }
 if(i==2){ 
-	histname = histname + TString("UpX");
+	histname = histname + TString("A-L2");
 	legname = TString("A - L1");
 }
 if(i==3){ 
-	histname = histname + TString("UpY");
+	histname = histname + TString("A-L1");
 	legname = TString("A - L2");
 }
 h1D = (TH1D*)_file0->Get(histname.Data());
@@ -231,7 +232,7 @@ TCanvas *cccc = new TCanvas("cccc","",800,600);
     
 
 
-        TLegend *leg3 = new TLegend(0.55,0.65,0.9,0.92);
+        TLegend *leg3 = new TLegend(0.6,0.65,0.95,0.92);
         leg3->SetFillColor(0);
         leg3->SetFillStyle(0);
         leg3->SetLineColor(0);
@@ -245,20 +246,20 @@ TCanvas *cccc = new TCanvas("cccc","",800,600);
 for (int i=0; i<4; i++){
 histname = TString("clustersize/clustersize_");
 if(i==0) {
-	histname = histname + TString("DownX");
+	histname = histname + TString("B-L2");
 	legname = TString("B - L2");
 
 }
 if(i==1){ 
-	histname = histname + TString("DownY");
+	histname = histname + TString("B-L1");
 	legname = TString("B - L1");
 }
 if(i==2){ 
-	histname = histname + TString("UpY");
+	histname = histname + TString("A-L1");
 	legname = TString("A - L1");
 }
 if(i==3){ 
-	histname = histname + TString("UpX");
+	histname = histname + TString("A-L2");
 	legname = TString("A - L2");
 }
 h1D = (TH1D*)_file0->Get(histname.Data());
@@ -289,8 +290,8 @@ h1D->SetAxisRange(0,30,"X");
         cccc->cd();
         leg3->Draw();
         latex->SetTextColor(kBlack);
-        latex->DrawLatex(0.26,0.8,"DESY Testbeam");
-        latex->DrawLatex(0.26,0.72,"4.4 GeV   2016");
+        latex->DrawLatex(0.31,0.8,"DESY Testbeam");
+        latex->DrawLatex(0.31,0.72,"4.4 GeV   2016");
  
 
         ss = TString("results/") + TString("CluSizeAll.pdf");

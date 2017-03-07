@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
     
     //runHitMaker();
   //runAlignment();
-    //system("./alignment 74");
+    //system("./alignment 134");
      
     //system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
     //runAnalyze();
@@ -292,7 +292,7 @@ void makeMultiGraps(){
     TLegend *leg_eff[2];
     TLegend *leg_res[2];
     TLegend *leg_angres;
-    leg_angres = new TLegend(0.6, 0.9, 0.8, 0.7);
+    leg_angres = new TLegend(0.5, 0.9, 0.7, 0.75);
     leg_angres->SetFillColor(0);
     leg_angres->SetLineColor(0);
     leg_angres->SetTextSize(0.05);
@@ -385,9 +385,8 @@ void makeMultiGraps(){
             gre->SetLineColor(color[icolor[4]]);
             icolor[4]++;
             mgr_angres->Add(gre);
-            legname =histname(histname.Last('_')-5, 5);
-	    if(legname == TString("tiltX")) legname = TString("Tilt around x-axis");
-	    if(legname == TString("tiltY")) legname = TString("Tilt around y-axis");
+	    if(histname.Index("tiltX") != -1) legname = TString("Tilt around x-axis");
+	    if(histname.Index("tiltY") != -1) legname = TString("Tilt around y-axis");
             leg_angres->AddEntry(gre, legname.Data(), "ep");
         }
         
@@ -405,8 +404,8 @@ void makeMultiGraps(){
         mgr_eff[i]->Draw("AP");
         leg_eff[i]->Draw();
         formatMultiGraph(mgr_eff[i]);
-        latex->DrawLatex(0.17,0.8,"DESY Testbeam");
-        latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+        latex->DrawLatex(0.17,0.85,"DESY Testbeam");
+        latex->DrawLatex(0.17,0.77,"4.4 GeV   2016");
         
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
@@ -422,8 +421,8 @@ void makeMultiGraps(){
         leg_res[i]->Draw();
         mgr_res[i]->GetXaxis()->SetRangeUser(-1,11);
         formatMultiGraph(mgr_res[i]);
-        latex->DrawLatex(0.17,0.8,"DESY Testbeam");
-        latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+        latex->DrawLatex(0.17,0.85,"DESY Testbeam");
+        latex->DrawLatex(0.17,0.77,"4.4 GeV   2016");
         
         cc->SaveAs(pdfname.Data());
         cc->SaveAs(Cfilename.Data());
@@ -434,7 +433,7 @@ void makeMultiGraps(){
     
     histname = mgr_angres->GetName();
     mgr_angres->SetMinimum(0);
-    mgr_angres->SetMaximum(0.333);
+    mgr_angres->SetMaximum(0.65);
     pdfname = TString("./results/") + histname +TString(".pdf");
     Cfilename = TString("./results/") + histname +TString(".C");
     mgr_angres->Draw("AP");
@@ -442,8 +441,9 @@ void makeMultiGraps(){
     mgr_angres->GetXaxis()->SetRangeUser(-1,9);
     formatMultiGraph(mgr_angres);
     
-    latex->DrawLatex(0.17,0.8,"DESY Testbeam");
-    latex->DrawLatex(0.17,0.72,"4.4 GeV   2016");
+    leg_angres = new TLegend(0.5, 0.9, 0.7, 0.75);
+    latex->DrawLatex(0.17,0.85,"DESY Testbeam");
+    latex->DrawLatex(0.17,0.77,"4.4 GeV   2016");
     cc->SaveAs(pdfname.Data());
     cc->SaveAs(Cfilename.Data());
     
@@ -535,8 +535,8 @@ void runAnalyze(){
     for (unsigned int irun=0; irun<runlist.size(); irun++) {
         runlist[irun].print();
         runnum_str = TString::Itoa(runlist[irun].DataRun,10);
-        //runthis = TString("./analyze ") + runnum_str + TString(" 74");
-        runthis = TString("./analyze ") + runnum_str + TString(" ")+ runnum_str;
+        runthis = TString("./analyze ") + runnum_str + TString(" 134");
+        //runthis = TString("./analyze ") + runnum_str + TString(" ")+ runnum_str;
         cout<<runthis<<endl;
         system(runthis.Data());
     }
