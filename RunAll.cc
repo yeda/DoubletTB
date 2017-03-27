@@ -105,7 +105,7 @@ void makePlots(){
             comb_result[0][0][0][2][i_point[0]]=ameas->get_eff_BL1_err();
             comb_result[0][0][0][3][i_point[0]]=ameas->get_res_BL1();
             comb_result[0][0][0][4][i_point[0]]=ameas->get_res_BL1_err();
-            eff_err_sum[0][0][0] += ameas->get_eff_BL1();
+            eff_err_sum[0][0][0] += ameas->get_eff_BL1_err();
 
             // tiltX, B, L2
             comb_result[0][0][1][0][i_point[0]]=ameas->get_Angle2();
@@ -113,7 +113,7 @@ void makePlots(){
             comb_result[0][0][1][2][i_point[0]]=ameas->get_eff_BL2_err();
             comb_result[0][0][1][3][i_point[0]]=ameas->get_res_BL2();
             comb_result[0][0][1][4][i_point[0]]=ameas->get_res_BL2_err();
-            eff_err_sum[0][0][1] += ameas->get_eff_BL2();
+            eff_err_sum[0][0][1] += ameas->get_eff_BL2_err();
             
             // tiltX, A, L1
             comb_result[0][1][0][0][i_point[0]]=ameas->get_Angle2();
@@ -121,7 +121,7 @@ void makePlots(){
             comb_result[0][1][0][2][i_point[0]]=ameas->get_eff_AL1_err();
             comb_result[0][1][0][3][i_point[0]]=ameas->get_res_AL1();
             comb_result[0][1][0][4][i_point[0]]=ameas->get_res_AL1_err();
-            eff_err_sum[0][1][0] += ameas->get_eff_AL1();
+            eff_err_sum[0][1][0] += ameas->get_eff_AL1_err();
 
             // tiltX, A, L2
             comb_result[0][1][1][0][i_point[0]]=ameas->get_Angle2();
@@ -129,19 +129,19 @@ void makePlots(){
             comb_result[0][1][1][2][i_point[0]]=ameas->get_eff_AL2_err();
             comb_result[0][1][1][3][i_point[0]]=ameas->get_res_AL2();
             comb_result[0][1][1][4][i_point[0]]=ameas->get_res_AL2_err();
-            eff_err_sum[0][1][1] += ameas->get_eff_AL2();
+            eff_err_sum[0][1][1] += ameas->get_eff_AL2_err();
 
             // tiltX, R, L1
             comb_result[0][2][0][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][2][0][1][i_point[0]]=ameas->get_eff_RL1();
             comb_result[0][2][0][2][i_point[0]]=ameas->get_eff_RL1_err();
-            eff_err_sum[0][2][0] += ameas->get_eff_RL1();
+            eff_err_sum[0][2][0] += ameas->get_eff_RL1_err();
 
             // tiltX, R, L2
             comb_result[0][2][1][0][i_point[0]]=ameas->get_Angle2();
             comb_result[0][2][1][1][i_point[0]]=ameas->get_eff_RL2();
             comb_result[0][2][1][2][i_point[0]]=ameas->get_eff_RL2_err();
-            eff_err_sum[0][2][1] += ameas->get_eff_RL2();
+            eff_err_sum[0][2][1] += ameas->get_eff_RL2_err();
 
             comb_ang_res[0][0][i_point[0]]=ameas->get_Angle2();
             comb_ang_res[0][1][i_point[0]]=ameas->get_ang_res();
@@ -159,7 +159,7 @@ void makePlots(){
             comb_result[1][0][0][2][i_point[1]]=ameas->get_eff_BL1_err();
             comb_result[1][0][0][3][i_point[1]]=ameas->get_res_BL1();
             comb_result[1][0][0][4][i_point[1]]=ameas->get_res_BL1_err();
-            eff_err_sum[1][0][0] += ameas->get_eff_BL1();
+            eff_err_sum[1][0][0] += ameas->get_eff_BL1_err();
 
             // tiltY, B, L2
             comb_result[1][0][1][0][i_point[1]]=ameas->get_Angle1();
@@ -167,7 +167,7 @@ void makePlots(){
             comb_result[1][0][1][2][i_point[1]]=ameas->get_eff_BL2_err();
             comb_result[1][0][1][3][i_point[1]]=ameas->get_res_BL2();
             comb_result[1][0][1][4][i_point[1]]=ameas->get_res_BL2_err();
-            eff_err_sum[1][0][1] += ameas->get_eff_BL2();
+            eff_err_sum[1][0][1] += ameas->get_eff_BL2_err();
 
             // tiltY, A, L1
             comb_result[1][1][0][0][i_point[1]]=ameas->get_Angle1();
@@ -175,7 +175,7 @@ void makePlots(){
             comb_result[1][1][0][2][i_point[1]]=ameas->get_eff_AL1_err();
             comb_result[1][1][0][3][i_point[1]]=ameas->get_res_AL1();
             comb_result[1][1][0][4][i_point[1]]=ameas->get_res_AL1_err();
-            eff_err_sum[1][1][0] += ameas->get_eff_AL1();
+            eff_err_sum[1][1][0] += ameas->get_eff_AL1_err();
 
             // tiltY, A, L2
             comb_result[1][1][1][0][i_point[1]]=ameas->get_Angle1();
@@ -183,19 +183,19 @@ void makePlots(){
             comb_result[1][1][1][2][i_point[1]]=ameas->get_eff_AL2_err();
             comb_result[1][1][1][3][i_point[1]]=ameas->get_res_AL2();
             comb_result[1][1][1][4][i_point[1]]=ameas->get_res_AL2_err();
-            eff_err_sum[1][1][1] += ameas->get_eff_AL2();
+            eff_err_sum[1][1][1] += ameas->get_eff_AL2_err();
 
             // tiltY, R, L1
             comb_result[1][2][0][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][2][0][1][i_point[1]]=ameas->get_eff_RL1();
             comb_result[1][2][0][2][i_point[1]]=ameas->get_eff_RL1_err();
-            eff_err_sum[1][2][0] += ameas->get_eff_RL1();
+            eff_err_sum[1][2][0] += ameas->get_eff_RL1_err();
 
             // tiltY, R, L2
             comb_result[1][2][1][0][i_point[1]]=ameas->get_Angle1();
             comb_result[1][2][1][1][i_point[1]]=ameas->get_eff_RL2();
             comb_result[1][2][1][2][i_point[1]]=ameas->get_eff_RL2_err();
-            eff_err_sum[1][2][1] += ameas->get_eff_RL2();
+            eff_err_sum[1][2][1] += ameas->get_eff_RL2_err();
 
             comb_ang_res[1][0][i_point[1]]=ameas->get_Angle1();
             comb_ang_res[1][1][i_point[1]]=ameas->get_ang_res();
