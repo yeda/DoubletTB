@@ -218,7 +218,7 @@ void makePlots(){
     for (int itilt=0; itilt<2; itilt++) {
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
-                eff_err_mean[itilt][idet][ixy] = eff_err_sum[itilt][idet][ixy] / i_point[itilt];
+                eff_err_mean[itilt][idet][ixy] = eff_err_sum[itilt][idet][ixy] / double(i_point[itilt]);
             }
         }
     }
@@ -240,7 +240,7 @@ void makePlots(){
     for (int itilt=0; itilt<2; itilt++) {
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
-                eff_err_dev[itilt][idet][ixy] = sqrt(eff_err_dev[itilt][idet][ixy] / i_point[itilt]);
+                eff_err_dev[itilt][idet][ixy] = sqrt(eff_err_dev[itilt][idet][ixy] / double(i_point[itilt]));
             }
         }
     }
@@ -259,7 +259,7 @@ void makePlots(){
         }
     }
     for (int itilt=0; itilt<2; itilt++) {
-        mean_dev[itilt] = mean_dev[itilt] / n_dev[itilt];
+        mean_dev[itilt] = mean_dev[itilt] / double (n_dev[itilt]);
     }
 
     // add sys err to eff_err
