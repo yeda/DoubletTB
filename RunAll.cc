@@ -220,6 +220,7 @@ void makePlots(){
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
                 eff_mean[itilt][idet][ixy] = eff_sum[itilt][idet][ixy] / (double(i_point[itilt]));
+                cout<< "eff_mean " << eff_mean[itilt][idet][ixy] << endl;
             }
         }
     }
@@ -231,6 +232,7 @@ void makePlots(){
             for (int ixy=0; ixy<2; ixy++) {
                 for (int i_meas=0; i_meas<i_point[itilt]; i_meas++) {
                     diff = eff_mean[itilt][idet][ixy] - comb_result[itilt][idet][ixy][1][i_point[itilt]];
+                    cout<< "diff " << diff << endl;
                     eff_diff_sum[itilt][idet][ixy] += diff*diff;
                 }
             }
@@ -241,8 +243,8 @@ void makePlots(){
     for (int itilt=0; itilt<2; itilt++) {
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
-                eff_err_dev[itilt][idet][ixy] = sqrt(eff_diff_sum[itilt][idet][ixy] / (double(i_point[itilt])));
-                cout<< "eff_err_dev" << eff_err_dev[itilt][idet][ixy] << endl;
+                eff_err_dev[itilt][idet][ixy] = sqrt( eff_diff_sum[itilt][idet][ixy] / (double(i_point[itilt])) );
+                cout<< "eff_err_dev " << eff_err_dev[itilt][idet][ixy] << endl;
             }
         }
     }
