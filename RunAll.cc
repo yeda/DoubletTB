@@ -48,12 +48,12 @@ int main(int argc, char *argv[]){
     
     readRunList(runlistfile);
     
-    runHitMaker();
-    runAlignment();
+    //runHitMaker();
+    //runAlignment();
     //system("./alignment 134");
      
-    system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
-    runAnalyze();
+    //system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
+    //runAnalyze();
     readMeasEff();
     readMeasRes();
     
@@ -307,15 +307,15 @@ void makePlots(){
                         gre->SetName(histname.Data());
                         title= histname + TString(";Tilt angle (degrees);Efficiency");
                         gre->SetTitle(title.Data());
-                        gre->SetMarkerStyle(20);
-                        gre->SetMarkerSize(1.6);
+                        gre->SetMarkerStyle(2);
+                        gre->SetMarkerSize(0.5);
                         gre->Sort();
                         rootobjects.insert(pair<TString,TObject*>(histname,gre));
                     } else if (imeastype==2){
                         if (idet!=2){
                             gre = new TGraphErrors(i_point[itilt], comb_result[itilt][idet][ixy][0], comb_result[itilt][idet][ixy][3],angle_err,comb_result[itilt][idet][ixy][4]);
                             gre->SetName(histname.Data());
-                            gre->SetMarkerStyle(20);
+                            gre->SetMarkerStyle(7);
                             gre->SetMarkerSize(1.6);
                             
                             title= histname + TString(";Tilt angle (degrees);Spatial Resolution (mm)");
@@ -419,7 +419,7 @@ void makeMultiGraps(){
         if ( histname.Index(eff_histoname) != -1 && histname.Index("R") == -1){
             //&& histname.Index("R") == -1 && histname.Index("B-L2") == -1 && histname.Index("A-L1") == -1) { // pick eff plots
             gre = (TGraphErrors*) it->second;
-            gre->SetMarkerStyle(20);
+            gre->SetMarkerStyle(7);
             gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
@@ -429,7 +429,7 @@ void makeMultiGraps(){
                 gre->SetLineColor(color[icolor[0]]);
                 icolor[0]++;
                 mgr_eff[0]->Add(gre);
-                leg_eff[0]->AddEntry(gre, legname.Data(), "ep");
+                leg_eff[0]->AddEntry(gre, legname.Data(), "lep");
                 
                 
             }
@@ -438,14 +438,14 @@ void makeMultiGraps(){
                 gre->SetLineColor(color[icolor[1]]);
                 icolor[1]++;
                 mgr_eff[1]->Add(gre);
-                leg_eff[1]->AddEntry(gre, legname.Data(), "ep");
+                leg_eff[1]->AddEntry(gre, legname.Data(), "lep");
                 
             }
             
         }
         else if (histname.Index(res_histoname) != -1 && histname.Index(angres_histoname) == -1){ //&& histname.Index("R") == -1){ // res plots
             gre = (TGraphErrors*) it->second;
-            gre->SetMarkerStyle(20);
+            gre->SetMarkerStyle(7);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
             
@@ -454,20 +454,20 @@ void makeMultiGraps(){
                 gre->SetLineColor(color[icolor[2]]);
                 icolor[2]++;
                 mgr_res[0]->Add(gre);
-                leg_res[0]->AddEntry(gre, legname.Data(), "ep");
+                leg_res[0]->AddEntry(gre, legname.Data(), "lep");
             }
             else if (histname.Index("tiltY") != -1){
                 gre->SetMarkerColor(color[icolor[3]]);
                 gre->SetLineColor(color[icolor[3]]);
                 icolor[3]++;
                 mgr_res[1]->Add(gre);
-                leg_res[1]->AddEntry(gre, legname.Data(), "ep");
+                leg_res[1]->AddEntry(gre, legname.Data(), "lep");
                 
             }
         }
         else if (histname.Index(angres_histoname) != -1 && histname.Index("R") == -1){
             gre = (TGraphErrors*) it->second;
-            gre->SetMarkerStyle(20);
+            gre->SetMarkerStyle(7);
             gre->SetMarkerSize(1.6);
             gre->SetLineWidth(2);
             gre->SetFillStyle(0);
@@ -477,7 +477,7 @@ void makeMultiGraps(){
             mgr_angres->Add(gre);
 	    if(histname.Index("tiltX") != -1) legname = TString("Tilt around x-axis");
 	    if(histname.Index("tiltY") != -1) legname = TString("Tilt around y-axis");
-            leg_angres->AddEntry(gre, legname.Data(), "ep");
+            leg_angres->AddEntry(gre, legname.Data(), "lep");
         }
         
     }
