@@ -251,6 +251,7 @@ void makePlots(){
     for (int itilt=0; itilt<2; itilt++) {
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
+                if (idet == 2) continue;
                 if (itilt == 1 && idet == 0 && ixy == 1) continue;
                 mean_dev[itilt] += eff_err_dev[itilt][idet][ixy];
                 n_dev[itilt]++;
