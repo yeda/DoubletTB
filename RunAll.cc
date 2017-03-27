@@ -52,8 +52,8 @@ int main(int argc, char *argv[]){
   //runAlignment();
     //system("./alignment 134");
      
-    //system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
-    //runAnalyze();
+    system("rm ./results/efficiency.txt"); system("rm ./results/resolution.txt");
+    runAnalyze();
     readMeasEff();
     readMeasRes();
     
@@ -231,7 +231,7 @@ void makePlots(){
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
                 for (int i_meas=0; i_meas<i_point[itilt]; i_meas++) {
-                    diff = eff_mean[itilt][idet][ixy] - comb_result[itilt][idet][ixy][1][i_point[itilt]];
+                    diff = eff_mean[itilt][idet][ixy] - comb_result[itilt][idet][ixy][1][i_meas];
                     cout<< "diff " << diff << endl;
                     eff_diff_sum[itilt][idet][ixy] += diff*diff;
                 }
