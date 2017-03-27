@@ -242,6 +242,7 @@ void makePlots(){
         for (int idet=0; idet<3; idet++) {
             for (int ixy=0; ixy<2; ixy++) {
                 eff_err_dev[itilt][idet][ixy] = sqrt(eff_diff_sum[itilt][idet][ixy] / (double(i_point[itilt])));
+                cout<< "eff_err_dev" << eff_err_dev[itilt][idet][ixy] << endl;
             }
         }
     }
@@ -672,7 +673,7 @@ void readMeasRes(){
         
         ameas->set_res_BL1(atof(elems[11].c_str()));
         ameas->set_res_BL1_err(atof(elems[12].c_str()));
-        cout<<runnum<<" BL1 res err: "<<atof(elems[12].c_str())<<endl;
+//        cout<<runnum<<" BL1 res err: "<<atof(elems[12].c_str())<<endl;
         
         ameas->set_ang_res(atof(elems[13].c_str()));
         ameas->set_ang_res_err(atof(elems[14].c_str()));
