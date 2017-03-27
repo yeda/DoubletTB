@@ -1,5 +1,5 @@
 {
-
+gStyle->SetOptStat(0);
 TFile *_file71 = TFile::Open("output/analyze_71.root");
 TH2D* h71_AL2 = (TH2D*)_file71->Get("exphitmap_A-L2");
 TCanvas* cc71_AL2 = new TCanvas();
